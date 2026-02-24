@@ -1,0 +1,150 @@
+@import url('https://fonts.googleapis.com/css2?family=Fustat:wght@200;300;400;500;600;700;800&display=swap');
+@import "tailwindcss";
+
+@theme {
+  /* Brand colors */
+  --color-brand-dark: #021B30;
+  --color-brand-bg: #FCFAF3;
+  --color-brand-muted: #8A9DAE;
+  --color-brand-accent: #C6D7F9;
+
+  /* Typography */
+  --font-sans: "Fustat", system-ui, sans-serif;
+
+  /* Hero font sizes */
+  --text-hero-title: 53.18px;
+  --text-hero-subtitle: 25.21px;
+  --text-hero-body: 22.05px;
+  --text-narrative-title: 50.18px;
+  --text-narrative-small: 28.13px;
+  --text-narrative-medium: 41.21px;
+
+  /* Animations */
+  --animate-teleport-in: teleport-in 1.2s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+  --animate-teleport-out: teleport-out 1.2s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+  --animate-teleport-in-reverse: teleport-in-reverse 1.2s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+  --animate-teleport-out-reverse: teleport-out-reverse 1.2s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+
+  @keyframes teleport-in {
+    0% {
+      opacity: 0;
+      transform: translateY(60vh);
+      filter: blur(12px);
+    }
+
+    40% {
+      opacity: 1;
+      filter: blur(4px);
+    }
+
+    100% {
+      opacity: 1;
+      transform: translateY(0);
+      filter: blur(0);
+    }
+  }
+
+  @keyframes teleport-out {
+    0% {
+      opacity: 1;
+      transform: translateY(0);
+      filter: blur(0);
+    }
+
+    60% {
+      opacity: 0.5;
+      filter: blur(4px);
+    }
+
+    100% {
+      opacity: 0;
+      transform: translateY(-60vh);
+      filter: blur(12px);
+    }
+  }
+
+  @keyframes teleport-in-reverse {
+    0% {
+      opacity: 0;
+      transform: translateY(-60vh);
+      filter: blur(12px);
+    }
+
+    40% {
+      opacity: 1;
+      filter: blur(4px);
+    }
+
+    100% {
+      opacity: 1;
+      transform: translateY(0);
+      filter: blur(0);
+    }
+  }
+
+  @keyframes teleport-out-reverse {
+    0% {
+      opacity: 1;
+      transform: translateY(0);
+      filter: blur(0);
+    }
+
+    60% {
+      opacity: 0.5;
+      filter: blur(4px);
+    }
+
+    100% {
+      opacity: 0;
+      transform: translateY(60vh);
+      filter: blur(12px);
+    }
+  }
+
+  @keyframes blur-in {
+    0% {
+      opacity: 0;
+      filter: blur(12px);
+      transform: translateY(20px);
+    }
+
+    100% {
+      opacity: 1;
+      filter: blur(0);
+      transform: translateY(0);
+    }
+  }
+
+  .animate-blur-focus {
+    animation: blur-in linear both;
+    animation-timeline: view();
+    animation-range: entry 20% cover 50%;
+  }
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-width: 320px;
+  min-height: 100vh;
+  font-family: var(--font-sans);
+  background-color: var(--color-brand-bg);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.snap-container {
+  scroll-snap-type: y mandatory;
+  height: 100vh;
+  overflow-y: scroll;
+}
+
+.snap-section {
+  scroll-snap-align: start;
+  scroll-snap-stop: always;
+}
