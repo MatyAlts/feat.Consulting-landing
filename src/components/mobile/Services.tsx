@@ -3,33 +3,71 @@ import { useRef, useEffect, useState } from 'react'
 export default function MobileServices() {
   const [activeColor, setActiveColor] = useState("#FCFAF3")
   const [activeStep, setActiveStep] = useState(0)
+  const lastStepRef = useRef(-1)
   const sectionRefs = useRef<(HTMLElement | null)[]>([])
 
   useEffect(() => {
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
-          if (entry.isIntersecting && entry.intersectionRatio > 0.5) {
+          if (entry.isIntersecting && entry.intersectionRatio > 0.4) {
             const stepIndex = Number(entry.target.getAttribute('data-step'))
             const color = entry.target.getAttribute('data-color')
 
             setActiveStep(stepIndex)
+            lastStepRef.current = stepIndex
             if (color) setActiveColor(color)
           }
         })
       },
-      { threshold: 0.6 }
+      {
+        threshold: [0.1, 0.5, 0.8],
+        rootMargin: '-10% 0px -10% 0px'
+      }
     )
 
     sectionRefs.current.forEach((ref) => {
       if (ref) observer.observe(ref)
     })
 
-    return () => observer.disconnect()
+    const containerObserver = new IntersectionObserver(
+      ([entry]) => {
+        if (!entry.isIntersecting) {
+          setActiveStep(-1)
+        }
+      },
+      { threshold: 0 }
+    )
+
+    const container = document.querySelector('[data-services-container]')
+    if (container) containerObserver.observe(container)
+
+    return () => {
+      observer.disconnect()
+      containerObserver.disconnect()
+    }
   }, [])
+
+  const getStepStyle = (step: number, delay: number = 0) => {
+    const isActive = activeStep === step
+    // Determinamos si la sección está "arriba" o "abajo" de la actual para el efecto de slide
+    const isPast = activeStep > step
+
+    return {
+      opacity: isActive ? 1 : 0,
+      filter: isActive ? 'blur(0px)' : 'blur(20px)',
+      transform: isActive
+        ? 'translateY(0px)'
+        : isPast
+          ? 'translateY(-60px)' // Aumentamos para que se note la caída desde el top al volver
+          : 'translateY(40px)',
+      transition: `all 600ms cubic-bezier(0, 0, 0.2, 1) ${delay}ms`,
+    }
+  }
 
   return (
     <div
+      data-services-container
       className="transition-colors duration-500 ease-in-out"
       style={{ backgroundColor: activeColor }}
     >
@@ -41,7 +79,10 @@ export default function MobileServices() {
         className="snap-start snap-always h-screen w-full flex items-center px-[17px] justify-start overflow-hidden"
       >
         <div className="w-full">
-          <h2 className={`text-narrative-title font-medium text-brand-dark leading-[1.05] tracking-tight transition-all duration-700 ease-out text-left ${activeStep === 0 ? 'opacity-100 blur-0 translate-y-0' : 'opacity-0 blur-xl translate-y-10'}`}>
+          <h2
+            className="text-narrative-title font-medium text-brand-dark leading-[1.05] tracking-tight text-left"
+            style={getStepStyle(0)}
+          >
             But the strain doesn’t appear overnight.
           </h2>
         </div>
@@ -55,7 +96,10 @@ export default function MobileServices() {
         className="snap-start snap-always h-screen w-full flex items-center px-[17px] justify-end overflow-hidden"
       >
         <div className="w-full">
-          <h2 className={`text-narrative-title font-medium text-white leading-[1.05] tracking-tight transition-all duration-700 ease-out text-right ${activeStep === 1 ? 'opacity-100 blur-0 translate-y-0' : 'opacity-0 blur-xl translate-y-10'}`}>
+          <h2
+            className={`text-narrative-title font-medium text-white leading-[1.05] tracking-tight text-right`}
+            style={getStepStyle(1)}
+          >
             It builds gradually.
           </h2>
         </div>
@@ -71,10 +115,26 @@ export default function MobileServices() {
         <section key={i} className="relative h-[200vh]">
           <div className="sticky top-0 h-screen w-full flex items-center px-[17px] justify-start overflow-hidden">
             <div className="w-full flex flex-col gap-2 text-left">
-              <p className="transition-all duration-700 ease-out tracking-tight" style={{ fontSize: "28.13px", fontWeight: "400", color: "#D6D6F0", opacity: activeStep >= combo.start && activeStep <= combo.start + 1 ? 1 : 0, filter: activeStep >= combo.start && activeStep <= combo.start + 1 ? 'blur(0)' : 'blur(10px)', transform: activeStep >= combo.start && activeStep <= combo.start + 1 ? 'translateY(0)' : 'translateY(10px)' }}>
+              <p
+                className="tracking-tight"
+                style={{
+                  fontSize: "28.13px",
+                  fontWeight: "400",
+                  color: "#D6D6F0",
+                  ...getStepStyle(activeStep >= combo.start && activeStep <= combo.start + 1 ? activeStep : -2, 0)
+                }}
+              >
                 {combo.t1}
               </p>
-              <h2 className="transition-all duration-700 ease-out leading-[1.05] tracking-tight" style={{ fontSize: "41.21px", fontWeight: "500", color: "#FFFFFF", opacity: activeStep === combo.start + 1 ? 1 : 0, filter: activeStep === combo.start + 1 ? 'blur(0)' : 'blur(10px)', transform: activeStep === combo.start + 1 ? 'translateY(0)' : 'translateY(10px)' }}>
+              <h2
+                className="leading-[1.05] tracking-tight"
+                style={{
+                  fontSize: "41.21px",
+                  fontWeight: "500",
+                  color: "#FFFFFF",
+                  ...getStepStyle(activeStep === combo.start + 1 ? activeStep : -2, 100)
+                }}
+              >
                 {combo.t2}
               </h2>
             </div>
@@ -86,16 +146,270 @@ export default function MobileServices() {
         </section>
       ))}
 
-      {/* 6. Frase Final (Step 10) */}
+      {/* 6. Outcome (Step 10) */}
       <section
         data-step={10}
-        data-color="#B0AA9A"
+        data-color="#D2D2FF"
         ref={(el) => { sectionRefs.current[10] = el; }}
-        className="snap-start snap-always h-screen w-full flex items-center px-[17px] justify-start overflow-hidden"
+        className="snap-start snap-always h-screen w-full flex flex-col justify-center px-5 overflow-hidden"
       >
-        <div className="w-full">
-          <h2 className={`text-narrative-title font-medium text-brand-dark leading-[1.05] tracking-tight transition-all duration-700 ease-out text-left ${activeStep === 10 ? 'opacity-100 blur-0 translate-y-0' : 'opacity-0 blur-xl translate-y-10'}`}>
-            Suddenly, scaling feels impossible.
+        <div className="flex flex-col">
+          <span
+            className="text-brand-dark font-light"
+            style={{
+              fontSize: '17.05px',
+              ...getStepStyle(10, 0)
+            }}
+          >
+            We’ll help you
+          </span>
+
+          <h2
+            className="text-brand-dark font-medium leading-[1.1] tracking-tight mt-[3px]"
+            style={{
+              fontSize: '53.18px',
+              ...getStepStyle(10, 100)
+            }}
+          >
+            Move from effort to structure.
+          </h2>
+
+          <p
+            className="text-brand-dark font-light mt-[23px]"
+            style={{
+              fontSize: '22.05px',
+              ...getStepStyle(10, 200)
+            }}
+          >
+            So that you can...
+          </p>
+        </div>
+      </section>
+
+      {/* 7. Strategy (Step 11) */}
+      <section
+        data-step={11}
+        data-color="#DBE9EE"
+        ref={(el) => { sectionRefs.current[11] = el; }}
+        className="snap-start snap-always h-screen w-full flex flex-col justify-center px-5 overflow-hidden"
+      >
+        <div className="flex flex-col">
+          <span
+            className="text-brand-dark font-light"
+            style={{
+              fontSize: '17.05px',
+              ...getStepStyle(11, 0)
+            }}
+          >
+            So you can...
+          </span>
+
+          <h2
+            className="text-brand-dark font-medium leading-[1.05] tracking-tight mt-[1px]"
+            style={{
+              fontSize: '56.18px',
+              ...getStepStyle(11, 100)
+            }}
+          >
+            Operate from strategy
+          </h2>
+        </div>
+      </section>
+
+      {/* 8. Urgency (Step 12) */}
+      <section
+        data-step={12}
+        data-color="#010D17"
+        ref={(el) => { sectionRefs.current[12] = el; }}
+        className="snap-start snap-always h-screen w-full flex flex-col justify-center items-center px-5 overflow-hidden"
+      >
+        <div className="w-full text-center">
+          <h2
+            className="font-light tracking-tight"
+            style={{
+              fontSize: '42.18px',
+              color: '#FCFAF3',
+              ...getStepStyle(12, 0)
+            }}
+          >
+            not urgency.
+          </h2>
+        </div>
+      </section>
+
+      {/* 9. Evidence (Step 13) */}
+      <section
+        data-step={13}
+        data-color="#C6D7F9"
+        ref={(el) => { sectionRefs.current[13] = el; }}
+        className="snap-start snap-always h-screen w-full flex flex-col justify-center px-5 overflow-hidden"
+      >
+        <div className="flex flex-col">
+          <span
+            className="text-brand-dark font-light"
+            style={{
+              fontSize: '17.05px',
+              ...getStepStyle(13, 0)
+            }}
+          >
+            So you can...
+          </span>
+
+          <h2
+            className="text-brand-dark font-medium leading-[1.05] tracking-tight mt-[1px]"
+            style={{
+              fontSize: '56.18px',
+              ...getStepStyle(13, 100)
+            }}
+          >
+            Invest from evidence
+          </h2>
+        </div>
+      </section>
+
+      {/* 10. Instinct (Step 14) */}
+      <section
+        data-step={14}
+        data-color="#010D17"
+        ref={(el) => { sectionRefs.current[14] = el; }}
+        className="snap-start snap-always h-screen w-full flex flex-col justify-center items-center px-5 overflow-hidden"
+      >
+        <div className="w-full text-center">
+          <h2
+            className="font-light tracking-tight"
+            style={{
+              fontSize: '42.18px',
+              color: '#FCFAF3',
+              ...getStepStyle(14, 0)
+            }}
+          >
+            not instinct.
+          </h2>
+        </div>
+      </section>
+
+      {/* 11. Scale (Step 15) */}
+      <section
+        data-step={15}
+        data-color="#DBE9EE"
+        ref={(el) => { sectionRefs.current[15] = el; }}
+        className="snap-start snap-always h-screen w-full flex flex-col justify-center px-5 overflow-hidden"
+      >
+        <div className="flex flex-col">
+          <span
+            className="text-brand-dark font-light"
+            style={{
+              fontSize: '17.05px',
+              ...getStepStyle(15, 0)
+            }}
+          >
+            So you can...
+          </span>
+
+          <h2
+            className="text-brand-dark font-medium leading-[1.05] tracking-tight mt-[1px]"
+            style={{
+              fontSize: '56.18px',
+              ...getStepStyle(15, 100)
+            }}
+          >
+            Scale what’s proven
+          </h2>
+        </div>
+      </section>
+
+      {/* 12. Feeling (Step 16) */}
+      <section
+        data-step={16}
+        data-color="rgba(1, 13, 23, 0.7)"
+        ref={(el) => { sectionRefs.current[16] = el; }}
+        className="snap-start snap-always h-screen w-full flex flex-col justify-center items-center px-5 overflow-hidden"
+      >
+        <div className="w-full text-center">
+          <h2
+            className="font-normal tracking-tight flex flex-col items-center leading-[1.1]"
+            style={{
+              fontSize: '42.18px',
+              color: '#FCFAF3',
+              ...getStepStyle(16, 0)
+            }}
+          >
+            <span>not what</span>
+            <span>
+              <span style={{ fontFamily: '"Lato", sans-serif', fontStyle: 'italic' }}>feels</span> right.
+            </span>
+          </h2>
+        </div>
+      </section>
+
+      {/* 13. Final (Step 17) */}
+      <section
+        data-step={17}
+        data-color="#FCFAF3"
+        ref={(el) => { sectionRefs.current[17] = el; }}
+        className="snap-start snap-always h-screen w-full flex flex-col justify-center px-5 overflow-hidden"
+      >
+        <div className="flex flex-col">
+          <span
+            className="text-brand-dark font-light"
+            style={{
+              fontSize: '17.05px',
+              ...getStepStyle(17, 0)
+            }}
+          >
+            And, finally,
+          </span>
+
+          <h2
+            className="text-brand-dark font-medium leading-[1.05] tracking-tight mt-[1px]"
+            style={{
+              fontSize: '56.18px',
+              ...getStepStyle(17, 100)
+            }}
+          >
+            Lead your company
+          </h2>
+        </div>
+      </section>
+
+      {/* 14. Carry (Step 18) */}
+      <section
+        data-step={18}
+        data-color="#010D17"
+        ref={(el) => { sectionRefs.current[18] = el; }}
+        className="snap-start snap-always h-screen w-full flex flex-col justify-center items-center px-5 overflow-hidden"
+      >
+        <div className="w-full text-center">
+          <h2
+            className="font-light tracking-tight"
+            style={{
+              fontSize: '42.18px',
+              color: '#FCFAF3',
+              ...getStepStyle(18, 0)
+            }}
+          >
+            not “carry” it.
+          </h2>
+        </div>
+      </section>
+
+      {/* 15. How? (Step 19) */}
+      <section
+        data-step={19}
+        data-color="#010D17"
+        ref={(el) => { sectionRefs.current[19] = el; }}
+        className="snap-start snap-always h-screen w-full flex flex-col justify-center items-center px-5 overflow-hidden"
+      >
+        <div className="w-full text-center">
+          <h2
+            className="font-medium tracking-tight"
+            style={{
+              fontSize: '74.18px',
+              color: '#FCFAF3',
+              ...getStepStyle(19, 0)
+            }}
+          >
+            How?
           </h2>
         </div>
       </section>

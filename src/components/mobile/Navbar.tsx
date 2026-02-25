@@ -20,39 +20,34 @@ export default function MobileNavbar() {
         className={[
           'fixed top-0 left-0 right-0 z-50',
           'flex items-center justify-between',
-          'px-4 h-16',
+          'h-[60px]',
           'bg-[#FCFAF3] border-b border-brand-dark/10',
           'transition-transform duration-300 ease-in-out',
           isHidden ? '-translate-y-full' : 'translate-y-0',
         ].join(' ')}
       >
-        <Logo height={32} />
+        <div className="px-5">
+          <Logo width={21} height={23.16} />
+        </div>
 
         <button
           onClick={() => setIsMenuOpen(prev => !prev)}
-          className="flex flex-col justify-center items-center w-10 h-10 -mr-2"
+          className="flex flex-col justify-center items-center w-[14px] h-[14px] mr-[20px] relative"
           aria-label={isMenuOpen ? 'Cerrar menú' : 'Abrir menú'}
           aria-expanded={isMenuOpen}
         >
           <span
             className={[
-              'block w-6 h-px bg-brand-dark',
-              'transition-all duration-300 origin-center',
-              isMenuOpen ? 'rotate-45 translate-y-[3.5px]' : '',
-            ].join(' ')}
-          />
-          <span
-            className={[
-              'block w-6 h-px bg-brand-dark mt-[6px]',
+              'absolute w-full h-[1.5px] bg-brand-dark',
               'transition-all duration-300',
-              isMenuOpen ? 'opacity-0 scale-x-0' : '',
+              isMenuOpen ? 'rotate-45' : 'rotate-0',
             ].join(' ')}
           />
           <span
             className={[
-              'block w-6 h-px bg-brand-dark mt-[6px]',
-              'transition-all duration-300 origin-center',
-              isMenuOpen ? '-rotate-45 -translate-y-[9.5px]' : '',
+              'absolute w-full h-[1.5px] bg-brand-dark',
+              'transition-all duration-300',
+              isMenuOpen ? '-rotate-45' : 'rotate-90',
             ].join(' ')}
           />
         </button>

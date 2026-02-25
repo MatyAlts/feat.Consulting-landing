@@ -1,16 +1,17 @@
 interface LogoProps {
+  width?: number
   height?: number
   className?: string
 }
 
-export default function Logo({ height = 32, className = '' }: LogoProps) {
-  const width = Math.round(21 * (height / 24))
+export default function Logo({ width, height = 23.1618, className = '' }: LogoProps) {
+  const calculatedWidth = width || Math.round(21 * (height / 23.1618))
 
   return (
     <svg
-      width={width}
+      width={calculatedWidth}
       height={height}
-      viewBox="0 0 21 24"
+      viewBox="0 0 21 23.1618"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
       className={className}

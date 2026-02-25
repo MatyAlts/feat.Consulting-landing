@@ -4,6 +4,7 @@ import MobileServices from '../components/mobile/Services'
 import MobileAbout from '../components/mobile/About'
 import MobileContact from '../components/mobile/Contact'
 import MobileFooter from '../components/mobile/Footer'
+import StickyFooter from '../components/mobile/StickyFooter'
 
 export default function MobileLayout() {
   return (
@@ -26,6 +27,7 @@ export default function MobileLayout() {
           <MobileFooter />
         </section>
       </main>
+      <StickyFooter />
     </div>
   )
 }

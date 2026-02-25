@@ -2,9 +2,9 @@ export default function MobileHero() {
   return (
     <section
       id="hero"
-      className="min-h-screen bg-[#FCFAF3] flex flex-col justify-start px-5 pt-32 pb-16"
+      className="min-h-screen bg-[#FCFAF3] flex flex-col justify-start px-5 pt-[175px] pb-16"
     >
-      <div className="flex flex-col gap-24">
+      <div className="flex flex-col">
         {/* Headline + subtítulo */}
         <div className="flex flex-col gap-4">
           <h1
@@ -20,13 +20,32 @@ export default function MobileHero() {
         </div>
 
         {/* Cuerpo */}
-        <p className="text-hero-body text-brand-dark leading-[1.3] font-normal">
+        <p className="mt-24 text-hero-body text-brand-dark leading-[1.3] font-normal">
           feat.Consulting helps companies{' '}
           <strong className="font-extrabold">
             turn what’s already working
           </strong>{' '}
           into repeatable growth.
         </p>
+
+        {/* Scroll Indicator */}
+        <div className="mt-[83px] animate-bounce-slow text-brand-dark">
+          <svg
+            width="18"
+            height="10"
+            viewBox="0 0 18 10"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M1.5 1.5L9 8.5L16.5 1.5"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            />
+          </svg>
+        </div>
       </div>
     </section>
   )

@@ -1,4 +1,4 @@
-@import url("https://fonts.googleapis.com/css2?family=Fustat:wght@200;300;400;500;600;700;800&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Fustat:wght@200;300;400;500;600;700;800&family=Lato:ital,wght@1,400&display=swap");
 @import "tailwindcss";
 
 @theme {
@@ -20,14 +20,10 @@
   --text-narrative-medium: 41.21px;
 
   /* Animations */
-  --animate-teleport-in: teleport-in 1.2s cubic-bezier(0.22, 1, 0.36, 1)
-    forwards;
-  --animate-teleport-out: teleport-out 1.2s cubic-bezier(0.22, 1, 0.36, 1)
-    forwards;
-  --animate-teleport-in-reverse: teleport-in-reverse 1.2s
-    cubic-bezier(0.22, 1, 0.36, 1) forwards;
-  --animate-teleport-out-reverse: teleport-out-reverse 1.2s
-    cubic-bezier(0.22, 1, 0.36, 1) forwards;
+  --animate-teleport-in: teleport-in 1.2s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+  --animate-teleport-out: teleport-out 1.2s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+  --animate-teleport-in-reverse: teleport-in-reverse 1.2s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+  --animate-teleport-out-reverse: teleport-out-reverse 1.2s cubic-bezier(0.22, 1, 0.36, 1) forwards;
 
   @keyframes teleport-in {
     0% {
@@ -105,19 +101,19 @@
     }
   }
 
-  @keyframes blur-in {
-    0% {
-      opacity: 0;
-      filter: blur(12px);
-      transform: translateY(20px);
-    }
+  @keyframes bounce-slow {
 
+    0%,
     100% {
-      opacity: 1;
-      filter: blur(0);
       transform: translateY(0);
     }
+
+    50% {
+      transform: translateY(10px);
+    }
   }
+
+  --animate-bounce-slow: bounce-slow 2s ease-in-out infinite;
 }
 
 .animate-blur-focus {
