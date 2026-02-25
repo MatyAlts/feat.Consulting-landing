@@ -1,12 +1,12 @@
-@import url('https://fonts.googleapis.com/css2?family=Fustat:wght@200;300;400;500;600;700;800&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Fustat:wght@200;300;400;500;600;700;800&display=swap");
 @import "tailwindcss";
 
 @theme {
   /* Brand colors */
-  --color-brand-dark: #021B30;
-  --color-brand-bg: #FCFAF3;
-  --color-brand-muted: #8A9DAE;
-  --color-brand-accent: #C6D7F9;
+  --color-brand-dark: #021b30;
+  --color-brand-bg: #fcfaf3;
+  --color-brand-muted: #8a9dae;
+  --color-brand-accent: #c6d7f9;
 
   /* Typography */
   --font-sans: "Fustat", system-ui, sans-serif;
@@ -20,10 +20,14 @@
   --text-narrative-medium: 41.21px;
 
   /* Animations */
-  --animate-teleport-in: teleport-in 1.2s cubic-bezier(0.22, 1, 0.36, 1) forwards;
-  --animate-teleport-out: teleport-out 1.2s cubic-bezier(0.22, 1, 0.36, 1) forwards;
-  --animate-teleport-in-reverse: teleport-in-reverse 1.2s cubic-bezier(0.22, 1, 0.36, 1) forwards;
-  --animate-teleport-out-reverse: teleport-out-reverse 1.2s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+  --animate-teleport-in: teleport-in 1.2s cubic-bezier(0.22, 1, 0.36, 1)
+    forwards;
+  --animate-teleport-out: teleport-out 1.2s cubic-bezier(0.22, 1, 0.36, 1)
+    forwards;
+  --animate-teleport-in-reverse: teleport-in-reverse 1.2s
+    cubic-bezier(0.22, 1, 0.36, 1) forwards;
+  --animate-teleport-out-reverse: teleport-out-reverse 1.2s
+    cubic-bezier(0.22, 1, 0.36, 1) forwards;
 
   @keyframes teleport-in {
     0% {
@@ -114,12 +118,12 @@
       transform: translateY(0);
     }
   }
+}
 
-  .animate-blur-focus {
-    animation: blur-in linear both;
-    animation-timeline: view();
-    animation-range: entry 20% cover 50%;
-  }
+.animate-blur-focus {
+  animation: blur-in linear both;
+  animation-timeline: view();
+  animation-range: entry 20% cover 50%;
 }
 
 *,
