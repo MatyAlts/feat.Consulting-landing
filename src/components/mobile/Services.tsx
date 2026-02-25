@@ -375,7 +375,7 @@ export default function MobileServices() {
       {/* 14. Carry (Step 18) */}
       <section
         data-step={18}
-        data-color="#010D17"
+        data-color="#312E3C"
         ref={(el) => { sectionRefs.current[18] = el; }}
         className="snap-start snap-always h-screen w-full flex flex-col justify-center items-center px-5 overflow-hidden"
       >
@@ -396,7 +396,7 @@ export default function MobileServices() {
       {/* 15. How? (Step 19) */}
       <section
         data-step={19}
-        data-color="#010D17"
+        data-color="rgba(21, 19, 36, 0.97)"
         ref={(el) => { sectionRefs.current[19] = el; }}
         className="snap-start snap-always h-screen w-full flex flex-col justify-center items-center px-5 overflow-hidden"
       >
@@ -411,6 +411,59 @@ export default function MobileServices() {
           >
             How?
           </h2>
+        </div>
+      </section>
+
+      {/* 16. Decade (Step 20) */}
+      <section
+        data-step={20}
+        data-color="rgba(13, 17, 31, 0.86)"
+        ref={(el) => { sectionRefs.current[20] = el; }}
+        className="snap-start snap-always h-screen w-full flex flex-col justify-center px-[30px] overflow-hidden"
+      >
+        <div className="flex flex-col gap-0 items-start">
+          <p
+            className="tracking-tight"
+            style={{
+              fontSize: '23.18px',
+              color: '#FCFAF3',
+              fontFamily: '"Fustat", sans-serif',
+              fontWeight: 300,
+              lineHeight: 1.2,
+              ...getStepStyle(20, 0)
+            }}
+          >
+            After a decade building growth systems, one pattern holds:
+          </p>
+
+          <h2
+            className="tracking-tight"
+            style={{
+              fontSize: '40.5px',
+              color: '#B1B2FF',
+              fontFamily: '"Lato", sans-serif',
+              fontStyle: 'italic',
+              fontWeight: 300,
+              lineHeight: 1.1,
+              ...getStepStyle(20, 100)
+            }}
+          >
+            Validated direction
+          </h2>
+
+          <p
+            className="tracking-tight"
+            style={{
+              fontSize: '35.5px',
+              color: 'rgba(252, 250, 243, 0.3)',
+              fontFamily: '"Fustat", sans-serif',
+              fontWeight: 300,
+              lineHeight: 1.1,
+              ...getStepStyle(20, 200)
+            }}
+          >
+            becomes structure.
+          </p>
         </div>
       </section>
     </div>
