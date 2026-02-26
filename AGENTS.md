@@ -57,8 +57,8 @@ src/
     ├── mobile/
     │   ├── Navbar.tsx               # Navbar fija + menú hamburguesa overlay
     │   ├── Hero.tsx                 # Primera sección — headline + subtítulo + body + scroll indicator
-    │   ├── Services.tsx             # Sección narrativa principal — 20 steps de scroll
-    │   ├── Outcome.tsx              # Sección standalone (actualmente reemplazada por Services step 10) ⚠️
+    │   ├── Services.tsx             # Sección narrativa principal — Step 0 (intro) + Steps 1–20
+    │   ├── HighImpact.tsx           # Sección post-narrativa — word painting + servicios + reveal
     │   ├── StickyFooter.tsx         # Footer flotante con barra de progreso
     │   ├── About.tsx                # PLACEHOLDER — pendiente de diseño Figma
     │   ├── Contact.tsx              # PLACEHOLDER — pendiente de diseño Figma
@@ -66,8 +66,6 @@ src/
     └── desktop/
         └── [6 archivos placeholder] # Todos pendientes de diseño Figma
 ```
-
-> ⚠️ **`Outcome.tsx`** existe como componente standalone pero **no está siendo usado** activamente — su contenido está integrado como Step 10 dentro de `Services.tsx`. No eliminar el archivo, podría reactivarse.
 
 ---
 
@@ -96,6 +94,8 @@ Importadas via Google Fonts:
 | --------------------------- | --------------------------------------------------------------------------- |
 | **Fustat**                  | Fuente principal del sitio (`--font-sans`) — toda la UI por defecto         |
 | **Lato Italic Light (300)** | Uso puntual para énfasis narrativo (e.g., la sección "Validated direction") |
+| **Lato Italic Regular (400)** | Disponible para énfasis narrativo |
+| **Lato Italic Medium (500)** | Uso en "response." de la sección HighImpact |
 
 **Regla crítica**: la familia `Fustat` se aplica globalmente via `body { font-family: var(--font-sans) }`. Lato solo se aplica inline con `fontFamily: '"Lato", sans-serif'` cuando el diseño lo requiere explícitamente.
 
@@ -123,7 +123,7 @@ Las secciones dentro de `Services.tsx` usan `fontSize` inline con valores exacto
 ```tsx
 <div className="flex flex-col h-screen overflow-hidden snap-container bg-[#FCFAF3]">
   <MobileNavbar /> {/* Fija, fuera del flujo de scroll */}
-  <main className="flex-1 overflow-y-auto snap-y snap-mandatory scroll-smooth h-full">
+  <main className="flex-1 overflow-y-auto snap-y snap-proximity scroll-smooth h-full">
     {/* secciones aquí */}
   </main>
   <StickyFooter /> {/* Fija en bottom, fuera del flujo de scroll */}
@@ -146,7 +146,7 @@ Las secciones dentro de `Services.tsx` usan `fontSize` inline con valores exacto
 
 ## 6. Componente `Services.tsx` — El corazón de la narrativa
 
-Este es el componente más complejo. Gestiona 20 "slides" (`data-step` 0–20) con un **fondo dinámico** que cambia mediante `IntersectionObserver`.
+Este es el componente más complejo. Gestiona **21 secciones** en total: un **Step 0** de introducción/transición (que no cuenta como parte de los 20 steps narrativos) y los **Steps 1–20** que conforman la narrativa principal. El fondo cambia dinámicamente mediante `IntersectionObserver`.
 
 ### 6.1 Mecanismo de fondo dinámico
 
@@ -202,9 +202,28 @@ Los steps 2–9 usan un patrón especial: una `<section>` de `height: 200vh` con
 
 ---
 
-## 7. Animaciones globales (`index.css`)
+## 7. Componente `HighImpact.tsx` — Transición a servicios
 
-### 7.1 Keyframes disponibles
+Esta sección actúa como puente entre la narrativa de "problemas" y la oferta concreta. No usa snap-scroll (`snap-start`) para permitir una lectura fluida y continua.
+
+### 7.1 Word Painting (Bloque A)
+- **Mecanismo**: usa un scroll listener en el `<main>` para calcular el progreso del componente en el viewport.
+- **Efecto**: las palabras cambian de color de `#CECCCA` a `#171425` secuencialmente según el scroll.
+
+### 7.2 Servicios con entrada lateral (Bloque B)
+- Bloque con fondo `#8B8CFB` y `blur(18px)`.
+- 4 items entran alternando izquierda/derecha mediante `IntersectionObserver`.
+- Delays escalonados (0, 150, 300, 450ms).
+
+### 7.3 Reveal final (Bloque C)
+- Texto "Grounded in response. Not theory." con efecto de blur a foco y opacidad.
+- Usa Lato Italic Medium para "response.".
+
+---
+
+## 8. Animaciones globales (`index.css`)
+
+### 8.1 Keyframes disponibles
 
 | Keyframe               | Clase Tailwind                 | Uso                                |
 | ---------------------- | ------------------------------ | ---------------------------------- |
@@ -232,9 +251,9 @@ Clase especial que usa `animation-timeline: view()` (scroll-driven animations de
 
 ---
 
-## 8. Componentes fijos: Navbar y StickyFooter
+## 9. Componentes fijos: Navbar y StickyFooter
 
-### 8.1 Navbar (`Navbar.tsx`)
+### 9.1 Navbar (`Navbar.tsx`)
 
 - **Altura**: 60px, `fixed top-0 z-50`.
 - **Comportamiento**: se oculta al hacer scroll hacia abajo (`-translate-y-full`), reaparece al subir. Umbral de 8px (`THRESHOLD` en `useScrollDirection`).
@@ -251,7 +270,7 @@ Clase especial que usa `animation-timeline: view()` (scroll-driven animations de
 
 ---
 
-## 9. Hooks personalizados
+## 10. Hooks personalizados
 
 ### `useViewport`
 
@@ -267,7 +286,7 @@ Clase especial que usa `animation-timeline: view()` (scroll-driven animations de
 
 ---
 
-## 10. Paleta de colores de secciones narrativas
+## 11. Paleta de colores de secciones narrativas
 
 | Color               | Hex / RGBA            | Secciones donde aparece |
 | ------------------- | --------------------- | ----------------------- |
@@ -285,7 +304,7 @@ Clase especial que usa `animation-timeline: view()` (scroll-driven animations de
 
 ---
 
-## 11. Tipografía específica de secciones (Services.tsx)
+## 12. Tipografía específica de secciones (Services.tsx)
 
 Todos los tamaños son **exactos** (pixel-perfect según Figma). No redondear.
 
@@ -310,7 +329,7 @@ Todos los tamaños son **exactos** (pixel-perfect según Figma). No redondear.
 
 ---
 
-## 12. Reglas editoriales — lo que NO debe cambiar
+## 13. Reglas editoriales — lo que NO debe cambiar
 
 1. **El arco narrativo**: la secuencia problema → consecuencias → solución → llamada a la acción es intencional. No reordenar ni eliminar steps sin aprobación.
 2. **Los valores numéricos de tipografía**: son pixel-perfect desde Figma. No redondear a valores "amigables".
@@ -321,7 +340,7 @@ Todos los tamaños son **exactos** (pixel-perfect según Figma). No redondear.
 
 ---
 
-## 13. Cómo agregar una nueva sección a `Services.tsx`
+## 14. Cómo agregar una nueva sección a `Services.tsx`
 
 1. **Incrementar el step más alto** (actualmente 20 → el nuevo sería 21).
 2. Agregar `ref={(el) => { sectionRefs.current[21] = el; }}` en la nueva section.
@@ -332,7 +351,7 @@ Todos los tamaños son **exactos** (pixel-perfect según Figma). No redondear.
 
 ---
 
-## 14. Estado del proyecto (Feb 2026)
+## 15. Estado del proyecto (Feb 2026)
 
 | Sección                            | Estado                       |
 | ---------------------------------- | ---------------------------- |
@@ -340,6 +359,7 @@ Todos los tamaños son **exactos** (pixel-perfect según Figma). No redondear.
 | Mobile Navbar                      | ✅ Completo                  |
 | Mobile Services (narrativa scroll) | ✅ Completo — 20 steps       |
 | Mobile StickyFooter                | ✅ Completo                  |
+| Mobile HighImpact                  | ✅ Completo                  |
 | Mobile About                       | ⏳ Placeholder               |
 | Mobile Contact                     | ⏳ Placeholder               |
 | Mobile Footer                      | ⏳ Placeholder               |
@@ -347,7 +367,7 @@ Todos los tamaños son **exactos** (pixel-perfect según Figma). No redondear.
 
 ---
 
-## 15. Comandos útiles
+## 16. Comandos útiles
 
 ```bash
 # Levantar el servidor de desarrollo (accesible en red local)

@@ -146,7 +146,7 @@ export default function MobileServices() {
         </section>
       ))}
 
-      {/* 6. Outcome (Step 10) */}
+      {/* Step 10: Outcome */}
       <section
         data-step={10}
         data-color="#D2D2FF"
