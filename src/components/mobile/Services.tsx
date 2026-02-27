@@ -1,4 +1,5 @@
 import { useRef, useEffect, useState } from 'react'
+import { StaggerReveal } from '../shared/StaggerReveal'
 
 interface MobileServicesProps {
   onStepChange?: (step: number) => void;
@@ -9,6 +10,23 @@ export default function MobileServices({ onStepChange }: MobileServicesProps) {
   const [activeStep, setActiveStep] = useState(0)
   const lastStepRef = useRef(-1)
   const sectionRefs = useRef<(HTMLElement | null)[]>([])
+
+  // Refs para medir la posición exacta de los textos
+  const soThatTextRef = useRef<HTMLParagraphElement>(null)    // "So that you can..."
+  const soYouTextRef = useRef<HTMLSpanElement>(null)           // "So you can..."
+  const section10Ref = useRef<HTMLElement>(null)
+  const section11Ref = useRef<HTMLElement>(null)
+
+  const buildsTextRef = useRef<HTMLHeadingElement>(null)      // "It builds gradually."
+  const growingTextRef = useRef<HTMLParagraphElement>(null)   // "You're growing."
+  const section1Ref = useRef<HTMLElement>(null)
+  const section2Ref = useRef<HTMLDivElement>(null)
+
+  // Estado con las posiciones calculadas de la línea
+  const [line10Top, setLine10Top] = useState<number | null>(null)
+  const [line11Height, setLine11Height] = useState<number | null>(null)
+  const [line1Top, setLine1Top] = useState<number | null>(null)
+  const [line2Height, setLine2Height] = useState<number | null>(null)
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -53,9 +71,56 @@ export default function MobileServices({ onStepChange }: MobileServicesProps) {
     }
   }, [])
 
+  // Mide la posición exacta del texto relativa a su sección padre.
+  // Suma offsetTop por toda la cadena DOM hasta llegar a la sección,
+  // evitando errores por divs intermedios con position:relative.
+  useEffect(() => {
+    const getOffsetFromSection = (el: HTMLElement, section: HTMLElement): number => {
+      let top = 0
+      let current: HTMLElement | null = el
+      while (current && current !== section) {
+        top += current.offsetTop
+        current = current.offsetParent as HTMLElement | null
+      }
+      return top
+    }
+
+    const measure = () => {
+      // Sección 10: línea empieza 53px después del bottom de "So that you can..."
+      if (soThatTextRef.current && section10Ref.current) {
+        const relTop = getOffsetFromSection(soThatTextRef.current, section10Ref.current)
+        setLine10Top(relTop + soThatTextRef.current.offsetHeight + 53)
+      }
+      // Sección 11: línea termina 53px antes del top de "So you can..."
+      if (soYouTextRef.current && section11Ref.current) {
+        const relTop = getOffsetFromSection(soYouTextRef.current, section11Ref.current)
+        setLine11Height(relTop - 53)
+      }
+
+      // Sección 1 a 2: línea entre "It builds gradually" y "You're growing"
+      if (buildsTextRef.current && section1Ref.current) {
+        const relTop = getOffsetFromSection(buildsTextRef.current, section1Ref.current)
+        setLine1Top(relTop + buildsTextRef.current.offsetHeight + 53)
+      }
+      if (growingTextRef.current && section2Ref.current) {
+        const relTop = getOffsetFromSection(growingTextRef.current, section2Ref.current)
+        setLine2Height(relTop - 53)
+      }
+    }
+
+    const t = setTimeout(measure, 150)
+    window.addEventListener('resize', measure)
+    window.addEventListener('orientationchange', measure)
+
+    return () => {
+      clearTimeout(t)
+      window.removeEventListener('resize', measure)
+      window.removeEventListener('orientationchange', measure)
+    }
+  }, [])
+
   const getStepStyle = (step: number, delay: number = 0) => {
     const isActive = activeStep === step
-    // Determinamos si la sección está "arriba" o "abajo" de la actual para el efecto de slide
     const isPast = activeStep > step
 
     return {
@@ -64,7 +129,7 @@ export default function MobileServices({ onStepChange }: MobileServicesProps) {
       transform: isActive
         ? 'translateY(0px)'
         : isPast
-          ? 'translateY(-60px)' // Aumentamos para que se note la caída desde el top al volver
+          ? 'translateY(-60px)'
           : 'translateY(40px)',
       transition: `all 600ms cubic-bezier(0, 0, 0.2, 1) ${delay}ms`,
     }
@@ -81,14 +146,14 @@ export default function MobileServices({ onStepChange }: MobileServicesProps) {
         data-step={0}
         data-color="#FCFAF3"
         ref={(el) => { sectionRefs.current[0] = el; }}
-        className="snap-start snap-always h-screen w-full flex items-center px-[17px] justify-start overflow-hidden"
+        className="snap-start snap-always full-height w-full flex items-center px-[17px] justify-start overflow-hidden"
       >
         <div className="w-full">
           <h2
             className="text-narrative-title font-medium text-brand-dark leading-[1.05] tracking-tight text-left"
             style={getStepStyle(0)}
           >
-            The strain doesn’t appear overnight.
+            The strain doesn't appear overnight.
           </h2>
         </div>
       </section>
@@ -97,11 +162,19 @@ export default function MobileServices({ onStepChange }: MobileServicesProps) {
       <section
         data-step={1}
         data-color="#010D17"
-        ref={(el) => { sectionRefs.current[1] = el; }}
-        className="snap-start snap-always h-screen w-full flex items-center px-[17px] justify-end overflow-hidden"
+        ref={(el) => { sectionRefs.current[1] = el; section1Ref.current = el; }}
+        className="snap-start snap-always full-height w-full flex items-center px-[17px] justify-end overflow-hidden relative"
       >
-        <div className="w-full">
+        {/* Línea vertical — empieza exactamente 53px debajo de "It builds gradually" */}
+        {line1Top !== null && (
+          <div
+            className="absolute bottom-0 pointer-events-none"
+            style={{ right: '68px', top: line1Top, width: '1px', backgroundColor: 'rgba(255, 255, 255, 0.2)', zIndex: 0 }}
+          />
+        )}
+        <div className="w-full relative z-10">
           <h2
+            ref={buildsTextRef}
             className={`text-narrative-title font-medium text-white leading-[1.05] tracking-tight text-right`}
             style={getStepStyle(1)}
           >
@@ -112,15 +185,26 @@ export default function MobileServices({ onStepChange }: MobileServicesProps) {
 
       {/* Combo Blocks (Sticky Background #010D17) */}
       {[
-        { t1: "You’re growing.", t2: "But it doesn’t feel stable.", start: 2 },
-        { t1: "Wins happen.", t2: "But they’re inconsistent.", start: 4 },
-        { t1: "Your team is moving", t2: "But sales still has to explain everything.", start: 6 },
-        { t1: "You’re doing the work.", t2: "And it’s not getting lighter.", start: 8 }
+        { t1: "You're growing.", t2: <>But it doesn't<br />feel stable.</>, start: 2 },
+        { t1: "Wins happen.", t2: "But they're inconsistent.", start: 4 },
+        { t1: "Your team is moving", t2: <>But sales still<br />has to explain <br />everything.</>, start: 6 },
+        { t1: "You're doing the work.", t2: <>And it's not<br />getting lighter.</>, start: 8 }
       ].map((combo, i) => (
-        <section key={i} className="relative h-[200vh]">
-          <div className="sticky top-0 h-screen w-full flex items-center px-[17px] justify-start overflow-hidden">
-            <div className="w-full flex flex-col gap-2 text-left">
+        <section key={i} className="relative h-[200dvh]">
+          <div
+            className="sticky top-0 full-height w-full flex items-center px-[17px] justify-start overflow-hidden relative"
+            ref={i === 0 ? section2Ref : null}
+          >
+            {/* Línea vertical — termina exactamente 53px antes de "You're growing" */}
+            {i === 0 && line2Height !== null && line2Height > 0 && (
+              <div
+                className="absolute top-0 pointer-events-none"
+                style={{ right: '68px', height: line2Height, width: '1px', backgroundColor: 'rgba(255, 255, 255, 0.2)', zIndex: 0 }}
+              />
+            )}
+            <div className="w-full flex flex-col gap-2 text-left relative z-10">
               <p
+                ref={i === 0 ? growingTextRef : null}
                 className="tracking-tight"
                 style={{
                   fontSize: "28.13px",
@@ -145,8 +229,8 @@ export default function MobileServices({ onStepChange }: MobileServicesProps) {
             </div>
           </div>
           <div className="absolute top-0 left-0 w-full h-full pointer-events-none">
-            <div data-step={combo.start} data-color="#010D17" ref={(el) => { sectionRefs.current[combo.start] = el; }} className="h-screen snap-start snap-always pointer-events-auto" />
-            <div data-step={combo.start + 1} data-color="#010D17" ref={(el) => { sectionRefs.current[combo.start + 1] = el; }} className="h-screen snap-start snap-always pointer-events-auto" />
+            <div data-step={combo.start} data-color="#010D17" ref={(el) => { sectionRefs.current[combo.start] = el; }} className="full-height snap-start snap-always pointer-events-auto" />
+            <div data-step={combo.start + 1} data-color="#010D17" ref={(el) => { sectionRefs.current[combo.start + 1] = el; }} className="full-height snap-start snap-always pointer-events-auto" />
           </div>
         </section>
       ))}
@@ -155,38 +239,34 @@ export default function MobileServices({ onStepChange }: MobileServicesProps) {
       <section
         data-step={10}
         data-color="#D2D2FF"
-        ref={(el) => { sectionRefs.current[10] = el; }}
-        className="snap-start snap-always h-screen w-full flex flex-col justify-center px-5 overflow-hidden"
+        ref={(el) => { sectionRefs.current[10] = el; section10Ref.current = el; }}
+        className="snap-start snap-always full-height w-full flex flex-col justify-center px-5 overflow-hidden relative"
       >
-        <div className="flex flex-col">
+        {/* Línea vertical — desde debajo de "So that you can..." hasta el borde inferior */}
+        {line10Top !== null && (
+          <div
+            className="absolute bottom-0 pointer-events-none"
+            style={{ left: '68px', top: line10Top, width: '1px', backgroundColor: '#000000', zIndex: 0 }}
+          />
+        )}
+
+        <div className="flex flex-col relative z-10">
           <span
             className="text-brand-dark font-light"
-            style={{
-              fontSize: '17.05px',
-              ...getStepStyle(10, 0)
-            }}
+            style={{ fontSize: '17.05px', ...getStepStyle(10, 0) }}
           >
-            We’ll help you
+            We'll help you
           </span>
-
           <h2
             className="text-brand-dark font-medium leading-[1.1] tracking-tight mt-[3px]"
-            style={{
-              fontSize: '53.18px',
-              ...getStepStyle(10, 100)
-            }}
+            style={{ fontSize: '53.18px', ...getStepStyle(10, 100) }}
           >
-            Go from
-            <br />
-            effort to control.
+            Go from<br />effort to control.
           </h2>
-
           <p
+            ref={soThatTextRef}
             className="text-brand-dark font-light mt-[23px]"
-            style={{
-              fontSize: '22.05px',
-              ...getStepStyle(10, 200)
-            }}
+            style={{ fontSize: '22.05px', ...getStepStyle(10, 200) }}
           >
             So that you can...
           </p>
@@ -197,51 +277,46 @@ export default function MobileServices({ onStepChange }: MobileServicesProps) {
       <section
         data-step={11}
         data-color="#DBE9EE"
-        ref={(el) => { sectionRefs.current[11] = el; }}
-        className="snap-start snap-always h-screen w-full flex flex-col justify-center px-5 overflow-hidden"
+        ref={(el) => { sectionRefs.current[11] = el; section11Ref.current = el; }}
+        className="snap-start snap-always full-height w-full flex flex-col justify-center px-5 overflow-hidden relative"
       >
-        <div className="flex flex-col">
+        {/* Línea vertical — termina exactamente 53px antes de "So you can..." */}
+        {line11Height !== null && line11Height > 0 && (
+          <div
+            className="absolute top-0 pointer-events-none"
+            style={{ left: '68px', height: line11Height, width: '1px', backgroundColor: '#000000', zIndex: 0 }}
+          />
+        )}
+
+        <div className="flex flex-col relative z-10">
           <span
+            ref={soYouTextRef}
             className="text-brand-dark font-light"
-            style={{
-              fontSize: '17.05px',
-              ...getStepStyle(11, 0)
-            }}
+            style={{ fontSize: '17.05px', ...getStepStyle(11, 0) }}
           >
             So you can...
           </span>
-
           <h2
             className="text-brand-dark font-medium leading-[1.05] tracking-tight mt-[1px]"
-            style={{
-              fontSize: '56.18px',
-              ...getStepStyle(11, 100)
-            }}
+            style={{ fontSize: '56.18px', ...getStepStyle(11, 100) }}
           >
-            Operate
-            <br />
-            from
-            <br />
-            strategy
+            Operate<br />from<br />strategy
           </h2>
         </div>
       </section>
+
 
       {/* 8. Urgency (Step 12) */}
       <section
         data-step={12}
         data-color="#010D17"
         ref={(el) => { sectionRefs.current[12] = el; }}
-        className="snap-start snap-always h-screen w-full flex flex-col justify-center items-center px-5 overflow-hidden"
+        className="snap-start snap-always full-height w-full flex flex-col justify-center items-center px-5 overflow-hidden"
       >
         <div className="w-full text-center">
           <h2
             className="font-light tracking-tight"
-            style={{
-              fontSize: '42.18px',
-              color: '#FCFAF3',
-              ...getStepStyle(12, 0)
-            }}
+            style={{ fontSize: '42.18px', color: '#FCFAF3', ...getStepStyle(12, 0) }}
           >
             not urgency.
           </h2>
@@ -253,25 +328,18 @@ export default function MobileServices({ onStepChange }: MobileServicesProps) {
         data-step={13}
         data-color="#C6D7F9"
         ref={(el) => { sectionRefs.current[13] = el; }}
-        className="snap-start snap-always h-screen w-full flex flex-col justify-center px-5 overflow-hidden"
+        className="snap-start snap-always full-height w-full flex flex-col justify-center px-5 overflow-hidden"
       >
         <div className="flex flex-col">
           <span
             className="text-brand-dark font-light"
-            style={{
-              fontSize: '17.05px',
-              ...getStepStyle(13, 0)
-            }}
+            style={{ fontSize: '17.05px', ...getStepStyle(13, 0) }}
           >
             So you can...
           </span>
-
           <h2
             className="text-brand-dark font-medium leading-[1.05] tracking-tight mt-[1px]"
-            style={{
-              fontSize: '56.18px',
-              ...getStepStyle(13, 100)
-            }}
+            style={{ fontSize: '56.18px', ...getStepStyle(13, 100) }}
           >
             Invest from evidence
           </h2>
@@ -283,16 +351,12 @@ export default function MobileServices({ onStepChange }: MobileServicesProps) {
         data-step={14}
         data-color="#010D17"
         ref={(el) => { sectionRefs.current[14] = el; }}
-        className="snap-start snap-always h-screen w-full flex flex-col justify-center items-center px-5 overflow-hidden"
+        className="snap-start snap-always full-height w-full flex flex-col justify-center items-center px-5 overflow-hidden"
       >
         <div className="w-full text-center">
           <h2
             className="font-light tracking-tight"
-            style={{
-              fontSize: '42.18px',
-              color: '#FCFAF3',
-              ...getStepStyle(14, 0)
-            }}
+            style={{ fontSize: '42.18px', color: '#FCFAF3', ...getStepStyle(14, 0) }}
           >
             not instinct.
           </h2>
@@ -304,27 +368,20 @@ export default function MobileServices({ onStepChange }: MobileServicesProps) {
         data-step={15}
         data-color="#DBE9EE"
         ref={(el) => { sectionRefs.current[15] = el; }}
-        className="snap-start snap-always h-screen w-full flex flex-col justify-center px-5 overflow-hidden"
+        className="snap-start snap-always full-height w-full flex flex-col justify-center px-5 overflow-hidden"
       >
         <div className="flex flex-col">
           <span
             className="text-brand-dark font-light"
-            style={{
-              fontSize: '17.05px',
-              ...getStepStyle(15, 0)
-            }}
+            style={{ fontSize: '17.05px', ...getStepStyle(15, 0) }}
           >
             So you can...
           </span>
-
           <h2
             className="text-brand-dark font-medium leading-[1.05] tracking-tight mt-[1px]"
-            style={{
-              fontSize: '56.18px',
-              ...getStepStyle(15, 100)
-            }}
+            style={{ fontSize: '56.18px', ...getStepStyle(15, 100) }}
           >
-            Scale what’s proven
+            Scale what's proven
           </h2>
         </div>
       </section>
@@ -334,16 +391,12 @@ export default function MobileServices({ onStepChange }: MobileServicesProps) {
         data-step={16}
         data-color="rgba(1, 13, 23, 0.7)"
         ref={(el) => { sectionRefs.current[16] = el; }}
-        className="snap-start snap-always h-screen w-full flex flex-col justify-center items-center px-5 overflow-hidden"
+        className="snap-start snap-always full-height w-full flex flex-col justify-center items-center px-5 overflow-hidden"
       >
         <div className="w-full text-center">
           <h2
             className="font-normal tracking-tight flex flex-col items-center leading-[1.1]"
-            style={{
-              fontSize: '42.18px',
-              color: '#FCFAF3',
-              ...getStepStyle(16, 0)
-            }}
+            style={{ fontSize: '42.18px', color: '#FCFAF3', ...getStepStyle(16, 0) }}
           >
             <span>not what</span>
             <span>
@@ -358,25 +411,18 @@ export default function MobileServices({ onStepChange }: MobileServicesProps) {
         data-step={17}
         data-color="#FCFAF3"
         ref={(el) => { sectionRefs.current[17] = el; }}
-        className="snap-start snap-always h-screen w-full flex flex-col justify-center px-5 overflow-hidden"
+        className="snap-start snap-always full-height w-full flex flex-col justify-center px-5 overflow-hidden"
       >
         <div className="flex flex-col">
           <span
             className="text-brand-dark font-light"
-            style={{
-              fontSize: '17.05px',
-              ...getStepStyle(17, 0)
-            }}
+            style={{ fontSize: '17.05px', ...getStepStyle(17, 0) }}
           >
             And, finally,
           </span>
-
           <h2
             className="text-brand-dark font-medium leading-[1.05] tracking-tight mt-[1px]"
-            style={{
-              fontSize: '56.18px',
-              ...getStepStyle(17, 100)
-            }}
+            style={{ fontSize: '56.18px', ...getStepStyle(17, 100) }}
           >
             Lead your company
           </h2>
@@ -388,18 +434,14 @@ export default function MobileServices({ onStepChange }: MobileServicesProps) {
         data-step={18}
         data-color="#312E3C"
         ref={(el) => { sectionRefs.current[18] = el; }}
-        className="snap-start snap-always h-screen w-full flex flex-col justify-center items-center px-5 overflow-hidden"
+        className="snap-start snap-always full-height w-full flex flex-col justify-center items-center px-5 overflow-hidden"
       >
         <div className="w-full text-center">
           <h2
             className="font-light tracking-tight"
-            style={{
-              fontSize: '42.18px',
-              color: '#FCFAF3',
-              ...getStepStyle(18, 0)
-            }}
+            style={{ fontSize: '42.18px', color: '#FCFAF3', ...getStepStyle(18, 0) }}
           >
-            not “carry” it.
+            not "carry" it.
           </h2>
         </div>
       </section>
@@ -409,16 +451,12 @@ export default function MobileServices({ onStepChange }: MobileServicesProps) {
         data-step={19}
         data-color="rgba(21, 19, 36, 0.97)"
         ref={(el) => { sectionRefs.current[19] = el; }}
-        className="snap-start snap-always h-screen w-full flex flex-col justify-center items-center px-5 overflow-hidden"
+        className="snap-start snap-always full-height w-full flex flex-col justify-center items-center px-5 overflow-hidden"
       >
         <div className="w-full text-center">
           <h2
             className="font-medium tracking-tight"
-            style={{
-              fontSize: '74.18px',
-              color: '#FCFAF3',
-              ...getStepStyle(19, 0)
-            }}
+            style={{ fontSize: '74.18px', color: '#FCFAF3', ...getStepStyle(19, 0) }}
           >
             How?
           </h2>
@@ -430,47 +468,42 @@ export default function MobileServices({ onStepChange }: MobileServicesProps) {
         data-step={20}
         data-color="rgba(13, 17, 31, 0.86)"
         ref={(el) => { sectionRefs.current[20] = el; }}
-        className="snap-start snap-always min-h-screen w-full flex flex-col justify-center px-[30px] overflow-hidden"
+        className="snap-start snap-always min-full-height w-full flex flex-col justify-center px-[30px] overflow-hidden"
       >
-        <div style={getStepStyle(20, 0)} className="self-stretch inline-flex flex-col justify-start items-start">
-          {/* Bloque 1: Exactamente como se pidió anteriormente */}
-          <div className="self-stretch flex flex-col justify-start items-start">
-            <div className="flex flex-col justify-start items-start gap-5">
-              <div className="self-stretch flex flex-col justify-start items-start gap-5">
-                <div className="w-full flex flex-col justify-start items-start">
-                  <div className="self-stretch flex flex-col justify-start items-start gap-6">
-                    <div className="self-stretch justify-start text-[#A5B4FC] text-2xl font-light font-['Fustat'] leading-6">
-                      After years building journeys, one pattern became clear:
-                    </div>
-                    <div className="self-stretch flex flex-col justify-start items-start gap-5">
-                      <div className="w-80 justify-start leading-10">
-                        <span className="text-white text-4xl font-normal font-['Fustat']">When growth reflects how buyers </span>
-                        <span className="text-white text-4xl font-normal font-['Lato'] italic">actually</span>
-                        <span className="text-white text-4xl font-normal font-['Fustat']"> decide,</span>
-                      </div>
-                      <div className="w-full justify-start text-[#C7D2FE] text-6xl font-normal font-['Fustat'] leading-[54.59px]">
-                        Scale stops depending on effort.
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
+        <div className="self-stretch inline-flex flex-col justify-start items-start relative z-10 w-full">
+          <StaggerReveal staggerDelay={120} className="w-full flex flex-col">
+            <div className="text-[#A5B4FC] text-2xl font-light font-['Fustat'] leading-6 mb-11">
+              After years building journeys, one pattern became clear:
             </div>
-          </div>
 
-          {/* Bloque 2: Nueva frase a 145px */}
-          <div className="mt-[145px] flex flex-col justify-start items-start">
+            <div className="text-white text-4xl font-normal font-['Fustat'] leading-10">
+              When growth
+            </div>
+            <div className="text-white text-4xl font-normal font-['Fustat'] leading-10">
+              reflects how buyers
+            </div>
+            <div className="leading-10 mb-5">
+              <span className="text-white text-4xl font-normal font-['Lato'] italic">actually</span>
+              <span className="text-white text-4xl font-normal font-['Fustat']"> decide,</span>
+            </div>
+
+            <div className="w-full text-[#C7D2FE] mb-[145px] text-[56px] font-normal font-['Fustat'] leading-[54.59px]">
+              Scale stops depending on effort.
+            </div>
+          </StaggerReveal>
+
+          <StaggerReveal staggerDelay={120} className="w-full flex flex-col">
             <p className="text-[#FCFAF3] text-[33.5px] font-light font-['Fustat'] leading-tight">
-              That’s where leverage
+              That's where leverage
             </p>
-            <p className="text-[#FCFAF3] text-[33.5px] font-light font-['Fustat'] leading-tight">
+            <p className="text-[#FCFAF3] text-[33.5px] font-light font-['Fustat'] leading-tight mb-[63px]">
               replaces grind.
             </p>
-          </div>
 
-          <div className="mt-[63.12px] w-full border-t border-[#FCFAF3]/10" />
+            <div className="w-full border-t border-[#FCFAF3]/10" />
+          </StaggerReveal>
         </div>
       </section>
-    </div>
+    </div >
   )
 }

@@ -1,4 +1,5 @@
 import React from 'react';
+import { StaggerReveal } from '../shared/StaggerReveal';
 
 export default function MobileDecisionStage() {
   const chips = [
@@ -19,11 +20,10 @@ export default function MobileDecisionStage() {
         <div className="self-stretch flex flex-col justify-center items-center px-5">
           <div className="flex flex-col justify-center items-center gap-4">
             <div className="self-stretch flex flex-col justify-start items-start gap-1">
-              <div className="w-80 text-center justify-start">
-                <span className="text-gray-900 text-4xl font-semibold font-['Fustat'] leading-9">Match the Build to the </span>
-                <span className="text-indigo-400 text-4xl font-semibold font-['Fustat'] leading-9">Decision Stage</span>
-                <span className="text-gray-900 text-4xl font-normal font-['Fustat'] leading-9">.</span>
-              </div>
+              <StaggerReveal staggerDelay={120} className="w-80 text-center justify-start leading-9">
+                <span className="text-gray-900 text-4xl font-semibold font-['Fustat']">Match the Build to the </span>
+                <span className="text-indigo-400 text-4xl font-semibold font-['Fustat']">Decision Stage<span className="text-gray-900 font-normal">.</span></span>
+              </StaggerReveal>
               <div className="self-stretch h-6 text-center justify-start text-slate-900 text-base font-light font-['Fustat']">
                 Growth isn’t static. Execution must adapt.
               </div>
@@ -36,7 +36,7 @@ export default function MobileDecisionStage() {
           <div className="flex w-fit animate-marquee gap-[5px]">
             {/* Primero el set original */}
             {chips.map((text, idx) => (
-              <div 
+              <div
                 key={`orig-${idx}`}
                 className="px-7 py-4 bg-violet-100/70 rounded-[10px] outline outline-[0.43px] outline-stone-50 backdrop-blur-md flex justify-center items-center gap-1 whitespace-nowrap flex-shrink-0"
               >
@@ -47,7 +47,7 @@ export default function MobileDecisionStage() {
             ))}
             {/* Duplicamos el set para el loop infinito */}
             {chips.map((text, idx) => (
-              <div 
+              <div
                 key={`dup-${idx}`}
                 className="px-7 py-4 bg-violet-100/70 rounded-[10px] outline outline-[0.43px] outline-stone-50 backdrop-blur-md flex justify-center items-center gap-1 whitespace-nowrap flex-shrink-0"
               >
@@ -64,7 +64,7 @@ export default function MobileDecisionStage() {
           <div className="self-stretch h-6 text-center justify-start text-zinc-600 text-xl font-normal font-['Fustat']">
             This is how the system takes shape:
           </div>
-          
+
           <div className="w-80 flex flex-col justify-start items-start gap-24">
             <div className="self-stretch flex flex-col justify-start items-start gap-20">
               <div className="flex flex-col justify-start items-center gap-6">
@@ -81,7 +81,7 @@ export default function MobileDecisionStage() {
                     </div>
                     <div className="w-80 flex flex-col justify-start items-start px-5">
                       <div className="w-64 justify-center text-white text-xl font-medium font-['Fustat'] leading-6">Impact</div>
-                      <div className="self-stretch justify-center text-white text-xl font-light font-['Lato'] leading-6">+27% conversion<br/>Unified positioning across 12+ touchpoints.</div>
+                      <div className="self-stretch justify-center text-white text-xl font-light font-['Lato'] leading-6">+27% conversion<br />Unified positioning across 12+ touchpoints.</div>
                     </div>
                   </div>
 
@@ -124,7 +124,7 @@ export default function MobileDecisionStage() {
                 </div>
               </div>
             </div>
-            
+
             {/* Fin de sección */}
             <div className="mt-[135.12px] w-full border-t border-zinc-200/50" />
           </div>

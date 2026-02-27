@@ -20,27 +20,28 @@ export default function MobileLayout() {
   const isSnapDisabled = !(activeStep < 19 || (activeStep === 19 && scrollDir === 'up'))
 
   return (
-    <div className="flex flex-col h-screen overflow-hidden bg-[#FCFAF3]">
+    <div
+      className="flex flex-col overflow-hidden bg-[#FCFAF3]"
+      style={{ height: 'calc(var(--real-vh, 1dvh) * 100)' }}
+    >
       <MobileNavbar />
       <main className={[
-        'flex-1 overflow-y-auto h-full scroll-smooth hide-scrollbar',
+        'flex-1 overflow-y-auto scroll-smooth hide-scrollbar',
         isSnapDisabled ? '' : 'snapping-locked'
       ].join(' ')}
       >
-        <section className="snap-start snap-always min-h-screen bg-[#FCFAF3]">
-          <MobileHero />
-        </section>
-        
+        <MobileHero />
+
         <MobileServices onStepChange={setActiveStep} />
-        
+
         <MobileDecisionStage />
 
         <MobileApproach />
 
-        <section className="min-h-screen bg-[#FCFAF3]">
+        <section className="min-h-[100dvh] bg-[#FCFAF3]">
           <MobileAbout />
         </section>
-        <section className="min-h-screen bg-[#FCFAF3]">
+        <section className="min-h-[100dvh] bg-[#FCFAF3]">
           <MobileContact />
         </section>
         <section className="bg-[#FCFAF3]">

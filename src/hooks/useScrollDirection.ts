@@ -5,6 +5,7 @@ const THRESHOLD = 8
 export function useScrollDirection() {
   const [scrollDir, setScrollDir] = useState<'up' | 'down'>('up')
   const [isAtTop, setIsAtTop] = useState(true)
+  const [isInHero, setIsInHero] = useState(true)
 
   useEffect(() => {
     // Rastreamos lastScrollY por contenedor para evitar saltos
@@ -18,13 +19,9 @@ export function useScrollDirection() {
       const key = isMain ? 'main' : 'snap'
       const lastScrollY = lastScroll[key]
 
-      // isAtTop solo es true cuando el snap container está en el tope
-      if (!isMain) {
-        setIsAtTop(scrollY < THRESHOLD)
-      } else {
-        // En zona de scroll libre ya estamos más allá del Hero
-        setIsAtTop(false)
-      }
+      // isAtTop es true cuando el scroll está cerca del tope
+      setIsAtTop(scrollY < THRESHOLD)
+      setIsInHero(scrollY < window.innerHeight * 0.8)
 
       if (Math.abs(scrollY - lastScrollY) >= THRESHOLD) {
         setScrollDir(scrollY > lastScrollY ? 'down' : 'up')
@@ -52,5 +49,5 @@ export function useScrollDirection() {
     return () => window.removeEventListener('scroll', onScroll, { capture: true })
   }, [])
 
-  return { scrollDir, isAtTop }
+  return { scrollDir, isAtTop, isInHero }
 }

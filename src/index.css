@@ -6,6 +6,7 @@
   font-style: normal;
   font-display: swap;
 }
+
 @font-face {
   font-family: 'Fustat';
   src: url('./assets/fonts/Fustat-ExtraBold.ttf') format('truetype');
@@ -13,6 +14,7 @@
   font-style: normal;
   font-display: swap;
 }
+
 @font-face {
   font-family: 'Fustat';
   src: url('./assets/fonts/Fustat-ExtraLight.ttf') format('truetype');
@@ -20,6 +22,7 @@
   font-style: normal;
   font-display: swap;
 }
+
 @font-face {
   font-family: 'Fustat';
   src: url('./assets/fonts/Fustat-Light.ttf') format('truetype');
@@ -27,6 +30,7 @@
   font-style: normal;
   font-display: swap;
 }
+
 @font-face {
   font-family: 'Fustat';
   src: url('./assets/fonts/Fustat-Medium.ttf') format('truetype');
@@ -34,6 +38,7 @@
   font-style: normal;
   font-display: swap;
 }
+
 @font-face {
   font-family: 'Fustat';
   src: url('./assets/fonts/Fustat-Regular.ttf') format('truetype');
@@ -41,6 +46,7 @@
   font-style: normal;
   font-display: swap;
 }
+
 @font-face {
   font-family: 'Fustat';
   src: url('./assets/fonts/Fustat-SemiBold.ttf') format('truetype');
@@ -57,6 +63,7 @@
   font-style: normal;
   font-display: swap;
 }
+
 @font-face {
   font-family: 'Lato';
   src: url('./assets/fonts/Lato-Regular.ttf') format('truetype');
@@ -64,6 +71,7 @@
   font-style: normal;
   font-display: swap;
 }
+
 @font-face {
   font-family: 'Lato';
   src: url('./assets/fonts/Lato-Bold.ttf') format('truetype');
@@ -71,11 +79,21 @@
   font-style: normal;
   font-display: swap;
 }
+
 @font-face {
   font-family: 'Lato';
   src: url('./assets/fonts/Lato-Black.ttf') format('truetype');
   font-weight: 900;
   font-style: normal;
+  font-display: swap;
+}
+
+/* Local Fonts: Prompt */
+@font-face {
+  font-family: 'Prompt';
+  src: url('./assets/fonts/Prompt-ExtraLightItalic.ttf') format('truetype');
+  font-weight: 200;
+  font-style: italic;
   font-display: swap;
 }
 
@@ -87,7 +105,7 @@
   --color-brand-bg: #fcfaf3;
   --color-brand-muted: #8a9dae;
   --color-brand-accent: #c6d7f9;
-  
+
   /* Hero specific colors */
   --color-brand-hero-title: #1A1A2E;
   --color-brand-hero-subtitle: #5C63C3;
@@ -204,6 +222,7 @@
       transform: translate3d(0, 20px, 0);
       filter: blur(5px);
     }
+
     100% {
       opacity: 1;
       transform: translate3d(0, 0, 0);
@@ -213,13 +232,33 @@
   }
 
   @keyframes marquee {
-    from { transform: translateX(0); }
-    to { transform: translateX(-50%); }
+    from {
+      transform: translateX(0);
+    }
+
+    to {
+      transform: translateX(-50%);
+    }
+  }
+
+  @keyframes text-reveal-up {
+    0% {
+      transform: translateY(100%);
+    }
+
+    100% {
+      transform: translateY(0);
+    }
   }
 
   --animate-bounce-slow: bounce-slow 2s ease-in-out infinite;
   --animate-fade-in-up: fade-in-up 0.8s ease-out forwards;
   --animate-marquee: marquee 30s linear infinite;
+  --animate-text-reveal-up: text-reveal-up 1.2s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.animate-text-reveal-up {
+  will-change: transform;
 }
 
 .animate-blur-focus {
@@ -234,6 +273,10 @@
   box-sizing: border-box;
 }
 
+html {
+  overscroll-behavior: none;
+}
+
 body {
   margin: 0;
   min-width: 320px;
@@ -242,10 +285,12 @@ body {
   background-color: var(--color-brand-bg);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  overscroll-behavior: none;
 }
 
 .snapping-locked {
   scroll-snap-type: y mandatory;
+  overscroll-behavior-y: none;
 }
 
 .snap-container {
@@ -258,6 +303,7 @@ body {
   -ms-overflow-style: none;
   scrollbar-width: none;
 }
+
 .hide-scrollbar::-webkit-scrollbar {
   display: none;
 }
@@ -265,4 +311,18 @@ body {
 .snap-section {
   scroll-snap-align: start;
   scroll-snap-stop: always;
+}
+
+/* 
+ * Clase de altura exacta para iOS/Chrome.
+ * JS setea --real-vh = window.innerHeight * 0.01
+ * Esto garantiza que la altura coincida perfectamente
+ * con el área visible, incluso en iOS con barras dinámicas.
+ */
+.full-height {
+  height: calc(var(--real-vh, 1dvh) * 100);
+}
+
+.full-height-min {
+  min-height: calc(var(--real-vh, 1dvh) * 100);
 }

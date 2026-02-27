@@ -7,9 +7,9 @@ import logoBlanco from '../../assets/icons/LOGO BLANCO.svg'
 
 export default function MobileNavbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
-  const { scrollDir, isAtTop } = useScrollDirection()
+  const { scrollDir, isAtTop, isInHero } = useScrollDirection()
 
-  const isHidden = scrollDir === 'down' && !isAtTop && !isMenuOpen
+  const isHidden = scrollDir === 'down' && !isAtTop && !isMenuOpen && !isInHero
 
   // Bloquea el scroll del body cuando el menú está abierto
   useEffect(() => {
@@ -38,8 +38,8 @@ export default function MobileNavbar() {
           className="flex flex-col justify-center items-center w-6 h-6 mr-2 relative z-50 group"
           aria-label="Abrir menú"
         >
-          <span className="absolute w-5 h-[1.2px] bg-brand-dark rotate-0" />
-          <span className="absolute w-5 h-[1.2px] bg-brand-dark rotate-90" />
+          <span className={`absolute w-5 h-[1.2px] bg-brand-dark transition-transform duration-500 ease-in-out ${isMenuOpen ? 'rotate-45' : 'rotate-0'}`} />
+          <span className={`absolute w-5 h-[1.2px] bg-brand-dark transition-transform duration-500 ease-in-out ${isMenuOpen ? '-rotate-45' : 'rotate-90'}`} />
         </button>
       </header>
 
@@ -55,23 +55,23 @@ export default function MobileNavbar() {
         <div className="w-full h-full relative bg-white">
           {/* Layer 1: Overlay Multiplicativo */}
           <div className="absolute w-[539px] h-[908px] left-[-44.97px] top-[-23px] mix-blend-multiply bg-[#171425] backdrop-blur-[2.55px]" />
-          
+
           {/* Header Replicado (Logo Blanco con contra-animación) */}
-          <div 
+          <div
             className={[
               'absolute top-0 left-0 right-0 h-[60px] px-5 flex items-center justify-between z-50 transition-transform duration-500 cubic-bezier(0.4, 0, 0.2, 1)',
               isMenuOpen ? 'translate-x-0' : '-translate-x-full'
             ].join(' ')}
           >
             <Logo width={21} height={23.16} variant="light" />
-            
+
             <button
               onClick={() => setIsMenuOpen(false)}
               className="flex flex-col justify-center items-center w-6 h-6 mr-2 relative z-50 group"
               aria-label="Cerrar menú"
             >
-              <span className="absolute w-6 h-[1.2px] bg-white/90 rotate-45" />
-              <span className="absolute w-6 h-[1.2px] bg-white/90 -rotate-45" />
+              <span className={`absolute w-6 h-[1.2px] bg-white/90 transition-transform duration-500 ease-in-out ${isMenuOpen ? 'rotate-45' : 'rotate-0'}`} />
+              <span className={`absolute w-6 h-[1.2px] bg-white/90 transition-transform duration-500 ease-in-out ${isMenuOpen ? '-rotate-45' : 'rotate-90'}`} />
             </button>
           </div>
 
@@ -88,7 +88,7 @@ export default function MobileNavbar() {
                 { title: 'What Changes', desc: 'What shifts inside your company when alignment is real.' },
                 { title: 'FAQs', desc: 'Clarity around scope, timelines, and a little more about how we work.' },
               ].map((item) => (
-                <a 
+                <a
                   key={item.title}
                   href={`#${item.title.toLowerCase().replace(/\s+/g, '-')}`}
                   onClick={() => setIsMenuOpen(false)}
@@ -111,18 +111,18 @@ export default function MobileNavbar() {
                 <span className="text-indigo-200 text-[15.69px] font-light font-['Lato'] opacity-60">
                   Want to get in contact?
                 </span>
-                <a 
-                  href="#contact" 
+                <a
+                  href="#contact"
                   onClick={() => setIsMenuOpen(false)}
                   className="flex items-center gap-4.5 group"
                 >
                   <span className="text-white text-[41.81px] font-normal font-['Fustat'] tracking-tight group-active:text-indigo-200 transition-colors">
                     Let’s talk
                   </span>
-                  <img 
-                    src={flechaIcon} 
-                    alt="Arrow" 
-                    className="w-[23.5px] h-[23.5px] transition-transform group-active:translate-x-1 group-active:-translate-y-1" 
+                  <img
+                    src={flechaIcon}
+                    alt="Arrow"
+                    className="w-[23.5px] h-[23.5px] transition-transform group-active:translate-x-1 group-active:-translate-y-1"
                   />
                 </a>
               </div>
