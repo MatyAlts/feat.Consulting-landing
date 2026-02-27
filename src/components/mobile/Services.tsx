@@ -1,6 +1,10 @@
 import { useRef, useEffect, useState } from 'react'
 
-export default function MobileServices() {
+interface MobileServicesProps {
+  onStepChange?: (step: number) => void;
+}
+
+export default function MobileServices({ onStepChange }: MobileServicesProps) {
   const [activeColor, setActiveColor] = useState("#FCFAF3")
   const [activeStep, setActiveStep] = useState(0)
   const lastStepRef = useRef(-1)
@@ -15,6 +19,7 @@ export default function MobileServices() {
             const color = entry.target.getAttribute('data-color')
 
             setActiveStep(stepIndex)
+            onStepChange?.(stepIndex)
             lastStepRef.current = stepIndex
             if (color) setActiveColor(color)
           }
@@ -83,7 +88,7 @@ export default function MobileServices() {
             className="text-narrative-title font-medium text-brand-dark leading-[1.05] tracking-tight text-left"
             style={getStepStyle(0)}
           >
-            But the strain doesn’t appear overnight.
+            The strain doesn’t appear overnight.
           </h2>
         </div>
       </section>
@@ -107,10 +112,10 @@ export default function MobileServices() {
 
       {/* Combo Blocks (Sticky Background #010D17) */}
       {[
-        { t1: "Growth is visible", t2: "But it’s fragile.", start: 2 },
-        { t1: "You’re getting wins", t2: "But they’re inconsistent.", start: 4 },
-        { t1: "Your team is moving", t2: "But not always on the same page.", start: 6 },
-        { t1: "Making progress...", t2: "But only when you’re involved.", start: 8 }
+        { t1: "You’re growing.", t2: "But it doesn’t feel stable.", start: 2 },
+        { t1: "Wins happen.", t2: "But they’re inconsistent.", start: 4 },
+        { t1: "Your team is moving", t2: "But sales still has to explain everything.", start: 6 },
+        { t1: "You’re doing the work.", t2: "And it’s not getting lighter.", start: 8 }
       ].map((combo, i) => (
         <section key={i} className="relative h-[200vh]">
           <div className="sticky top-0 h-screen w-full flex items-center px-[17px] justify-start overflow-hidden">
@@ -171,7 +176,9 @@ export default function MobileServices() {
               ...getStepStyle(10, 100)
             }}
           >
-            Move from effort to structure.
+            Go from
+            <br />
+            effort to control.
           </h2>
 
           <p
@@ -211,7 +218,11 @@ export default function MobileServices() {
               ...getStepStyle(11, 100)
             }}
           >
-            Operate from strategy
+            Operate
+            <br />
+            from
+            <br />
+            strategy
           </h2>
         </div>
       </section>
@@ -414,56 +425,50 @@ export default function MobileServices() {
         </div>
       </section>
 
-      {/* 16. Decade (Step 20) */}
+      {/* 16. Final Narrative Sequence (Step 20) */}
       <section
         data-step={20}
         data-color="rgba(13, 17, 31, 0.86)"
         ref={(el) => { sectionRefs.current[20] = el; }}
-        className="snap-start snap-always h-screen w-full flex flex-col justify-center px-[30px] overflow-hidden"
+        className="snap-start snap-always min-h-screen w-full flex flex-col justify-center px-[30px] overflow-hidden"
       >
-        <div className="flex flex-col gap-0 items-start">
-          <p
-            className="tracking-tight"
-            style={{
-              fontSize: '23.18px',
-              color: '#FCFAF3',
-              fontFamily: '"Fustat", sans-serif',
-              fontWeight: 300,
-              lineHeight: 1.2,
-              ...getStepStyle(20, 0)
-            }}
-          >
-            After a decade building growth systems, one pattern holds:
-          </p>
+        <div style={getStepStyle(20, 0)} className="self-stretch inline-flex flex-col justify-start items-start">
+          {/* Bloque 1: Exactamente como se pidió anteriormente */}
+          <div className="self-stretch flex flex-col justify-start items-start">
+            <div className="flex flex-col justify-start items-start gap-5">
+              <div className="self-stretch flex flex-col justify-start items-start gap-5">
+                <div className="w-full flex flex-col justify-start items-start">
+                  <div className="self-stretch flex flex-col justify-start items-start gap-6">
+                    <div className="self-stretch justify-start text-[#A5B4FC] text-2xl font-light font-['Fustat'] leading-6">
+                      After years building journeys, one pattern became clear:
+                    </div>
+                    <div className="self-stretch flex flex-col justify-start items-start gap-5">
+                      <div className="w-80 justify-start leading-10">
+                        <span className="text-white text-4xl font-normal font-['Fustat']">When growth reflects how buyers </span>
+                        <span className="text-white text-4xl font-normal font-['Lato'] italic">actually</span>
+                        <span className="text-white text-4xl font-normal font-['Fustat']"> decide,</span>
+                      </div>
+                      <div className="w-full justify-start text-[#C7D2FE] text-6xl font-normal font-['Fustat'] leading-[54.59px]">
+                        Scale stops depending on effort.
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
 
-          <h2
-            className="tracking-tight"
-            style={{
-              fontSize: '40.5px',
-              color: '#B1B2FF',
-              fontFamily: '"Lato", sans-serif',
-              fontStyle: 'italic',
-              fontWeight: 300,
-              lineHeight: 1.1,
-              ...getStepStyle(20, 100)
-            }}
-          >
-            Validated direction
-          </h2>
+          {/* Bloque 2: Nueva frase a 145px */}
+          <div className="mt-[145px] flex flex-col justify-start items-start">
+            <p className="text-[#FCFAF3] text-[33.5px] font-light font-['Fustat'] leading-tight">
+              That’s where leverage
+            </p>
+            <p className="text-[#FCFAF3] text-[33.5px] font-light font-['Fustat'] leading-tight">
+              replaces grind.
+            </p>
+          </div>
 
-          <p
-            className="tracking-tight"
-            style={{
-              fontSize: '35.5px',
-              color: 'rgba(252, 250, 243, 0.3)',
-              fontFamily: '"Fustat", sans-serif',
-              fontWeight: 300,
-              lineHeight: 1.1,
-              ...getStepStyle(20, 200)
-            }}
-          >
-            becomes structure.
-          </p>
+          <div className="mt-[63.12px] w-full border-t border-[#FCFAF3]/10" />
         </div>
       </section>
     </div>
