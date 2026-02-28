@@ -11,28 +11,23 @@ export default function StickyFooter() {
 
         const updateProgress = (target: HTMLElement) => {
             const scrollTop = target.scrollTop
-            const containerHeight = target.clientHeight
 
-            // Buscamos todos los elementos con snap-start dentro del main
-            const sections = Array.from(target.querySelectorAll('.snap-start'))
-            if (sections.length > 0) {
-                // Encontrar el índice de la sección que está más cerca del tope del viewport
-                let currentSectionIndex = 0
-                let minDistance = Infinity
+            // Buscamos el hero para saber dónde empezar a contar
+            const hero = target.querySelector('#hero') as HTMLElement
+            if (!hero) return
 
-                sections.forEach((section, index) => {
-                    const rect = section.getBoundingClientRect()
-                    const distance = Math.abs(rect.top)
-                    if (distance < minDistance) {
-                        minDistance = distance
-                        currentSectionIndex = index
-                    }
-                });
+            const heroHeight = hero.offsetHeight
+            const maxScroll = target.scrollHeight - target.clientHeight
 
-                // El progreso se basa en el índice de la sección activa
-                // 0 en la primera sección, 1 en la última
-                const targetProgress = currentSectionIndex / (sections.length - 1)
-                setProgress(targetProgress)
+            // El progreso empieza después del Hero
+            const scrollableRange = maxScroll - heroHeight
+            const currentLevel = Math.max(0, scrollTop - heroHeight)
+
+            if (scrollableRange > 0) {
+                const targetProgress = currentLevel / scrollableRange
+                setProgress(Math.max(0, Math.min(1, targetProgress)))
+            } else {
+                setProgress(0)
             }
 
             // Lógica de visibilidad basada en dirección
@@ -94,7 +89,7 @@ export default function StickyFooter() {
                         style={{
                             transform: `scaleX(${progress})`,
                             // Usamos una transición un poco más larga para que el "paso" sea suave al hacer swipe
-                            transition: 'transform 600ms cubic-bezier(0.22, 1, 0.36, 1)'
+                            transition: 'transform 150ms cubic-bezier(0.22, 1, 0.36, 1)'
                         }}
                     />
                 </div>

@@ -1,4 +1,4 @@
-import React from 'react';
+
 import { StaggerReveal } from '../shared/StaggerReveal';
 
 export default function MobileDecisionStage() {

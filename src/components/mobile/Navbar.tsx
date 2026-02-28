@@ -3,7 +3,7 @@ import Logo from '../shared/Logo'
 import { useScrollDirection } from '../../hooks/useScrollDirection'
 import flechaIcon from '../../assets/icons/flecha.svg'
 
-import logoBlanco from '../../assets/icons/LOGO BLANCO.svg'
+
 
 export default function MobileNavbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
