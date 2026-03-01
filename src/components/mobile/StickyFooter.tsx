@@ -70,23 +70,18 @@ export default function StickyFooter() {
             <div className="flex items-center justify-center gap-12 h-full px-4 relative">
                 <a
                     href="#contact"
-                    className="text-brand-dark text-[15px] font-medium underline underline-offset-4 decoration-1"
+                    className="text-brand-dark text-[15px] font-medium flex items-center gap-1"
                 >
-                    Let’s talk
-                </a>
-                <a
-                    href="#contact"
-                    className="text-brand-dark text-[15px] font-medium underline underline-offset-4 decoration-1 flex items-center gap-1"
-                >
-                    Let’s talk <span className="text-[12px] no-underline">↗</span>
+                    Let’s talk <span className="text-[12px]">↗</span>
                 </a>
 
                 {/* Progress Bar Container */}
-                <div className="absolute bottom-0 left-0 w-full h-[3px] overflow-hidden">
+                <div className="absolute bottom-0 left-0 w-full h-[5px] overflow-hidden">
                     {/* Progress Bar Fill - Discrete steps logic */}
                     <div
-                        className="h-full bg-brand-dark will-change-transform origin-left opacity-80"
+                        className="h-full will-change-transform origin-left"
                         style={{
+                            backgroundColor: '#5C63C3',
                             transform: `scaleX(${progress})`,
                             // Usamos una transición un poco más larga para que el "paso" sea suave al hacer swipe
                             transition: 'transform 150ms cubic-bezier(0.22, 1, 0.36, 1)'

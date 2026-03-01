@@ -2,21 +2,21 @@ export default function MobileHero() {
   return (
     <section
       id="hero"
-      className="snap-start snap-always bg-[#FCFAF3] flex flex-col justify-start px-5 pt-34 pb-16"
-      style={{ minHeight: 'calc(var(--real-vh, 1dvh) * 100)' }}
+      className="snap-start snap-always bg-[#FCFAF3] flex flex-col justify-start px-5 pt-34 pb-16 overflow-hidden"
+      style={{ minHeight: '100dvh' }}
     >
       <div className="flex flex-col">
         {/* Headline + subtítulo */}
         <div className="flex flex-col">
-          <div className="overflow-hidden">
+          <div className="overflow-hidden will-change-transform">
             <h1 className="text-hero-title font-medium text-brand-hero-title leading-[1.05] tracking-tight animate-text-reveal-up">
               Scaling isn’t<br />
               about pushing<br />
               harder.
             </h1>
           </div>
-          <div className="overflow-hidden">
-            <p className="text-hero-subtitle text-brand-hero-subtitle leading-tight font-medium animate-text-reveal-up [animation-delay:300ms]">
+          <div className="overflow-hidden will-change-transform">
+            <p className="text-hero-subtitle text-brand-hero-subtitle leading-tight font-medium animate-text-reveal-up [animation-delay:1500ms]">
               It’s about matching<br />
               how your market decides.
             </p>
@@ -25,16 +25,16 @@ export default function MobileHero() {
 
         {/* Cuerpo */}
         <div className="mt-25.75 flex flex-col gap-6">
-          <div className="overflow-hidden">
-            <p className="text-hero-body text-brand-hero-body leading-[1.3] animate-text-reveal-up [animation-delay:600ms]">
+          <div className="overflow-hidden will-change-transform">
+            <p className="text-hero-body text-brand-hero-body leading-[1.3] animate-text-reveal-up [animation-delay:3000ms]">
               <span className="font-light">feat. builds </span>
               <span className="font-normal">custom journeys </span><br />
               <span className="font-light">around </span>
               <span className="font-normal">real buyer behavior</span>
             </p>
           </div>
-          <div className="overflow-hidden">
-            <p className="text-hero-body text-brand-hero-body leading-[1.3] animate-text-reveal-up [animation-delay:900ms]">
+          <div className="overflow-hidden will-change-transform">
+            <p className="text-hero-body text-brand-hero-body leading-[1.3] animate-text-reveal-up [animation-delay:4200ms]">
               <span className="font-light">and turns them into </span><br />
               <span className="font-normal">repeatable growth.</span>
             </p>
@@ -42,8 +42,8 @@ export default function MobileHero() {
         </div>
 
         {/* Scroll Indicator */}
-        <div className="mt-12 overflow-hidden pb-4">
-          <div className="animate-text-reveal-up [animation-delay:1200ms]">
+        <div className="mt-12 overflow-hidden will-change-transform pb-4">
+          <div className="animate-text-reveal-up [animation-delay:4200ms]">
             <div className="animate-bounce-slow text-brand-dark">
               <svg
                 width="18"

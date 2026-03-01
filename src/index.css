@@ -244,10 +244,12 @@
   @keyframes text-reveal-up {
     0% {
       transform: translateY(100%);
+      opacity: 0;
     }
 
     100% {
       transform: translateY(0);
+      opacity: 1;
     }
   }
 
@@ -320,9 +322,15 @@ body {
  * con el área visible, incluso en iOS con barras dinámicas.
  */
 .full-height {
-  height: calc(var(--real-vh, 1dvh) * 100);
+  height: 100dvh;
 }
 
 .full-height-min {
-  min-height: calc(var(--real-vh, 1dvh) * 100);
+  min-height: 100dvh;
+}
+
+/* Italic descender fix for Lato inside StaggerReveal */
+.italic-lato-word .stagger-mask {
+  padding-bottom: 0.3em;
+  margin-bottom: -0.3em;
 }

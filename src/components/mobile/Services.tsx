@@ -57,6 +57,7 @@ export default function MobileServices({ onStepChange }: MobileServicesProps) {
       ([entry]) => {
         if (!entry.isIntersecting) {
           setActiveStep(-1)
+          onStepChange?.(-1)
         }
       },
       { threshold: 0 }
@@ -146,9 +147,9 @@ export default function MobileServices({ onStepChange }: MobileServicesProps) {
         data-step={0}
         data-color="#FCFAF3"
         ref={(el) => { sectionRefs.current[0] = el; }}
-        className="snap-start snap-always full-height w-full flex items-center px-[17px] justify-start overflow-hidden"
+        className="snap-start snap-always full-height w-full flex items-start px-[17px] justify-start overflow-hidden"
       >
-        <div className="w-full">
+        <div className="w-full pt-[100px]">
           <h2
             className="text-narrative-title font-medium text-brand-dark leading-[1.05] tracking-tight text-left"
             style={getStepStyle(0)}
@@ -165,13 +166,7 @@ export default function MobileServices({ onStepChange }: MobileServicesProps) {
         ref={(el) => { sectionRefs.current[1] = el; section1Ref.current = el; }}
         className="snap-start snap-always full-height w-full flex items-center px-[17px] justify-end overflow-hidden relative"
       >
-        {/* Línea vertical — empieza exactamente 53px debajo de "It builds gradually" */}
-        {line1Top !== null && (
-          <div
-            className="absolute bottom-0 pointer-events-none"
-            style={{ right: '68px', top: line1Top, width: '1px', backgroundColor: 'rgba(255, 255, 255, 0.2)', zIndex: 0 }}
-          />
-        )}
+
         <div className="w-full relative z-10">
           <h2
             ref={buildsTextRef}
@@ -192,16 +187,10 @@ export default function MobileServices({ onStepChange }: MobileServicesProps) {
       ].map((combo, i) => (
         <section key={i} className="relative h-[200dvh]">
           <div
-            className="sticky top-0 full-height w-full flex items-center px-[17px] justify-start overflow-hidden relative"
+            className="sticky top-0 full-height w-full flex items-center pl-[64.5px] pr-[17px] justify-start overflow-hidden relative"
             ref={i === 0 ? section2Ref : null}
           >
-            {/* Línea vertical — termina exactamente 53px antes de "You're growing" */}
-            {i === 0 && line2Height !== null && line2Height > 0 && (
-              <div
-                className="absolute top-0 pointer-events-none"
-                style={{ right: '68px', height: line2Height, width: '1px', backgroundColor: 'rgba(255, 255, 255, 0.2)', zIndex: 0 }}
-              />
-            )}
+
             <div className="w-full flex flex-col gap-2 text-left relative z-10">
               <p
                 ref={i === 0 ? growingTextRef : null}
@@ -242,13 +231,7 @@ export default function MobileServices({ onStepChange }: MobileServicesProps) {
         ref={(el) => { sectionRefs.current[10] = el; section10Ref.current = el; }}
         className="snap-start snap-always full-height w-full flex flex-col justify-center px-5 overflow-hidden relative"
       >
-        {/* Línea vertical — desde debajo de "So that you can..." hasta el borde inferior */}
-        {line10Top !== null && (
-          <div
-            className="absolute bottom-0 pointer-events-none"
-            style={{ left: '68px', top: line10Top, width: '1px', backgroundColor: '#000000', zIndex: 0 }}
-          />
-        )}
+
 
         <div className="flex flex-col relative z-10">
           <span
@@ -280,13 +263,7 @@ export default function MobileServices({ onStepChange }: MobileServicesProps) {
         ref={(el) => { sectionRefs.current[11] = el; section11Ref.current = el; }}
         className="snap-start snap-always full-height w-full flex flex-col justify-center px-5 overflow-hidden relative"
       >
-        {/* Línea vertical — termina exactamente 53px antes de "So you can..." */}
-        {line11Height !== null && line11Height > 0 && (
-          <div
-            className="absolute top-0 pointer-events-none"
-            style={{ left: '68px', height: line11Height, width: '1px', backgroundColor: '#000000', zIndex: 0 }}
-          />
-        )}
+
 
         <div className="flex flex-col relative z-10">
           <span
@@ -394,15 +371,13 @@ export default function MobileServices({ onStepChange }: MobileServicesProps) {
         className="snap-start snap-always full-height w-full flex flex-col justify-center items-center px-5 overflow-hidden"
       >
         <div className="w-full text-center">
-          <h2
-            className="font-normal tracking-tight flex flex-col items-center leading-[1.1]"
-            style={{ fontSize: '42.18px', color: '#FCFAF3', ...getStepStyle(16, 0) }}
-          >
-            <span>not what</span>
-            <span>
-              <span style={{ fontFamily: '"Lato", sans-serif', fontStyle: 'italic' }}>feels</span> right.
-            </span>
-          </h2>
+            <h2
+              className="text-[42.18px] font-normal tracking-tight leading-[1.1] text-[#FCFAF3]"
+              style={getStepStyle(16, 0)}
+            >
+              not what <br />
+              <span className="text-[42.18px] font-['Lato'] italic">feels</span> right.
+            </h2>
         </div>
       </section>
 
@@ -466,42 +441,59 @@ export default function MobileServices({ onStepChange }: MobileServicesProps) {
       {/* 16. Final Narrative Sequence (Step 20) */}
       <section
         data-step={20}
-        data-color="rgba(13, 17, 31, 0.86)"
+        data-color="rgba(13, 17, 31, 1)"
         ref={(el) => { sectionRefs.current[20] = el; }}
-        className="snap-start snap-always min-full-height w-full flex flex-col justify-center px-[30px] overflow-hidden"
+        className="snap-start snap-always full-height-min w-full flex flex-col justify-start px-[30px] overflow-hidden"
       >
-        <div className="self-stretch inline-flex flex-col justify-start items-start relative z-10 w-full">
-          <StaggerReveal staggerDelay={120} className="w-full flex flex-col">
-            <div className="text-[#A5B4FC] text-2xl font-light font-['Fustat'] leading-6 mb-11">
-              After years building journeys, one pattern became clear:
-            </div>
+        <div className="self-stretch flex flex-col justify-start items-start relative z-10 w-full pt-14">
 
-            <div className="text-white text-4xl font-normal font-['Fustat'] leading-10">
+          <StaggerReveal staggerDelay={80} baseDelay={200} rootMargin="0px" className="w-full">
+            <div className="text-[#A5B4FC] text-2xl font-light font-['Fustat'] leading-6">
+              After years building journeys,
+            </div>
+          </StaggerReveal>
+
+          <StaggerReveal staggerDelay={80} baseDelay={1000} rootMargin="0px" className="w-full mb-7">
+            <div className="text-[#A5B4FC] text-2xl font-light font-['Fustat'] leading-6">
+              one pattern became clear:
+            </div>
+          </StaggerReveal>
+
+          <StaggerReveal staggerDelay={80} baseDelay={1900} rootMargin="0px" className="w-full">
+            <p className="text-white text-4xl font-normal font-['Fustat'] leading-[1.11]">
               When growth
-            </div>
-            <div className="text-white text-4xl font-normal font-['Fustat'] leading-10">
-              reflects how buyers
-            </div>
-            <div className="leading-10 mb-5">
-              <span className="text-white text-4xl font-normal font-['Lato'] italic">actually</span>
-              <span className="text-white text-4xl font-normal font-['Fustat']"> decide,</span>
-            </div>
+            </p>
+          </StaggerReveal>
 
-            <div className="w-full text-[#C7D2FE] mb-[145px] text-[56px] font-normal font-['Fustat'] leading-[54.59px]">
+          <StaggerReveal staggerDelay={80} baseDelay={2500} rootMargin="0px" className="w-full">
+            <p className="text-white text-4xl font-normal font-['Fustat'] leading-[1.11]">
+              reflects how buyers
+            </p>
+          </StaggerReveal>
+
+          <StaggerReveal staggerDelay={80} baseDelay={3100} rootMargin="0px" className="w-full mb-5">
+            <p className="text-white text-4xl font-normal font-['Fustat'] leading-[1.11]">
+              <span className="italic-lato-word" style={{
+                fontFamily: 'Lato, sans-serif',
+                fontStyle: 'italic',
+                fontWeight: 400,
+              }}>actually</span>{' '}decide,
+            </p>
+          </StaggerReveal>
+
+          <StaggerReveal staggerDelay={80} baseDelay={3900} rootMargin="0px" className="w-full mb-[65px]">
+            <div className="w-full text-[#C7D2FE] text-[56px] font-normal font-['Fustat'] leading-[54.59px]">
               Scale stops depending on effort.
             </div>
           </StaggerReveal>
 
-          <StaggerReveal staggerDelay={120} className="w-full flex flex-col">
-            <p className="text-[#FCFAF3] text-[33.5px] font-light font-['Fustat'] leading-tight">
-              That's where leverage
-            </p>
+          <StaggerReveal staggerDelay={80} baseDelay={5300} rootMargin="0px" className="w-full flex flex-col">
             <p className="text-[#FCFAF3] text-[33.5px] font-light font-['Fustat'] leading-tight mb-[63px]">
-              replaces grind.
+              That's where leverage replaces grind.
             </p>
-
             <div className="w-full border-t border-[#FCFAF3]/10" />
           </StaggerReveal>
+
         </div>
       </section>
     </div >

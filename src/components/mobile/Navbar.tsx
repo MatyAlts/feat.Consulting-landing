@@ -5,11 +5,15 @@ import flechaIcon from '../../assets/icons/flecha.svg'
 
 
 
-export default function MobileNavbar() {
+interface MobileNavbarProps {
+  forceHide?: boolean
+}
+
+export default function MobileNavbar({ forceHide = false }: MobileNavbarProps) {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const { scrollDir, isAtTop, isInHero } = useScrollDirection()
 
-  const isHidden = scrollDir === 'down' && !isAtTop && !isMenuOpen && !isInHero
+  const isHidden = !isMenuOpen && scrollDir === 'down' && (forceHide || (!isAtTop && !isInHero))
 
   // Bloquea el scroll del body cuando el menú está abierto
   useEffect(() => {

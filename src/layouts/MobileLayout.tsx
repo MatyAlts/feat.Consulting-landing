@@ -12,19 +12,24 @@ import { useScrollDirection } from '../hooks/useScrollDirection'
 
 export default function MobileLayout() {
   const [activeStep, setActiveStep] = useState(0)
-  const { scrollDir } = useScrollDirection()
+  const { isInHero } = useScrollDirection()
 
   // El snap está habilitado si:
-  // 1. Estamos antes de "How?" (step < 19)
-  // 2. Estamos en "How?" PERO subiendo (queremos capturarlo de nuevo para encajarlo)
-  const isSnapDisabled = !(activeStep < 19 || (activeStep === 19 && scrollDir === 'up'))
+  // 1. Estamos en las secciones de Services (step 0 al 20)
+  // 2. O si estamos en el Hero (step -1 y isInHero), para capturar el primer snap
+  // 3. O en la sección Approach (steps 50-60, arbitrariamente)
+  const isSnapDisabled = !(
+    (activeStep >= 0 && activeStep <= 20) ||
+    (activeStep >= 50 && activeStep <= 60) ||
+    (activeStep === -1 && isInHero)
+  )
 
   return (
     <div
       className="flex flex-col overflow-hidden bg-[#FCFAF3]"
-      style={{ height: 'calc(var(--real-vh, 1dvh) * 100)' }}
+      style={{ height: '100dvh' }}
     >
-      <MobileNavbar />
+      <MobileNavbar forceHide={activeStep >= 1 && activeStep <= 20} />
       <main className={[
         'flex-1 overflow-y-auto scroll-smooth hide-scrollbar',
         isSnapDisabled ? '' : 'snapping-locked'
@@ -34,9 +39,9 @@ export default function MobileLayout() {
 
         <MobileServices onStepChange={setActiveStep} />
 
-        <MobileDecisionStage />
+        <MobileDecisionStage onStepChange={setActiveStep} />
 
-        <MobileApproach />
+        <MobileApproach onStepChange={setActiveStep} />
 
         <section className="min-h-[100dvh] bg-[#FCFAF3]">
           <MobileAbout />

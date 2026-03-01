@@ -1,0 +1,8 @@
+{
+  "permissions": {
+    "allow": [
+      "Skill(mobile-design)",
+      "Skill(mobile-design:*)"
+    ]
+  }
+}
