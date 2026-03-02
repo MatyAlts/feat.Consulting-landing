@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import MobileNavbar from '../components/mobile/Navbar'
 import MobileHero from '../components/mobile/Hero'
 import MobileServices from '../components/mobile/Services'
@@ -8,32 +8,53 @@ import MobileFooter from '../components/mobile/Footer'
 import MobileDecisionStage from '../components/mobile/DecisionStage'
 import MobileApproach from '../components/mobile/Approach'
 import StickyFooter from '../components/mobile/StickyFooter'
-import { useScrollDirection } from '../hooks/useScrollDirection'
+import { useDragScroll } from '../hooks/useDragScroll'
+import { useRef } from 'react'
 
-export default function MobileLayout() {
-  const [activeStep, setActiveStep] = useState(0)
-  const { isInHero } = useScrollDirection()
+interface MobileLayoutProps {
+  isDesktopContainer?: boolean;
+}
+
+export default function MobileLayout({ isDesktopContainer = false }: MobileLayoutProps) {
+  const [activeStep, setActiveStep] = useState(-1)
+  const [hasEnteredServices, setHasEnteredServices] = useState(false)
+  const mainRef = useRef<HTMLElement>(null)
+
+  // Habilitar drag to scroll para desktop emulation
+  useDragScroll(mainRef, isDesktopContainer)
+
+  // Marca la primera vez que el usuario entra a Services.
+  // Esto evita la condición de carrera donde isInHero se vuelve false
+  // antes de que el IntersectionObserver dispare el step 0.
+  useEffect(() => {
+    if (!hasEnteredServices && activeStep >= 0 && activeStep <= 20) {
+      setHasEnteredServices(true)
+    }
+  }, [activeStep, hasEnteredServices])
 
   // El snap está habilitado si:
   // 1. Estamos en las secciones de Services (step 0 al 20)
-  // 2. O si estamos en el Hero (step -1 y isInHero), para capturar el primer snap
-  // 3. O en la sección Approach (steps 50-60, arbitrariamente)
+  // 2. O si estamos en el Hero (step -1 y aún no hemos entrado a Services)
+  // 3. O en la sección Approach (steps 50-60)
   const isSnapDisabled = !(
     (activeStep >= 0 && activeStep <= 20) ||
     (activeStep >= 50 && activeStep <= 60) ||
-    (activeStep === -1 && isInHero)
+    (activeStep === -1 && !hasEnteredServices)
   )
 
   return (
     <div
-      className="flex flex-col overflow-hidden bg-[#FCFAF3]"
-      style={{ height: '100dvh' }}
+      className={`flex flex-col overflow-hidden bg-[#FCFAF3] ${isDesktopContainer ? 'h-full w-full' : ''}`}
+      style={{ height: isDesktopContainer ? '100%' : '100dvh' }}
     >
-      <MobileNavbar forceHide={activeStep >= 1 && activeStep <= 20} />
-      <main className={[
-        'flex-1 overflow-y-auto scroll-smooth hide-scrollbar',
+      {!isDesktopContainer && <MobileNavbar forceHide={activeStep >= 1 && activeStep <= 20} />}
+      <main 
+        ref={mainRef}
+        className={[
+        'flex-1 overflow-y-auto hide-scrollbar',
+        isDesktopContainer ? 'emulator-container' : 'scroll-smooth',
         isSnapDisabled ? '' : 'snapping-locked'
-      ].join(' ')}
+      ].filter(Boolean).join(' ')}
       >
         <MobileHero />
 
@@ -41,7 +62,7 @@ export default function MobileLayout() {
 
         <MobileDecisionStage onStepChange={setActiveStep} />
 
-        <MobileApproach onStepChange={setActiveStep} />
+        <MobileApproach />
 
         <section className="min-h-[100dvh] bg-[#FCFAF3]">
           <MobileAbout />
@@ -49,11 +70,13 @@ export default function MobileLayout() {
         <section className="min-h-[100dvh] bg-[#FCFAF3]">
           <MobileContact />
         </section>
-        <section className="bg-[#FCFAF3]">
-          <MobileFooter />
-        </section>
+        {!isDesktopContainer && (
+          <section className="bg-[#FCFAF3]">
+            <MobileFooter />
+          </section>
+        )}
       </main>
-      <StickyFooter />
+      {!isDesktopContainer && <StickyFooter />}
     </div>
   )
 }

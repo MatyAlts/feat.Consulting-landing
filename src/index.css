@@ -334,3 +334,45 @@ body {
   padding-bottom: 0.3em;
   margin-bottom: -0.3em;
 }
+
+/* Emulador Móvil — bloquea todo comportamiento nativo del browser 
+   para simular touch 1:1 con el mouse */
+.emulator-container {
+  user-select: none !important;
+  -webkit-user-select: none !important;
+  touch-action: none;
+  -webkit-touch-callout: none;
+  -webkit-tap-highlight-color: transparent;
+  cursor: default;
+}
+
+.emulator-container * {
+  user-select: none !important;
+  -webkit-user-select: none !important;
+  -webkit-user-drag: none !important;
+}
+
+.emulator-container img,
+.emulator-container a {
+  user-drag: none;
+  -webkit-user-drag: none;
+  pointer-events: auto;
+}
+
+/* En mobile real: permitir swipe horizontal nativo */
+[data-horizontal-drag] {
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: manipulation;
+  overscroll-behavior-x: contain;
+}
+
+/* Dentro del emulador desktop: bloquear touch nativo para que el hook maneje todo */
+.emulator-container [data-horizontal-drag] {
+  touch-action: none;
+  cursor: grab;
+}
+
+.emulator-container [data-horizontal-drag]:active {
+  cursor: grabbing;
+}

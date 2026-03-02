@@ -39,11 +39,11 @@ export default function MobileNavbar({ forceHide = false }: MobileNavbarProps) {
 
         <button
           onClick={() => setIsMenuOpen(true)}
-          className="flex flex-col justify-center items-center w-6 h-6 mr-2 relative z-50 group"
+          className="flex flex-col justify-center items-center w-11 h-11 -mr-0.5 relative z-50 group"
           aria-label="Abrir menú"
         >
-          <span className={`absolute w-5 h-[1.2px] bg-brand-dark transition-transform duration-500 ease-in-out ${isMenuOpen ? 'rotate-45' : 'rotate-0'}`} />
-          <span className={`absolute w-5 h-[1.2px] bg-brand-dark transition-transform duration-500 ease-in-out ${isMenuOpen ? '-rotate-45' : 'rotate-90'}`} />
+          <span className={`absolute w-3.5 h-[1.2px] bg-brand-dark transition-transform duration-500 ease-in-out ${isMenuOpen ? 'rotate-45' : 'rotate-0'}`} />
+          <span className={`absolute w-3.5 h-[1.2px] bg-brand-dark transition-transform duration-500 ease-in-out ${isMenuOpen ? '-rotate-45' : 'rotate-90'}`} />
         </button>
       </header>
 
@@ -71,25 +71,29 @@ export default function MobileNavbar({ forceHide = false }: MobileNavbarProps) {
 
             <button
               onClick={() => setIsMenuOpen(false)}
-              className="flex flex-col justify-center items-center w-6 h-6 mr-2 relative z-50 group"
+              className="flex flex-col justify-center items-center w-11 h-11 -mr-0.5 relative z-50 group"
               aria-label="Cerrar menú"
             >
-              <span className={`absolute w-6 h-[1.2px] bg-white/90 transition-transform duration-500 ease-in-out ${isMenuOpen ? 'rotate-45' : 'rotate-0'}`} />
-              <span className={`absolute w-6 h-[1.2px] bg-white/90 transition-transform duration-500 ease-in-out ${isMenuOpen ? '-rotate-45' : 'rotate-90'}`} />
+              <span className={`absolute w-3.5 h-[1.2px] bg-white/90 transition-transform duration-500 ease-in-out ${isMenuOpen ? 'rotate-45' : 'rotate-0'}`} />
+              <span className={`absolute w-3.5 h-[1.2px] bg-white/90 transition-transform duration-500 ease-in-out ${isMenuOpen ? '-rotate-45' : 'rotate-90'}`} />
             </button>
           </div>
 
           <div className="absolute top-[60px] left-0 w-full h-[0.5px] bg-white/10" />
 
           {/* Contenido de Navegación */}
-          <div className="absolute left-[22px] top-[95px] w-[calc(100%-44px)] flex flex-col justify-start items-start gap-6 h-[calc(100%-140px)] overflow-y-auto hide-scrollbar">
-            <nav className="self-stretch flex flex-col justify-start items-start gap-6">
+          <div className={[
+            "absolute left-[22px] top-[95px] w-[calc(100%-44px)] flex flex-col justify-between h-[calc(100vh-140px)] overflow-hidden",
+            "transition-transform duration-500 cubic-bezier(0.4, 0, 0.2, 1)",
+            isMenuOpen ? 'translate-x-0' : 'translate-x-full'
+          ].join(' ')}>
+            <nav className="self-stretch flex flex-col justify-start items-start gap-5">
               {[
-                { title: 'Direction', desc: 'How we think about growth, and why force is never the answer.' },
-                { title: 'Mechanism', desc: 'How validated direction becomes structure, and structure becomes leverage.' },
-                { title: 'Work', desc: 'What installed direction looks like in practice.' },
+                { title: 'Direction', desc: 'Where scale is stalling, and what actually drives it.' },
+                { title: 'System', desc: 'How aligned decisions become durable growth.' },
+                { title: 'In Practice', desc: 'What installed direction looks like in practice.' },
                 { title: 'Entry Points', desc: 'Different ways to engage, depending on where you are.' },
-                { title: 'What Changes', desc: 'What shifts inside your company when alignment is real.' },
+                { title: 'Impact', desc: 'What shifts inside your company when alignment is real.' },
                 { title: 'FAQs', desc: 'Clarity around scope, timelines, and a little more about how we work.' },
               ].map((item) => (
                 <a
@@ -101,32 +105,31 @@ export default function MobileNavbar({ forceHide = false }: MobileNavbarProps) {
                   <span className="text-white text-xl font-normal font-['Fustat'] leading-tight group-active:text-indigo-200 transition-colors">
                     {item.title}
                   </span>
-                  <span className="text-indigo-200 text-[15.69px] font-light font-['Lato'] leading-tight mt-1 opacity-70">
+                  <span className="text-indigo-200 text-[15px] font-light font-['Lato'] leading-tight mt-0.5 opacity-70">
                     {item.desc}
                   </span>
                 </a>
               ))}
-              <div className="self-stretch h-px border-t border-indigo-200/20 my-2" />
             </nav>
 
             {/* Footer de contacto */}
-            <div className="mt-auto w-full pt-10 pb-20">
+            <div className="w-full pb-8">
               <div className="flex flex-col justify-start items-start gap-1">
-                <span className="text-indigo-200 text-[15.69px] font-light font-['Lato'] opacity-60">
-                  Want to get in contact?
+                <span className="text-indigo-200 text-[15px] font-light font-['Lato'] opacity-60">
+                  Ready to get growing?
                 </span>
                 <a
                   href="#contact"
                   onClick={() => setIsMenuOpen(false)}
-                  className="flex items-center gap-4.5 group"
+                  className="flex items-center gap-3 group"
                 >
-                  <span className="text-white text-[41.81px] font-normal font-['Fustat'] tracking-tight group-active:text-indigo-200 transition-colors">
-                    Let’s talk
+                  <span className="text-white text-[40px] font-normal font-['Fustat'] tracking-tight group-active:text-indigo-200 transition-colors">
+                    Let's talk
                   </span>
                   <img
                     src={flechaIcon}
                     alt="Arrow"
-                    className="w-[23.5px] h-[23.5px] transition-transform group-active:translate-x-1 group-active:-translate-y-1"
+                    className="w-[22px] h-[22px] transition-transform group-active:translate-x-1 group-active:-translate-y-1"
                   />
                 </a>
               </div>

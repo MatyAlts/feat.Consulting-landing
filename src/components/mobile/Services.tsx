@@ -21,17 +21,16 @@ export default function MobileServices({ onStepChange }: MobileServicesProps) {
   const growingTextRef = useRef<HTMLParagraphElement>(null)   // "You're growing."
   const section1Ref = useRef<HTMLElement>(null)
   const section2Ref = useRef<HTMLDivElement>(null)
-
-  // Estado con las posiciones calculadas de la línea
-  const [line10Top, setLine10Top] = useState<number | null>(null)
-  const [line11Height, setLine11Height] = useState<number | null>(null)
-  const [line1Top, setLine1Top] = useState<number | null>(null)
-  const [line2Height, setLine2Height] = useState<number | null>(null)
+  const step21SentinelRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
+    const servicesContainer = document.querySelector('[data-services-container]')
+
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
+          if (entry.target === servicesContainer) return;
+
           if (entry.isIntersecting && entry.intersectionRatio > 0.4) {
             const stepIndex = Number(entry.target.getAttribute('data-step'))
             const color = entry.target.getAttribute('data-color')
@@ -44,14 +43,17 @@ export default function MobileServices({ onStepChange }: MobileServicesProps) {
         })
       },
       {
-        threshold: [0.1, 0.5, 0.8],
+        threshold: [0.1, 0.4, 0.8],
         rootMargin: '-10% 0px -10% 0px'
       }
     )
 
+    // Observar todas las secciones incluyendo la 20
     sectionRefs.current.forEach((ref) => {
       if (ref) observer.observe(ref)
     })
+    
+    if (servicesContainer) observer.observe(servicesContainer)
 
     const containerObserver = new IntersectionObserver(
       ([entry]) => {
@@ -63,8 +65,7 @@ export default function MobileServices({ onStepChange }: MobileServicesProps) {
       { threshold: 0 }
     )
 
-    const container = document.querySelector('[data-services-container]')
-    if (container) containerObserver.observe(container)
+    if (servicesContainer) containerObserver.observe(servicesContainer)
 
     return () => {
       observer.disconnect()
@@ -72,41 +73,34 @@ export default function MobileServices({ onStepChange }: MobileServicesProps) {
     }
   }, [])
 
+  // Observador para el sentinel del Step 21: desactiva el snap al salir de la sección de servicios
+  useEffect(() => {
+    const target = step21SentinelRef.current;
+    if (!onStepChange || !target) return;
+
+    const observer = new IntersectionObserver(([entry]) => {
+      if (entry.isIntersecting) {
+        // Solo activar step 21 si el sentinel entra desde abajo (scroll hacia adelante).
+        // Si entra desde arriba (scroll hacia atrás desde DecisionStage), el step 20
+        // se activa por el observer principal y el snap se re-habilita naturalmente.
+        const vh = entry.rootBounds?.height ?? window.innerHeight;
+        if (entry.boundingClientRect.top > vh * 0.5) {
+          setActiveStep(21)
+          onStepChange(21)
+        }
+      }
+    }, { threshold: 0.1 });
+
+    observer.observe(target);
+    return () => observer.disconnect();
+  }, [onStepChange]);
+
   // Mide la posición exacta del texto relativa a su sección padre.
   // Suma offsetTop por toda la cadena DOM hasta llegar a la sección,
   // evitando errores por divs intermedios con position:relative.
   useEffect(() => {
-    const getOffsetFromSection = (el: HTMLElement, section: HTMLElement): number => {
-      let top = 0
-      let current: HTMLElement | null = el
-      while (current && current !== section) {
-        top += current.offsetTop
-        current = current.offsetParent as HTMLElement | null
-      }
-      return top
-    }
-
     const measure = () => {
-      // Sección 10: línea empieza 53px después del bottom de "So that you can..."
-      if (soThatTextRef.current && section10Ref.current) {
-        const relTop = getOffsetFromSection(soThatTextRef.current, section10Ref.current)
-        setLine10Top(relTop + soThatTextRef.current.offsetHeight + 53)
-      }
-      // Sección 11: línea termina 53px antes del top de "So you can..."
-      if (soYouTextRef.current && section11Ref.current) {
-        const relTop = getOffsetFromSection(soYouTextRef.current, section11Ref.current)
-        setLine11Height(relTop - 53)
-      }
-
-      // Sección 1 a 2: línea entre "It builds gradually" y "You're growing"
-      if (buildsTextRef.current && section1Ref.current) {
-        const relTop = getOffsetFromSection(buildsTextRef.current, section1Ref.current)
-        setLine1Top(relTop + buildsTextRef.current.offsetHeight + 53)
-      }
-      if (growingTextRef.current && section2Ref.current) {
-        const relTop = getOffsetFromSection(growingTextRef.current, section2Ref.current)
-        setLine2Height(relTop - 53)
-      }
+      // Logic for measuring can be added here if needed for lines
     }
 
     const t = setTimeout(measure, 150)
@@ -496,6 +490,15 @@ export default function MobileServices({ onStepChange }: MobileServicesProps) {
 
         </div>
       </section>
+
+      {/* Sentinel snap-start: da al browser un punto de snap siguiente después del step 20.
+          Esto evita que iOS Safari quede atascado en el último snap point. Cuando el
+          sentinel es visible, se desactiva el snap (step 21) y el scroll queda libre. */}
+      <div
+        ref={step21SentinelRef}
+        className="snap-start h-px w-full"
+        style={{ backgroundColor: 'rgba(13, 17, 31, 1)' }}
+      />
     </div >
   )
 }

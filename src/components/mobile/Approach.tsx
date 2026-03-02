@@ -37,11 +37,7 @@ function FadeInBlock({ children, delay = 0 }: { children: React.ReactNode, delay
   );
 }
 
-interface ApproachProps {
-  onStepChange?: (step: number) => void;
-}
-
-export default function MobileApproach({ onStepChange }: ApproachProps) {
+export default function MobileApproach() {
   const wrapperRef = useRef<HTMLDivElement>(null);
   const stickyRef = useRef<HTMLDivElement>(null);
   const textRef = useRef<HTMLDivElement>(null);
@@ -57,7 +53,8 @@ export default function MobileApproach({ onStepChange }: ApproachProps) {
       if (!text || !wrapper || !sticky) return;
 
       // Adjusted distance to ensure "consultancy" stays visible with 90px from components right edge
-      const overflow = Math.max(0, text.scrollWidth - window.innerWidth + 145);
+      const containerWidth = document.querySelector('main')?.clientWidth || window.innerWidth;
+      const overflow = Math.max(0, text.scrollWidth - containerWidth + 145);
       textOverflowRef.current = overflow;
 
       // wrapper height = sticky content natural height + panning scroll distance
@@ -71,27 +68,6 @@ export default function MobileApproach({ onStepChange }: ApproachProps) {
     return () => { clearTimeout(t); window.removeEventListener('resize', measure); };
   }, []);
 
-  // Set step to 50 when we enter the Approach section to enable snap scrolling
-  const snapStartRef = useRef<HTMLDivElement>(null);
-  useEffect(() => {
-    if (!onStepChange) return;
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          onStepChange(50);
-        } else {
-          // Si subimos del approach, volver a algo seguro (ej: decision stage no tiene snap así que 30 funciona)
-          if (entry.boundingClientRect.top > 0) {
-            onStepChange(30); 
-          }
-        }
-      },
-      { threshold: 0.1 }
-    );
-
-    if (snapStartRef.current) observer.observe(snapStartRef.current);
-    return () => observer.disconnect();
-  }, [onStepChange]);
 
   /* ── Scroll → translateX ── */
   useEffect(() => {
@@ -154,37 +130,8 @@ export default function MobileApproach({ onStepChange }: ApproachProps) {
       <div className="bg-[#151324] pt-[258px] pb-20 w-full overflow-hidden">
         <div className="flex flex-col justify-start items-center gap-40 w-full">
 
-          <div className="w-full flex flex-col justify-start items-center gap-40">
-            <FadeInBlock>
-              <div className="w-full flex justify-start pl-[38px]">
-                <div className="w-72 text-left text-stone-50 text-4xl font-light font-['Fustat'] leading-10">
-                  We don't hand you a strategy and disappear.
-                </div>
-              </div>
-            </FadeInBlock>
-            
-            <FadeInBlock delay={150}>
-              <div className="w-full flex justify-end pr-[38px]">
-                <div className="w-72 text-right text-stone-50 text-4xl font-light font-['Fustat'] leading-10">
-                  And we don't execute blindly either.
-                </div>
-              </div>
-            </FadeInBlock>
-            
-            <FadeInBlock delay={300}>
-              <div className="w-full flex flex-col justify-start items-center px-[30px]">
-                <div className="w-full text-center text-stone-50 text-4xl font-light font-['Fustat'] leading-10">
-                  We build what your reality demands
-                </div>
-                <div className="w-full opacity-20 text-center text-stone-50 text-4xl font-light font-['Fustat'] leading-10 mt-2">
-                  — and see it<br />through.
-                </div>
-              </div>
-            </FadeInBlock>
-          </div>
-
           {/* How this actually works - START OF SNAP SCROLL SECTIONS */}
-          <div ref={snapStartRef} className="snap-start snap-always full-height w-full flex flex-col justify-center items-center px-[30px] relative">
+          <div className="snap-start snap-always full-height w-full flex flex-col justify-center items-center px-[30px] relative">
             <FadeInBlock delay={150}>
               <div className="w-full text-center text-zinc-300 text-xl font-light font-['Fustat']">
                 How this actually works:

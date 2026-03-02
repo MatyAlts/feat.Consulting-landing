@@ -48,7 +48,8 @@ export default function MobileHighImpact() {
 
   useEffect(() => {
     const update = () => {
-      const vh = window.innerHeight
+      const main = document.querySelector('main')
+      const vh = main ? main.clientHeight : window.innerHeight
 
       // ── A: word-by-word lyrics (progreso de la sección del título) ─────────
       if (titleRef.current) {

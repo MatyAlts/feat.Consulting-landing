@@ -20,8 +20,9 @@ export function useScrollDirection() {
       const lastScrollY = lastScroll[key]
 
       // isAtTop es true cuando el scroll está cerca del tope
+      const vh = isMain ? target.clientHeight : window.innerHeight
       setIsAtTop(scrollY < THRESHOLD)
-      setIsInHero(scrollY < window.innerHeight * 0.8)
+      setIsInHero(scrollY < vh * 0.8)
 
       if (Math.abs(scrollY - lastScrollY) >= THRESHOLD) {
         setScrollDir(scrollY > lastScrollY ? 'down' : 'up')

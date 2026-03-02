@@ -29,29 +29,36 @@ export default function MobileDecisionStage({ onStepChange }: MobileDecisionStag
         {
           type: 'title-context',
           name: 'ISCP',
-          description: 'Global membership-based organization',
+          description: 'Global membership-based\norganization',
           pill: 'Context',
-          content: 'Institutional brand. No coherent conversion journey.',
+          content: 'Institutional brand.\nNo coherent conversion journey.',
           image: '/src/assets/slides/ICSP_1.png'
         },
         {
           type: 'intervention',
           pill: 'Our Intervention',
           content: 'Installed a stage-aware entry layer. Structured three intent-based tiers. Let behavior shape the message.',
-          image: '/src/assets/slides/ICSP_1.png'
+          image: '/src/assets/slides/ICSP_2.png'
         },
         {
           type: 'outcome',
           pill: 'The Outcome',
-          content: 'Behavior clarified positioning. The ecosystem was rebuilt around proven demand.',
-          image: '/src/assets/slides/ICSP_1.png'
+          content: 'Behavior clarified positioning.\nThe ecosystem was rebuilt around\nproven demand.',
+          image: '/src/assets/slides/ICSP_3.png'
         },
         {
           type: 'cta',
           topLine: 'Direction made visible.',
           mainLine: 'Scale made deliberate.',
-          ctaText: 'Calibrate your Growih',
-          image: '/src/assets/slides/ICSP_1.png'
+          ctaText: 'Calibrate your Growth',
+          image: '/src/assets/slides/ICSP_4.png',
+          layout: {
+            topLineTop: '123.72px',
+            mainLineTop: '153.72px',
+            mainFontSize: '39.69px',
+            buttonTop: '275.98px',
+            linkBottom: '139.46px'
+          }
         }
       ]
     },
@@ -64,29 +71,36 @@ export default function MobileDecisionStage({ onStepChange }: MobileDecisionStag
         {
           type: 'title-context',
           name: 'MobyBots',
-          description: 'Global membership-based organization',
+          description: 'Advanced analytics product scaling\nbeyond founder-led sales',
           pill: 'Context',
-          content: 'Early traction.\nExpansion friction.\n\nNew buyers were skeptical.',
+          content: 'Early traction. Expansion friction.\nNew buyers were skeptical.',
           image: '/src/assets/slides/MobyBots_1.png'
         },
         {
           type: 'intervention',
           pill: 'Our Intervention',
-          content: 'Shifted from outcome-led to pain-led positioning.\nValidated demand with fake-door testing.\nLet real behavior redirect the roadmap.',
-          image: '/src/assets/slides/MobyBots_1.png'
+          content: 'Shifted from outcome-led to pain-led\npositioning.\nValidated demand with fake-door\ntesting.\nLet real behavior redirect the roadmap.',
+          image: '/src/assets/slides/MobyBots_2.png'
         },
         {
           type: 'outcome',
           pill: 'The Outcome',
-          content: 'Signal clarified real buyer intent.\n\nProduct, sales, and fundraising\naligned around proven pull.',
-          image: '/src/assets/slides/MobyBots_1.png'
+          content: 'Signal clarified real buyer intent.\nProduct, sales, and fundraising aligned\naround proven pull.',
+          image: '/src/assets/slides/MobyBots_3.png'
         },
         {
           type: 'cta',
           topLine: 'Find the pull worth scaling.',
           mainLine: 'Scale from there.',
-          ctaText: 'Calibrate your Growih',
-          image: '/src/assets/slides/MobyBots_1.png'
+          ctaText: 'Calibrate your Growth',
+          image: '/src/assets/slides/MobyBots_4.png',
+          layout: {
+            topLineTop: '157.21px',
+            mainLineTop: '187.21px',
+            mainFontSize: '34.69px',
+            buttonTop: '242.49px',
+            linkBottom: '172.95px'
+          }
         }
       ]
     },
@@ -99,25 +113,37 @@ export default function MobileDecisionStage({ onStepChange }: MobileDecisionStag
         {
           type: 'title-context',
           name: 'doinGlobal',
-          description: 'Global membership-based organization',
+          description: 'Professional education platform\nin a fast–evolving market',
           pill: 'Context',
-          content: 'Strong program.\nLow resonance.\n\nThe positioning assumed awareness\nthat wasn’t there.'
+          content: 'Strong program. Low resonance.\nThe positioning assumed awareness\nthat wasn’t there.',
+          image: '/src/assets/slides/doinGlobal_1.png'
         },
         {
           type: 'intervention',
           pill: 'Our Intervention',
-          content: 'Mapped awareness depth\nbefore restructuring the offer.\n\nReordered the journey\naround how prospects actually move.'
+          content: 'Mapped awareness depth before\nrestructuring the offer.\nReordered the journey around how\nprospects actually move.',
+          image: '/src/assets/slides/doinGlobal_2.png'
         },
         {
           type: 'outcome',
           pill: 'The Outcome',
-          content: 'Alignment replaced explanation.\nThe problem became undeniable.\n\nThe offer stopped feeling educational,\nand started feeling necessary.'
+          content: 'Alignment replaced explanation.\nThe problem became undeniable.\nThe offer stopped feeling educational,\nand started feeling necessary.',
+          image: '/src/assets/slides/doinGlobal_3.png'
         },
         {
           type: 'cta',
           topLine: 'Don’t explain the offer.',
           mainLine: 'Reveal the necessity.',
-          ctaText: 'Calibrate your Growih'
+          ctaText: 'Calibrate your Growth',
+          image: '/src/assets/slides/doinGlobal_4.png',
+          layout: {
+            topLineTop: '143px',
+            topLineFontWeight: 400, // Fustat Regular
+            mainLineTop: '173px',
+            mainFontSize: '34.69px',
+            buttonTop: '228.28px',
+            linkBottom: '187.16px'
+          }
         }
       ]
     },
@@ -130,25 +156,38 @@ export default function MobileDecisionStage({ onStepChange }: MobileDecisionStag
         {
           type: 'title-context',
           name: 'Obras de Mar',
-          description: 'Global membership-based organization',
+          description: 'Asset–heavy developer with\ncomplex buyer journey',
           pill: 'Context',
-          content: 'High consideration cycle.\nLow structural alignment.\n\nBuyers were navigating touchpoints —\nnot a progression.'
+          content: 'High consideration cycle.\nLow structural alignment.\n\nBuyers were navigating touchpoints\ninstead, not progressing.',
+          image: '/src/assets/slides/ObrasDeMar_1.png'
         },
         {
           type: 'intervention',
           pill: 'Our Intervention',
-          content: 'Installed a stage-aligned growth architecture.\n\nRe-architected acquisition, landing, sales, and events around a common buyer progression.'
+          content: 'Installed a stage-aligned growth\narchitecture.\n\nRe-architected acquisition, landing,\nsales, and events around a common\nbuyer progression.',
+          image: '/src/assets/slides/ObrasDeMar_2.png'
         },
         {
           type: 'outcome',
           pill: 'The Outcome',
-          content: 'From scattered touchpoints\nto structured journeys.\n\nSales stopped compensating.\nThe path did the work.'
+          content: 'From scattered touchpoints\nto structured journeys.\n\nSales stopped compensating.\nThe path did the work.',
+          image: '/src/assets/slides/ObrasDeMar_3.png'
         },
         {
           type: 'cta',
           topLine: 'Don’t push harder.',
           mainLine: 'Build the system.',
-          ctaText: 'Calibrate your Growih'
+          ctaText: 'Calibrate your Growth',
+          image: '/src/assets/slides/ObrasDeMar_4.png',
+          layout: {
+            topLineTop: '157.21px',
+            topLineColor: '#DBE9EE',
+            topLineFontWeight: 400, // Fustat Regular
+            mainLineTop: '187.21px',
+            mainFontSize: '34.69px',
+            buttonTop: '242.49px',
+            linkBottom: '172.95px'
+          }
         }
       ]
     }
@@ -157,11 +196,25 @@ export default function MobileDecisionStage({ onStepChange }: MobileDecisionStag
   // 2. State Management
   const [activeProjectIdx, setActiveProjectIdx] = useState(0);
   const [activeSlideIdx, setActiveSlideIdx] = useState(0);
+  const [isChangingProject, setIsChangingProject] = useState(false);
 
   const activeProject = projects[activeProjectIdx];
-  const activeSlide = activeProject.slides[activeSlideIdx];
 
   const scrollRef = useRef<HTMLDivElement>(null);
+
+  const handleProjectChange = (index: number) => {
+    if (index === activeProjectIdx || isChangingProject) return;
+    
+    setIsChangingProject(true);
+    setTimeout(() => {
+      setActiveProjectIdx(index);
+      setActiveSlideIdx(0);
+      if (scrollRef.current) scrollRef.current.scrollLeft = 0;
+      setTimeout(() => {
+        setIsChangingProject(false);
+      }, 50);
+    }, 400); // Fade out duration
+  };
 
   // 3. Navigation Handlers
   const syncSlideIndex = () => {
@@ -262,50 +315,61 @@ export default function MobileDecisionStage({ onStepChange }: MobileDecisionStag
               className="w-full max-w-95 h-129.25 rounded-[40px] transition-colors duration-500 relative overflow-hidden shadow-2xl"
               style={{ backgroundColor: `${activeProject.bgColor}F2` }} // F2 for 95% opacity
             >
-              {/* Static Background Image Layer */}
-              {(activeSlide as any).image && (
-                <div className="absolute inset-0 w-full h-full pointer-events-none z-0">
-                  <img 
-                    src={(activeSlide as any).image} 
-                    alt="" 
-                    className="w-full h-full object-cover opacity-60 mix-blend-overlay scale-150 transition-all duration-700"
-                  />
-                  <div 
-                    className="absolute inset-0" 
-                    style={{ background: 'linear-gradient(to bottom, #000000, #8B8CFB)', opacity: 0.6 }} 
-                  />
+              {/* Background Image Layer with Cross-fade */}
+              {activeProject.slides.map((slide: any, idx: number) => (
+                <div 
+                  key={`${activeProject.id}-${idx}`}
+                  className="absolute inset-0 w-full h-full transition-opacity duration-1000 ease-in-out pointer-events-none z-0"
+                  style={{ opacity: activeSlideIdx === idx ? 1 : 0 }}
+                >
+                  {slide.image && (
+                    <>
+                      <img 
+                        src={slide.image} 
+                        alt="" 
+                        className="w-full h-full object-cover opacity-60 mix-blend-overlay"
+                      />
+                      <div 
+                        className="absolute inset-0" 
+                        style={{ background: 'linear-gradient(to bottom, #000000, #8B8CFB)', opacity: 0.6 }} 
+                      />
+                    </>
+                  )}
                 </div>
-              )}
+              ))}
 
               {/* Horizontal Scroll Container (Slides) */}
               <div 
+                data-horizontal-drag
                 ref={scrollRef}
                 onScroll={syncSlideIndex}
-                className="relative z-10 flex overflow-x-auto snap-x snap-mandatory hide-scrollbar w-full h-full overscroll-x-contain"
+                className={`relative z-10 flex overflow-x-auto snap-x snap-mandatory hide-scrollbar w-full h-full overscroll-x-contain transition-all duration-400 ease-out ${
+                  isChangingProject ? 'opacity-0 scale-95 blur-sm' : 'opacity-100 scale-100 blur-0'
+                }`}
                 style={{ scrollbarWidth: 'none' }}
               >
                 {activeProject.slides.map((slide, i) => (
                   <div 
                     key={i}
-                    className="w-full min-w-full h-full snap-start snap-always shrink-0 px-8 py-14 relative flex flex-col items-center justify-center text-center overflow-hidden"
+                    className="w-full min-w-full h-full snap-start snap-always shrink-0 px-4 py-14 relative flex flex-col items-center justify-center text-center overflow-hidden"
                   >
                     {slide.type === 'title-context' && (
                       <>
                         {/* Title Block */}
-                        <div className="absolute top-7.75 left-0 right-0 inline-flex flex-col justify-end items-center gap-20">
-                          <div className="flex flex-col justify-start items-center">
-                            <div className="self-stretch text-center justify-start text-white text-lg font-normal font-['Fustat'] leading-5 whitespace-pre-line">{slide.name}</div>
-                            <div className="w-80 text-center justify-start text-slate-200 text-xl font-extralight font-['Fustat'] leading-6 whitespace-pre-line">{slide.description}</div>
+                        <div className="absolute top-7.75 left-0 right-0 inline-flex flex-col justify-end items-center gap-1 px-4">
+                          <div className="flex flex-col justify-start items-center w-full">
+                            <div className="self-stretch text-center justify-start text-white text-lg font-medium font-['Fustat'] leading-5 whitespace-pre-line">{slide.name}</div>
+                            <div className="w-full text-center justify-start text-slate-200 text-xl font-extralight font-['Fustat'] leading-tight whitespace-pre-line">{slide.description}</div>
                           </div>
                         </div>
 
                         {/* Context Block */}
-                        <div className="absolute bottom-[38.82px] left-0 right-0 inline-flex justify-center items-end gap-1 px-5">
+                        <div className="absolute bottom-[38.82px] left-0 right-0 inline-flex justify-center items-end gap-1 px-4">
                           <div className="inline-flex flex-col justify-start items-center gap-2 w-full">
                             <div className="px-4 py-px rounded-[20px] outline-[0.50px] outline-offset-[-0.50px] outline-slate-200 inline-flex justify-center items-center gap-2.5">
                               <div className="w-20 self-stretch text-center justify-start text-slate-200 text-xl font-light font-['Fustat']">{slide.pill}</div>
                             </div>
-                            <div className="w-80 text-center justify-start text-white text-2xl font-light font-['Fustat'] leading-7 whitespace-pre-line">
+                            <div className="w-full text-center justify-start text-white text-[20px] font-normal font-['Lato'] leading-tight whitespace-pre-line">
                               {slide.content}
                             </div>
                           </div>
@@ -314,12 +378,12 @@ export default function MobileDecisionStage({ onStepChange }: MobileDecisionStag
                     )}
 
                     {slide.type === 'intervention' && (
-                      <div className="absolute top-6.5 left-0 right-0 inline-flex justify-center items-end gap-1 px-5">
+                      <div className="absolute top-6.5 left-0 right-0 inline-flex justify-center items-end gap-1 px-1">
                         <div className="inline-flex flex-col justify-start items-center gap-2 w-full">
                           <div className="px-4 py-px rounded-[20px] outline-[0.50px] outline-offset-[-0.50px] outline-slate-200 inline-flex justify-center items-center gap-2.5">
                             <div className="text-center justify-start text-slate-200 text-xl font-light font-['Fustat']">{slide.pill}</div>
                           </div>
-                          <div className="w-80 text-center justify-start text-white text-xl font-light font-['Fustat'] leading-6 whitespace-pre-line">
+                          <div className="w-full text-center justify-start text-white text-[19.5px] font-normal font-['Lato'] leading-tight whitespace-pre-line">
                             {slide.content}
                           </div>
                         </div>
@@ -327,12 +391,12 @@ export default function MobileDecisionStage({ onStepChange }: MobileDecisionStag
                     )}
 
                     {slide.type === 'outcome' && (
-                      <div className="absolute bottom-[38.82px] left-0 right-0 inline-flex justify-center items-end gap-1 px-5">
+                      <div className="absolute bottom-[38.82px] left-0 right-0 inline-flex justify-center items-end gap-1 px-1">
                         <div className="inline-flex flex-col justify-start items-center gap-2 w-full">
                           <div className="px-4 py-px rounded-[20px] outline-[0.50px] outline-offset-[-0.50px] outline-slate-200 inline-flex justify-center items-center gap-2.5">
                             <div className="text-center justify-start text-slate-200 text-xl font-light font-['Fustat']">{slide.pill}</div>
                           </div>
-                          <div className="w-80 text-center justify-start text-white text-xl font-light font-['Fustat'] leading-6 whitespace-pre-line">
+                          <div className="w-full text-center justify-start text-white text-xl font-normal font-['Lato'] leading-tight whitespace-pre-line">
                             {slide.content}
                           </div>
                         </div>
@@ -340,18 +404,63 @@ export default function MobileDecisionStage({ onStepChange }: MobileDecisionStag
                     )}
 
                     {slide.type === 'cta' && (
-                      <div className="flex flex-col items-center">
-                        <div className="flex flex-col gap-1 items-center">
-                          <div className="text-slate-200 text-xl font-extralight font-['Fustat'] leading-tight whitespace-pre-line">{slide.topLine}</div>
-                          <div className="text-white text-4xl font-normal font-['Fustat'] leading-tight whitespace-pre-line">{slide.mainLine}</div>
+                      <div className="absolute inset-0 w-full h-full flex flex-col items-center">
+                        {/* Top Text */}
+                        <div 
+                          className="absolute text-slate-200 font-light font-['Fustat'] leading-none text-center w-full px-4"
+                          style={{ 
+                            top: (slide as any).layout?.topLineTop || '123.72px', 
+                            fontSize: '21.3px',
+                            fontWeight: (slide as any).layout?.topLineFontWeight,
+                            color: (slide as any).layout?.topLineColor
+                          }}
+                        >
+                          {slide.topLine}
+                        </div>
+
+                        {/* Main Line */}
+                        <div 
+                          className="absolute text-white font-normal font-['Fustat'] leading-none text-center w-full px-4"
+                          style={{ 
+                            top: (slide as any).layout?.mainLineTop || '153.72px', 
+                            fontSize: (slide as any).layout?.mainFontSize || '39.69px' 
+                          }}
+                        >
+                          {slide.mainLine}
                         </div>
                         
-                        <button className="w-72 px-8 py-4 bg-white rounded-[50px] shadow-lg flex items-center justify-center gap-2 mt-[15.98px] active:scale-95 transition-transform">
-                          <span className="text-slate-900 text-lg font-medium font-['Fustat']">{slide.ctaText}</span>
-                          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="opacity-60">
-                            <line x1="7" y1="17" x2="17" y2="7"></line>
-                            <polyline points="7 7 17 7 17 17"></polyline>
-                          </svg>
+                        {/* CTA Button */}
+                        <button 
+                          onClick={() => window.open('#', '_blank')}
+                          className="absolute w-72 h-15 bg-white rounded-[50px] shadow-lg flex items-center justify-center active:scale-95 transition-transform"
+                          style={{ 
+                            top: (slide as any).layout?.buttonTop || '275.98px' 
+                          }}
+                        >
+                          <span className="text-slate-900 font-medium font-['Fustat']" style={{ fontSize: '18.75px' }}>
+                            {slide.ctaText}
+                          </span>
+                          <div className="absolute right-6 translate-x-1/2">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="opacity-60">
+                              <line x1="7" y1="17" x2="17" y2="7"></line>
+                              <polyline points="7 7 17 7 17 17"></polyline>
+                            </svg>
+                          </div>
+                        </button>
+
+                        {/* Next Project Link */}
+                        <button 
+                          onClick={() => {
+                            const nextIdx = (activeProjectIdx + 1) % projects.length;
+                            handleProjectChange(nextIdx);
+                          }}
+                          className="absolute text-slate-200 font-extralight font-['Fustat'] text-center w-full active:opacity-70 transition-opacity"
+                          style={{ 
+                            bottom: (slide as any).layout?.linkBottom || '139.46px', 
+                            fontSize: '18.75px' 
+                          }}
+                        >
+                          Go to next project →
                         </button>
                       </div>
                     )}
@@ -400,10 +509,7 @@ export default function MobileDecisionStage({ onStepChange }: MobileDecisionStag
               {projects.map((proj, idx) => (
                 <button
                   key={proj.id}
-                  onClick={() => {
-                    setActiveProjectIdx(idx);
-                    setActiveSlideIdx(0);
-                  }}
+                  onClick={() => handleProjectChange(idx)}
                   className={`flex items-center justify-center transition-all duration-500 transform ${
                     activeProjectIdx === idx ? 'grayscale-0 scale-105' : 'grayscale opacity-40 hover:opacity-70'
                   }`}
