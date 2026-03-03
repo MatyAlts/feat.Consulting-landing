@@ -154,17 +154,18 @@ export default function MobileApproach({ onStepChange }: { onStepChange?: (step:
       const sticky = stickyRef.current;
       if (!text || !wrapper || !sticky) return;
 
-      // Adjusted distance to ensure "consultancy" stays visible with 90px from components right edge
       const containerWidth = document.querySelector('main')?.clientWidth || window.innerWidth;
-      const overflow = Math.max(0, text.scrollWidth - containerWidth + 145);
-      textOverflowRef.current = overflow;
+      // Base amount the text is wider than container
+      const baseOverflow = Math.max(0, text.scrollWidth - containerWidth + 145);
+      
+      // Total travel: distance to enter from right (containerWidth) + baseOverflow
+      const totalTravel = containerWidth + baseOverflow;
+      textOverflowRef.current = totalTravel;
 
-      // wrapper height = sticky content natural height + panning scroll distance
-      // This means sticky releases exactly when the animation ends.
-      wrapper.style.height = `${sticky.offsetHeight + overflow}px`;
+      // wrapper height = sticky content height + panning distance
+      wrapper.style.height = `${sticky.offsetHeight + totalTravel}px`;
     };
 
-    // Small delay to let fonts/layout settle
     const t = setTimeout(measure, 50);
     window.addEventListener('resize', measure);
     return () => { clearTimeout(t); window.removeEventListener('resize', measure); };
@@ -178,16 +179,27 @@ export default function MobileApproach({ onStepChange }: { onStepChange?: (step:
 
     const handleScroll = () => {
       const wrapper = wrapperRef.current;
-      if (!wrapper) return;
+      const text = textRef.current;
+      if (!wrapper || !text) return;
 
       const wrapperTop = wrapper.offsetTop;
       const scrollTop = main.scrollTop;
       const scrollRange = textOverflowRef.current;
       if (scrollRange <= 0) return;
 
+      const containerWidth = main.clientWidth || window.innerWidth;
       const raw = (scrollTop - wrapperTop) / scrollRange;
       const p = Math.max(0, Math.min(1, raw));
-      setTranslateX(-textOverflowRef.current * p);
+
+      // Calculate the base translation (how much it would be if started at 0)
+      const baseOverflow = Math.max(0, text.scrollWidth - containerWidth + 145);
+      
+      // Start at screen width (right), end at negative baseOverflow (left)
+      const startX = containerWidth;
+      const endX = -baseOverflow;
+      
+      const currentX = startX + (endX - startX) * p;
+      setTranslateX(currentX);
     };
 
     main.addEventListener('scroll', handleScroll, { passive: true });
