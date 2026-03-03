@@ -47,6 +47,7 @@ export default function MobileApproach({ onStepChange }: { onStepChange?: (step:
   const wordsScrollRef = useRef<HTMLDivElement>(null);
   const horizontalScrollRef = useRef<HTMLDivElement>(null);
   const cardsRowRef = useRef<HTMLDivElement>(null);
+  const [activeCardIdx, setActiveCardIdx] = useState(0);
 
   /* ── Interactive Infinite Scroll Logic (100% User Controlled, Bidirectional) ── */
   useEffect(() => {
@@ -101,6 +102,11 @@ export default function MobileApproach({ onStepChange }: { onStepChange?: (step:
       
       // Calculate travel: we want to move from 0 to negative (total width - viewport + right margin)
       const maxTranslate = scrollWidth - viewportWidth + 21; 
+      
+      // Sync active dot: simple mapping of progress to index (0-4)
+      const numCards = 5;
+      const calculatedIdx = Math.min(numCards - 1, Math.floor(progress * (numCards - 0.1)));
+      setActiveCardIdx(calculatedIdx);
       
       // Apply transform directly without transition for maximum smoothness
       row.style.transform = `translate3d(${-progress * maxTranslate}px, 0, 0)`;
@@ -425,7 +431,7 @@ export default function MobileApproach({ onStepChange }: { onStepChange?: (step:
             </div>
           </div>
           <div className="self-stretch justify-start font-light font-['Fustat'] leading-[1.3] mb-[37px]" style={{ color: '#1E262D', fontSize: '22.05px' }}>
-            Some companies need clarity before momentum. Others need the system to scale what’s already working.<br />
+            Some companies need clarity before momentum. Others need the system to scale what’s already working.<br /><br />
             We start where friction actually lives.
           </div>
         </div>
@@ -812,7 +818,7 @@ export default function MobileApproach({ onStepChange }: { onStepChange?: (step:
       {/* ── New Section: Strategy meets Execution ── */}
       <div 
         className="w-full mt-0"
-        style={{ backgroundColor: '#171425', paddingBottom: '120px' }}
+        style={{ backgroundColor: '#171425' }}
       >
         <div style={{ paddingTop: '160px' }} className="pl-[21px] text-left flex flex-col">
           <FadeInBlock delay={100}>
@@ -835,7 +841,7 @@ export default function MobileApproach({ onStepChange }: { onStepChange?: (step:
           <div className="sticky top-0 h-screen w-full overflow-hidden flex flex-col justify-center">
             <div 
               ref={cardsRowRef}
-              className="flex px-[21px] gap-[21px] transition-transform duration-75 ease-out will-change-transform"
+              className="flex px-[21px] gap-[21px] items-start will-change-transform"
             >
               {[
                 {
@@ -866,9 +872,10 @@ export default function MobileApproach({ onStepChange }: { onStepChange?: (step:
               ].map((card, idx) => (
                 <div 
                   key={idx}
-                  className="shrink-0 rounded-[22px] border-[0.4px] border-[#E8E7E3]"
+                  className="shrink-0 border-[0.4px] border-[#E8E7E3]"
                   style={{ 
                     width: '327.03px',
+                    borderRadius: '6.84px',
                     background: 'linear-gradient(225deg, #08141F 0%, #182431 100%)',
                     padding: '36.14px 29.3px'
                   }}
@@ -885,8 +892,97 @@ export default function MobileApproach({ onStepChange }: { onStepChange?: (step:
                 </div>
               ))}
             </div>
+
+            {/* Pagination Dots */}
+            <div 
+              className="flex items-center justify-center gap-[11.53px] w-full"
+              style={{ marginTop: '41.83px' }}
+            >
+              {[0, 1, 2, 3, 4].map((i) => {
+                const isActive = activeCardIdx === i;
+                return (
+                  <div
+                    key={i}
+                    className="rounded-full transition-all duration-300 ease-out"
+                    style={{
+                      width: isActive ? '10.56px' : '8.34px',
+                      height: isActive ? '10.56px' : '8.34px',
+                      backgroundColor: isActive ? '#5B5CA9' : '#2D344E'
+                    }}
+                  />
+                );
+              })}
+            </div>
+        </div>
+      </div>
+
+      {/* ── CTA Container with Split Background ── */}
+      <div 
+        className="w-full relative pt-[121.11px] pb-24"
+        style={{ 
+          background: 'linear-gradient(to bottom, #171425 300.29px, #FCFAF3 300.29px)' 
+        }}
+      >
+        {/* The CTA Card */}
+        <div className="relative z-10 px-4">
+          <div 
+            className="w-full rounded-[30.34px] relative overflow-hidden flex flex-col items-center text-center"
+            style={{ 
+              height: '358.35px',
+              background: 'linear-gradient(225deg, #D2D3FF 0%, #DBE9EE 100%)',
+            }}
+          >
+            <p 
+              className="font-['Fustat'] font-light"
+              style={{ 
+                fontSize: '21.3px', 
+                color: '#171425',
+                marginTop: '67.91px',
+                lineHeight: '1'
+              }}
+            >
+              When direction gets serious,
+            </p>
+            <h2 
+              className="font-['Fustat'] font-medium"
+              style={{ 
+                fontSize: '39.69px', 
+                color: '#171425',
+                marginTop: '1px',
+                lineHeight: '1.05'
+              }}
+            >
+              Scaling becomes <br /> obvious.
+            </h2>
+            
+            <button 
+              className="rounded-full flex items-center justify-center transition-transform active:scale-95 shadow-sm"
+              style={{ 
+                marginTop: '15.98px',
+                width: '320px',
+                height: '67.43px',
+                backgroundColor: '#191432'
+              }}
+            >
+              <span className="text-white font-['Fustat'] font-normal" style={{ fontSize: '18.75px' }}>
+                Start the conversation →
+              </span>
+            </button>
+            
+            <p 
+              className="font-['Lato'] font-light"
+              style={{ 
+                marginTop: '10px',
+                fontSize: '14.56px',
+                color: '#191432',
+                opacity: 0.8
+              }}
+            >
+              No commitment required.
+            </p>
           </div>
         </div>
+      </div>
       </div>
     </>
   );
