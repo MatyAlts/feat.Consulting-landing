@@ -2,9 +2,6 @@ import { useState, useEffect } from 'react'
 import MobileNavbar from '../components/mobile/Navbar'
 import MobileHero from '../components/mobile/Hero'
 import MobileServices from '../components/mobile/Services'
-import MobileAbout from '../components/mobile/About'
-import MobileContact from '../components/mobile/Contact'
-import MobileFooter from '../components/mobile/Footer'
 import MobileDecisionStage from '../components/mobile/DecisionStage'
 import MobileApproach from '../components/mobile/Approach'
 import MobileFAQs from '../components/mobile/FAQs'
@@ -76,18 +73,7 @@ export default function MobileLayout({ isDesktopContainer = false, showStrategy 
             <MobileDecisionStage onStepChange={setActiveStep} />
             <MobileApproach onStepChange={setActiveStep} />
             <MobileFAQs />
-            <section className="min-h-dvh bg-[#FCFAF3]">
-              <MobileAbout />
-            </section>
-            <section className="min-h-dvh bg-[#FCFAF3]">
-              <MobileContact />
-            </section>
           </>
-        )}
-        {!isDesktopContainer && (
-          <section className="bg-[#FCFAF3]">
-            <MobileFooter />
-          </section>
         )}
       </main>
       {!isDesktopContainer && <StickyFooter isStrategy={showStrategy} />}
