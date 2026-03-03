@@ -17,7 +17,10 @@ export function useViewport() {
       setIsDesktop(e.matches)
     }
 
-    setIsDesktop(mediaQuery.matches)
+    // Set initial state correctly without calling setIsDesktop synchronously if possible
+    // But since it's already set in useState initial value, we don't need this line!
+    // setIsDesktop(mediaQuery.matches) 
+    
     mediaQuery.addEventListener('change', handleChange)
     return () => mediaQuery.removeEventListener('change', handleChange)
   }, [])

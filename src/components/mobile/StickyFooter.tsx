@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from 'react'
+import { Link } from 'react-router-dom'
 
 export default function StickyFooter({ isStrategy = false }: { isStrategy?: boolean }) {
     const [isVisible, setIsVisible] = useState(false)
@@ -85,12 +86,12 @@ export default function StickyFooter({ isStrategy = false }: { isStrategy?: bool
             ].join(' ')}
         >
             <div className="flex items-center justify-center gap-12 h-full px-4 relative">
-                <a
-                    href="#contact"
+                <Link
+                    to="/contact"
                     className="text-brand-dark text-[15px] font-medium flex items-center gap-1"
                 >
                     Let’s talk <span className="text-[12px]">↗</span>
-                </a>
+                </Link>
 
                 {/* Progress Bar Container */}
                 <div className="absolute bottom-0 left-0 w-full h-[5px] overflow-hidden">

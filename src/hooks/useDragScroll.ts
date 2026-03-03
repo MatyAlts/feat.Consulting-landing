@@ -337,7 +337,7 @@ export function useDragScroll(
           disableSnap()
           // scrollBehavior auto solo durante drag
           el.style.scrollBehavior = 'auto'
-          try { el.setPointerCapture(e.pointerId) } catch {}
+          try { el.setPointerCapture(e.pointerId) } catch (err) { /* ignore */ }
           el.style.userSelect = 'none'
           el.style.cursor = 'grabbing'
         } else {
@@ -345,7 +345,7 @@ export function useDragScroll(
           hTarget = target.closest?.('[data-horizontal-drag]') as HTMLElement | null
 
           if (hTarget) {
-            try { el.setPointerCapture(e.pointerId) } catch {}
+            try { el.setPointerCapture(e.pointerId) } catch (err) { /* ignore */ }
             hTarget.style.userSelect = 'none'
             hTarget.style.cursor = 'grabbing'
             hTarget.style.scrollBehavior = 'auto'
@@ -358,7 +358,7 @@ export function useDragScroll(
             inSnapZone = !!(snapType && snapType !== 'none')
             disableSnap()
             el.style.scrollBehavior = 'auto'
-            try { el.setPointerCapture(e.pointerId) } catch {}
+            try { el.setPointerCapture(e.pointerId) } catch (err) { /* ignore */ }
             el.style.userSelect = 'none'
             el.style.cursor = 'grabbing'
           }
@@ -398,7 +398,7 @@ export function useDragScroll(
       if (!pointerDown || e.pointerId !== pointerId) return
       pointerDown = false
 
-      try { el.releasePointerCapture(e.pointerId) } catch {}
+      try { el.releasePointerCapture(e.pointerId) } catch (err) { /* ignore */ }
 
       if (dragging) {
         if (axis === 'x' && hTarget) {
@@ -482,7 +482,7 @@ export function useDragScroll(
       pointerDown = false
       dragging = false
 
-      try { el.releasePointerCapture(e.pointerId) } catch {}
+      try { el.releasePointerCapture(e.pointerId) } catch (err) { /* ignore */ }
 
       if (hTarget) {
         hTarget.style.userSelect = ''
@@ -539,5 +539,5 @@ export function useDragScroll(
       el.style.cursor = ''
       el.style.scrollSnapType = ''
     }
-  }, [isEnabled, ref, opts.slop, opts.friction, opts.minVelocity, opts.maxVelocity])
+  }, [isEnabled, ref, opts])
 }

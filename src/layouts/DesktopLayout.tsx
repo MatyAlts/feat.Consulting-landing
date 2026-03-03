@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import { Link } from 'react-router-dom'
 import MobileLayout from './MobileLayout'
 import logoBlanco from '../assets/icons/LOGO BLANCO.svg'
 import flechaIcon from '../assets/icons/flecha.svg'
@@ -31,8 +32,8 @@ function useDesktopScale() {
   return scale
 }
 
-export default function DesktopLayout({ showStrategy = false }: { showStrategy?: boolean }) {
-  const [showMobile, setShowMobile] = useState(false)
+export default function DesktopLayout({ showStrategy = false, showForm = false }: { showStrategy?: boolean, showForm?: boolean }) {
+  const [showMobile, setShowMobile] = useState(showForm)
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [btnHovered, setBtnHovered] = useState(false)
   const scale = useDesktopScale()
@@ -42,6 +43,12 @@ export default function DesktopLayout({ showStrategy = false }: { showStrategy?:
     document.body.style.overflow = isMenuOpen ? 'hidden' : ''
     return () => { document.body.style.overflow = '' }
   }, [isMenuOpen])
+
+  useEffect(() => {
+    if (showForm) {
+      setShowMobile((prev) => (prev === true ? prev : true))
+    }
+  }, [showForm])
 
   return (
     <div className="relative min-h-dvh w-full overflow-hidden bg-[#020A30] flex items-center justify-center">
@@ -262,10 +269,7 @@ export default function DesktopLayout({ showStrategy = false }: { showStrategy?:
                 <Logo width={23} height={26} variant="dark" />
               </div>
               <div className="flex-1 relative overflow-hidden">
-                {/* Render MobileLayout only when showMobile is true to avoid unnecessary background load if possible, 
-                    OR render it always but let it handle its own state. 
-                    Given the request for fluidez, we render it but control visibility. */}
-                <MobileLayout isDesktopContainer={true} showStrategy={showStrategy} />
+                <MobileLayout isDesktopContainer={true} showStrategy={showStrategy} showForm={showForm} />
               </div>
             </div>
 
@@ -285,15 +289,15 @@ export default function DesktopLayout({ showStrategy = false }: { showStrategy?:
               Ready to get growing?
             </p>
 
-            <a 
-              href="#contact"
+            <Link 
+              to="/contact"
               className="absolute flex items-center cursor-pointer group hover:opacity-80 transition-opacity" 
               style={{ right: '164px', bottom: '36px', textDecoration: 'none' }}
             >
               <span style={{ color: '#FFFFFF', fontFamily: 'Fustat', fontWeight: 300, fontSize: '41.81px', lineHeight: 1 }}>
                 Let's talk
               </span>
-            </a>
+            </Link>
 
             <img 
               src={flechaIcon} 

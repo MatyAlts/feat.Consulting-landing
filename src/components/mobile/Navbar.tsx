@@ -89,7 +89,7 @@ export default function MobileNavbar({ forceHide = false }: MobileNavbarProps) {
         </button>
       </header>
 
-      {/* 2. Menú de apertura con efecto 'Wipe' para el Logo - z-60 */}
+      {/* 2. Menú de apertura con efecto 'Wipe' para el Logo — z-60 */}
       <div
         className={[
           'fixed inset-0 z-60 transition-all duration-500 cubic-bezier(0.4, 0, 0.2, 1) overflow-hidden',
@@ -159,10 +159,12 @@ export default function MobileNavbar({ forceHide = false }: MobileNavbarProps) {
                 <span className="text-indigo-200 text-[15px] font-light font-['Lato'] opacity-60">
                   Ready to get growing?
                 </span>
-                <a
-                  href="#contact"
-                  onClick={() => setIsMenuOpen(false)}
-                  className="flex items-center gap-3 group"
+                <button
+                  onClick={() => {
+                    setIsMenuOpen(false)
+                    navigate('/contact')
+                  }}
+                  className="flex items-center gap-3 group text-left"
                 >
                   <span className="text-white text-[40px] font-normal font-['Fustat'] tracking-tight group-active:text-indigo-200 transition-colors">
                     Let's talk
@@ -172,7 +174,7 @@ export default function MobileNavbar({ forceHide = false }: MobileNavbarProps) {
                     alt="Arrow"
                     className="w-[22px] h-[22px] transition-transform group-active:translate-x-1 group-active:-translate-y-1"
                   />
-                </a>
+                </button>
               </div>
             </div>
           </div>

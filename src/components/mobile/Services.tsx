@@ -1,11 +1,12 @@
 import { useRef, useEffect, useState } from 'react'
-import { Link } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 
 interface MobileServicesProps {
   onStepChange?: (step: number) => void;
 }
 
 export default function MobileServices({ onStepChange }: MobileServicesProps) {
+  const navigate = useNavigate()
   const [activeColor, setActiveColor] = useState("#FCFAF3")
   const [activeStep, setActiveStep] = useState(0)
   const lastStepRef = useRef(-1)
@@ -397,10 +398,12 @@ export default function MobileServices({ onStepChange }: MobileServicesProps) {
           data-step={19}
           data-color="rgba(21, 19, 36, 0.97)"
           ref={(el) => { sectionRefs.current[19] = el; }}
-          className="snap-start snap-always full-height w-full flex flex-col justify-center items-end pr-[37px] overflow-hidden"
+          className="snap-start snap-always full-height w-full flex flex-col justify-center items-end pr-9.25 overflow-hidden"
         >
-          <Link 
-            to="/strategy" 
+          <button 
+            onClick={() => {
+              navigate('/strategy#system');
+            }}
             style={{ 
               ...getStepStyle(19, 0),
               textDecoration: 'none',
@@ -409,12 +412,16 @@ export default function MobileServices({ onStepChange }: MobileServicesProps) {
               fontWeight: 200,
               fontSize: '27.54px',
               color: '#FCFAF3',
-              lineHeight: 1.12
+              lineHeight: 1.12,
+              background: 'none',
+              border: 'none',
+              padding: 0,
+              cursor: 'pointer'
             }}
           >
             So how does this<br />
             <span className="underline">happen? →</span>
-          </Link>
+          </button>
         </section>
       </>
     </div>

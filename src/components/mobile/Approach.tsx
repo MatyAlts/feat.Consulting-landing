@@ -1,4 +1,5 @@
 import { useRef, useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { StaggerReveal } from '../shared/StaggerReveal';
 import chevronIcon from '../../assets/icons/si_chevron-right-circle-line.png';
 
@@ -38,6 +39,7 @@ function FadeInBlock({ children, delay = 0 }: { children: React.ReactNode, delay
 }
 
 export default function MobileApproach({ onStepChange }: { onStepChange?: (step: number) => void }) {
+  const navigate = useNavigate();
   const wrapperRef = useRef<HTMLDivElement>(null);
   const stickyRef = useRef<HTMLDivElement>(null);
   const textRef = useRef<HTMLDivElement>(null);
@@ -510,6 +512,7 @@ export default function MobileApproach({ onStepChange }: { onStepChange?: (step:
 
           <div className="w-full mt-auto">
             <button 
+              onClick={() => navigate('/contact')}
               className="w-full flex items-center justify-center rounded-full active:scale-[0.98] transition-transform mb-2.5 shadow-sm"
               style={{ backgroundColor: '#1A1A2E', height: '60px' }}
             >
@@ -623,6 +626,7 @@ export default function MobileApproach({ onStepChange }: { onStepChange?: (step:
 
           <div className="w-full mt-auto">
             <button 
+              onClick={() => navigate('/contact')}
               className="w-full flex items-center justify-center rounded-full active:scale-[0.98] transition-transform mb-2.5 shadow-sm"
               style={{ backgroundColor: '#8B8CFB', height: '60px' }}
             >
@@ -655,6 +659,7 @@ export default function MobileApproach({ onStepChange }: { onStepChange?: (step:
 
           <div className="w-full px-[51.5px]">
             <button 
+              onClick={() => navigate('/contact')}
               className="w-full flex items-center justify-center rounded-full active:scale-[0.98] transition-transform mb-2.5 shadow-md"
               style={{ 
                 backgroundColor: '#191432', 
@@ -804,12 +809,13 @@ export default function MobileApproach({ onStepChange }: { onStepChange?: (step:
 
               <FadeInBlock delay={150}>
                 <div className="w-full mt-[36px] pl-[21px] text-left">
-                  <span 
-                    className="underline font-['Fustat'] font-light text-[22.05px]"
+                  <button 
+                    onClick={() => navigate('/contact')}
+                    className="underline font-['Fustat'] font-light text-[22.05px] border-none bg-transparent p-0 cursor-pointer outline-none active:opacity-70 transition-opacity"
                     style={{ color: '#191432' }}
                   >
                     Let’s get to work →
-                  </span>
+                  </button>
                 </div>
               </FadeInBlock>
             </div>
@@ -959,6 +965,7 @@ export default function MobileApproach({ onStepChange }: { onStepChange?: (step:
             </h2>
             
             <button 
+              onClick={() => navigate('/contact')}
               className="rounded-full flex items-center justify-center transition-transform active:scale-95 shadow-sm"
               style={{ 
                 marginTop: '15.98px',

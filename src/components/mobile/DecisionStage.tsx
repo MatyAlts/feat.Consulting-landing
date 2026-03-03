@@ -1,4 +1,5 @@
 import { useRef, useEffect, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { StaggerReveal } from '../shared/StaggerReveal'
 
 // Map all assets in /src/assets for dynamic lookup
@@ -16,13 +17,9 @@ interface MobileDecisionStageProps {
 }
 
 export default function MobileDecisionStage({ onStepChange }: MobileDecisionStageProps) {
-  // Reset scroll when entering this component in strategy page
-  useEffect(() => {
-    const main = document.querySelector('main');
-    if (main) {
-      main.scrollTo({ top: 0, behavior: 'instant' as any });
-    }
-  }, []);
+  const navigate = useNavigate();
+  // No longer resetting scroll to 0 here to allow MobileLayout to restore the position
+  // when returning from the contact form.
 
   const chips = [
     "Awareness depth",
@@ -504,7 +501,7 @@ export default function MobileDecisionStage({ onStepChange }: MobileDecisionStag
                         
                         {/* CTA Button */}
                         <button 
-                          onClick={() => window.open('#', '_blank')}
+                          onClick={() => navigate('/contact')}
                           className="absolute w-72 h-15 bg-white rounded-[50px] shadow-lg flex items-center justify-center active:scale-95 transition-transform"
                           style={{ 
                             top: (slide as any).layout?.buttonTop || '275.98px' 

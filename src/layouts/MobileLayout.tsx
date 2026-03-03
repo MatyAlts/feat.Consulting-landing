@@ -9,12 +9,15 @@ import StickyFooter from '../components/mobile/StickyFooter'
 import { useDragScroll } from '../hooks/useDragScroll'
 import { useRef } from 'react'
 
+import ContactForm from '../components/mobile/ContactForm'
+
 interface MobileLayoutProps {
   isDesktopContainer?: boolean;
   showStrategy?: boolean;
+  showForm?: boolean;
 }
 
-export default function MobileLayout({ isDesktopContainer = false, showStrategy = false }: MobileLayoutProps) {
+export default function MobileLayout({ isDesktopContainer = false, showStrategy = false, showForm = false }: MobileLayoutProps) {
   const [activeStep, setActiveStep] = useState(-1)
   const [hasEnteredServices, setHasEnteredServices] = useState(false)
   const mainRef = useRef<HTMLElement>(null)
@@ -22,39 +25,64 @@ export default function MobileLayout({ isDesktopContainer = false, showStrategy 
   // Habilitar drag to scroll para desktop emulation
   useDragScroll(mainRef, isDesktopContainer)
 
-  // Reset scroll and set manual restoration only ONCE on mount
+  // Handle scroll restoration and preservation
   useEffect(() => {
     if (typeof window !== 'undefined') {
       window.history.scrollRestoration = 'manual'
     }
-    if (mainRef.current) {
-      mainRef.current.scrollTo(0, 0)
+
+    const mainElement = mainRef.current;
+    if (!mainElement) return;
+
+    // 1. If we are entering a view that is NOT the form, check for saved position
+    if (!showForm) {
+      const savedPos = sessionStorage.getItem('scrollPos');
+      if (savedPos) {
+        // Wait for components (DecisionStage/Services) to have rendered fully
+        setTimeout(() => {
+          if (mainRef.current) {
+            mainRef.current.scrollTo(0, parseInt(savedPos, 10));
+            sessionStorage.removeItem('scrollPos');
+          }
+        }, 100);
+      } else {
+        // First enter (no saved pos), start at top
+        mainElement.scrollTo(0, 0);
+      }
     }
-  }, [])
+
+    // 2. Save scroll position only when leaving a non-form view
+    return () => {
+      if (!showForm && mainRef.current) {
+        sessionStorage.setItem('scrollPos', mainRef.current.scrollTop.toString());
+      }
+    };
+  }, [showForm]);
 
   // Keep track of services entry
   useEffect(() => {
     if (!hasEnteredServices && activeStep >= 0 && activeStep <= 20) {
-      setHasEnteredServices(true)
+      setHasEnteredServices((prev) => (prev === true ? prev : true))
     }
   }, [activeStep, hasEnteredServices])
 
   // El snap está habilitado si:
   // 1. En Strategy: Solo en los pasos de la metodología (50-60)
   // 2. En Home: En Services (0-20) o al inicio del Hero (-1)
-  const isSnapDisabled = showStrategy
+  // 3. En Form: Deshabilitado por completo
+  const isSnapDisabled = showForm || (showStrategy
     ? !(activeStep >= 50 && activeStep <= 60)
     : !(
         (activeStep >= 0 && activeStep <= 20) ||
         (activeStep === -1 && !hasEnteredServices)
-      )
+      ))
 
   return (
     <div
       className={`flex flex-col overflow-hidden bg-[#FCFAF3] ${isDesktopContainer ? 'h-full w-full' : ''}`}
       style={{ height: isDesktopContainer ? '100%' : '100dvh' }}
     >
-      {!isDesktopContainer && <MobileNavbar forceHide={activeStep >= 1 && activeStep <= 20} />}
+      {!isDesktopContainer && !showForm && <MobileNavbar forceHide={activeStep >= 1 && activeStep <= 20} />}
       <main 
         ref={mainRef}
         className={[
@@ -63,7 +91,9 @@ export default function MobileLayout({ isDesktopContainer = false, showStrategy 
         isSnapDisabled ? '' : 'snapping-locked'
       ].filter(Boolean).join(' ')}
       >
-        {!showStrategy ? (
+        {showForm ? (
+          <ContactForm />
+        ) : !showStrategy ? (
           <>
             <MobileHero />
             <MobileServices onStepChange={setActiveStep} />
@@ -76,7 +106,7 @@ export default function MobileLayout({ isDesktopContainer = false, showStrategy 
           </>
         )}
       </main>
-      {!isDesktopContainer && <StickyFooter isStrategy={showStrategy} />}
+      {!isDesktopContainer && !showForm && <StickyFooter isStrategy={showStrategy} />}
     </div>
   )
 }
