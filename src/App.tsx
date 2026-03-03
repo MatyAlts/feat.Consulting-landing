@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 import { useViewport } from './hooks/useViewport'
 import { useViewportHeight } from './hooks/useViewportHeight'
 import MobileLayout from './layouts/MobileLayout'
@@ -11,9 +12,19 @@ export default function App() {
   useViewportHeight()
 
   return (
-    <>
+    <BrowserRouter>
       <Loading onComplete={() => setIsLoading(false)} />
-      {isDesktop ? <DesktopLayout /> : <MobileLayout key={isLoading ? 'loading' : 'ready'} />}
-    </>
+      <Routes>
+        <Route 
+          path="/" 
+          element={isDesktop ? <DesktopLayout key="home" /> : <MobileLayout key={`home-${isLoading}`} />} 
+        />
+        <Route 
+          path="/strategy" 
+          element={isDesktop ? <DesktopLayout key="strategy" showStrategy /> : <MobileLayout key={`strategy-${isLoading}`} showStrategy />} 
+        />
+        <Route path="*" element={<Navigate to="/" replace />} />
+      </Routes>
+    </BrowserRouter>
   )
 }

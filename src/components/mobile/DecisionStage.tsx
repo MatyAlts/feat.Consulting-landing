@@ -1,12 +1,20 @@
 
-import { useState, useRef, useEffect } from 'react';
-import { StaggerReveal } from '../shared/StaggerReveal';
+import { useRef, useEffect, useState } from 'react'
+import { StaggerReveal } from '../shared/StaggerReveal'
 
 interface MobileDecisionStageProps {
   onStepChange?: (step: number) => void;
 }
 
 export default function MobileDecisionStage({ onStepChange }: MobileDecisionStageProps) {
+  // Reset scroll when entering this component in strategy page
+  useEffect(() => {
+    const main = document.querySelector('main');
+    if (main) {
+      main.scrollTo({ top: 0, behavior: 'instant' as any });
+    }
+  }, []);
+
   const chips = [
     "Awareness depth",
     "Problem clarity",
@@ -260,8 +268,63 @@ export default function MobileDecisionStage({ onStepChange }: MobileDecisionStag
   }, [onStepChange]);
 
   return (
-    <section ref={sectionRef} className="bg-[#FCFAF3] py-20 overflow-hidden">
-      <div className="self-stretch inline-flex flex-col justify-start items-start gap-2.5 w-full">
+    <>
+      {/* 16. Final Narrative Sequence (Previously Step 20) */}
+      <section
+        className="w-full flex flex-col justify-start px-7.5 overflow-hidden py-24 bg-[#0D111F]"
+      >
+        <div className="self-stretch flex flex-col justify-start items-start relative z-10 w-full pt-8 text-left">
+          <StaggerReveal staggerDelay={80} baseDelay={100} rootMargin="0px" className="w-full">
+            <div className="text-[#A5B4FC] text-2xl font-light font-['Fustat'] leading-6">
+              After years building journeys,
+            </div>
+          </StaggerReveal>
+
+          <StaggerReveal staggerDelay={80} baseDelay={500} rootMargin="0px" className="w-full mb-4">
+            <div className="text-[#A5B4FC] text-2xl font-light font-['Fustat'] leading-6">
+              one pattern became clear:
+            </div>
+          </StaggerReveal>
+
+          <StaggerReveal staggerDelay={80} baseDelay={900} rootMargin="0px" className="w-full">
+            <p className="text-white text-4xl font-normal font-['Fustat'] leading-[1.11]">
+              When growth
+            </p>
+          </StaggerReveal>
+
+          <StaggerReveal staggerDelay={80} baseDelay={1200} rootMargin="0px" className="w-full">
+            <p className="text-white text-4xl font-normal font-['Fustat'] leading-[1.11]">
+              reflects how buyers
+            </p>
+          </StaggerReveal>
+
+          <StaggerReveal staggerDelay={80} baseDelay={1500} rootMargin="0px" className="w-full mb-3">
+            <p className="text-white text-4xl font-normal font-['Fustat'] leading-[1.11]">
+              <span className="italic-lato-word" style={{
+                fontFamily: 'Lato, sans-serif',
+                fontStyle: 'italic',
+                fontWeight: 400,
+              }}>actually</span>{' '}decide,
+            </p>
+          </StaggerReveal>
+
+          <StaggerReveal staggerDelay={80} baseDelay={2000} rootMargin="0px" className="w-full mb-10">
+            <div className="w-full text-[#C7D2FE] text-[56px] font-normal font-['Fustat'] leading-[54.59px]">
+              Scale stops depending on effort.
+            </div>
+          </StaggerReveal>
+
+          <StaggerReveal staggerDelay={80} baseDelay={2500} rootMargin="0px" className="w-full flex flex-col">
+            <p className="text-[#FCFAF3] text-[33.5px] font-light font-['Fustat'] leading-tight mb-12">
+              That's where leverage replaces grind.
+            </p>
+            <div className="w-full border-t border-[#FCFAF3]/10" />
+          </StaggerReveal>
+        </div>
+      </section>
+
+      <section ref={sectionRef} className="bg-[#FCFAF3] py-20 overflow-hidden">
+        <div className="self-stretch inline-flex flex-col justify-start items-start gap-2.5 w-full">
         {/* Header Block */}
         <div className="self-stretch flex flex-col justify-center items-center px-5">
           <div className="flex flex-col justify-center items-center gap-4">
@@ -526,5 +589,6 @@ export default function MobileDecisionStage({ onStepChange }: MobileDecisionStag
         </div>
       </div>
     </section>
+    </>
   );
 }

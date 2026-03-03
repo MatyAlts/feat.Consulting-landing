@@ -13,9 +13,10 @@ import { useRef } from 'react'
 
 interface MobileLayoutProps {
   isDesktopContainer?: boolean;
+  showStrategy?: boolean;
 }
 
-export default function MobileLayout({ isDesktopContainer = false }: MobileLayoutProps) {
+export default function MobileLayout({ isDesktopContainer = false, showStrategy = false }: MobileLayoutProps) {
   const [activeStep, setActiveStep] = useState(-1)
   const [hasEnteredServices, setHasEnteredServices] = useState(false)
   const mainRef = useRef<HTMLElement>(null)
@@ -23,9 +24,17 @@ export default function MobileLayout({ isDesktopContainer = false }: MobileLayou
   // Habilitar drag to scroll para desktop emulation
   useDragScroll(mainRef, isDesktopContainer)
 
-  // Marca la primera vez que el usuario entra a Services.
-  // Esto evita la condición de carrera donde isInHero se vuelve false
-  // antes de que el IntersectionObserver dispare el step 0.
+  // Reset scroll and set manual restoration only ONCE on mount
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      window.history.scrollRestoration = 'manual'
+    }
+    if (mainRef.current) {
+      mainRef.current.scrollTo(0, 0)
+    }
+  }, [])
+
+  // Keep track of services entry
   useEffect(() => {
     if (!hasEnteredServices && activeStep >= 0 && activeStep <= 20) {
       setHasEnteredServices(true)
@@ -33,14 +42,14 @@ export default function MobileLayout({ isDesktopContainer = false }: MobileLayou
   }, [activeStep, hasEnteredServices])
 
   // El snap está habilitado si:
-  // 1. Estamos en las secciones de Services (step 0 al 20)
-  // 2. O si estamos en el Hero (step -1 y aún no hemos entrado a Services)
-  // 3. O en la sección Approach (steps 50-60)
-  const isSnapDisabled = !(
-    (activeStep >= 0 && activeStep <= 20) ||
-    (activeStep >= 50 && activeStep <= 60) ||
-    (activeStep === -1 && !hasEnteredServices)
-  )
+  // 1. En Strategy: Solo en los pasos de la metodología (50-60)
+  // 2. En Home: En Services (0-20) o al inicio del Hero (-1)
+  const isSnapDisabled = showStrategy
+    ? !(activeStep >= 50 && activeStep <= 60)
+    : !(
+        (activeStep >= 0 && activeStep <= 20) ||
+        (activeStep === -1 && !hasEnteredServices)
+      )
 
   return (
     <div
@@ -56,20 +65,23 @@ export default function MobileLayout({ isDesktopContainer = false }: MobileLayou
         isSnapDisabled ? '' : 'snapping-locked'
       ].filter(Boolean).join(' ')}
       >
-        <MobileHero />
-
-        <MobileServices onStepChange={setActiveStep} />
-
-        <MobileDecisionStage onStepChange={setActiveStep} />
-
-        <MobileApproach />
-
-        <section className="min-h-[100dvh] bg-[#FCFAF3]">
-          <MobileAbout />
-        </section>
-        <section className="min-h-[100dvh] bg-[#FCFAF3]">
-          <MobileContact />
-        </section>
+        {!showStrategy ? (
+          <>
+            <MobileHero />
+            <MobileServices onStepChange={setActiveStep} />
+          </>
+        ) : (
+          <>
+            <MobileDecisionStage onStepChange={setActiveStep} />
+            <MobileApproach onStepChange={setActiveStep} />
+            <section className="min-h-dvh bg-[#FCFAF3]">
+              <MobileAbout />
+            </section>
+            <section className="min-h-dvh bg-[#FCFAF3]">
+              <MobileContact />
+            </section>
+          </>
+        )}
         {!isDesktopContainer && (
           <section className="bg-[#FCFAF3]">
             <MobileFooter />

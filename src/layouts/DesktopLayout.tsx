@@ -31,7 +31,7 @@ function useDesktopScale() {
   return scale
 }
 
-export default function DesktopLayout() {
+export default function DesktopLayout({ showStrategy = false }: { showStrategy?: boolean }) {
   const [showMobile, setShowMobile] = useState(false)
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [btnHovered, setBtnHovered] = useState(false)
@@ -265,7 +265,7 @@ export default function DesktopLayout() {
                 {/* Render MobileLayout only when showMobile is true to avoid unnecessary background load if possible, 
                     OR render it always but let it handle its own state. 
                     Given the request for fluidez, we render it but control visibility. */}
-                <MobileLayout isDesktopContainer={true} />
+                <MobileLayout isDesktopContainer={true} showStrategy={showStrategy} />
               </div>
             </div>
 
