@@ -2,8 +2,7 @@ import { useState, useEffect } from 'react'
 import Logo from '../shared/Logo'
 import { useScrollDirection } from '../../hooks/useScrollDirection'
 import flechaIcon from '../../assets/icons/flecha.svg'
-
-
+import { useNavigate, useLocation } from 'react-router-dom'
 
 interface MobileNavbarProps {
   forceHide?: boolean
@@ -12,6 +11,8 @@ interface MobileNavbarProps {
 export default function MobileNavbar({ forceHide = false }: MobileNavbarProps) {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const { scrollDir, isAtTop, isInHero } = useScrollDirection()
+  const navigate = useNavigate()
+  const location = useLocation()
 
   const isHidden = !isMenuOpen && scrollDir === 'down' && (forceHide || (!isAtTop && !isInHero))
 
@@ -20,6 +21,47 @@ export default function MobileNavbar({ forceHide = false }: MobileNavbarProps) {
     document.body.style.overflow = isMenuOpen ? 'hidden' : ''
     return () => { document.body.style.overflow = '' }
   }, [isMenuOpen])
+
+  const handleNavClick = (title: string) => {
+    setIsMenuOpen(false)
+    
+    const navMap: Record<string, { path: string, hash: string }> = {
+      'Direction': { path: '/', hash: '#direction' },
+      'System': { path: '/strategy', hash: '#system' },
+      'In Practice': { path: '/strategy', hash: '#in-practice' },
+      'Entry Points': { path: '/strategy', hash: '#entry-points' },
+      'Impact': { path: '/strategy', hash: '#impact' },
+      'FAQs': { path: '/strategy', hash: '#faqs' },
+    }
+
+    const target = navMap[title]
+    if (!target) return
+
+    if (location.pathname === target.path) {
+      if (target.hash) {
+        const el = document.querySelector(target.hash)
+        if (el) {
+          el.scrollIntoView({ behavior: 'smooth' })
+        }
+      } else {
+        window.scrollTo({ top: 0, behavior: 'smooth' })
+      }
+    } else {
+      navigate(target.path + target.hash)
+    }
+  }
+
+  // Effect to scroll to hash after navigation
+  useEffect(() => {
+    if (location.hash) {
+      setTimeout(() => {
+        const el = document.querySelector(location.hash)
+        if (el) {
+          el.scrollIntoView({ behavior: 'smooth' })
+        }
+      }, 100)
+    }
+  }, [location])
 
   return (
     <>
@@ -96,11 +138,10 @@ export default function MobileNavbar({ forceHide = false }: MobileNavbarProps) {
                 { title: 'Impact', desc: 'What shifts inside your company when alignment is real.' },
                 { title: 'FAQs', desc: 'Clarity around scope, timelines, and a little more about how we work.' },
               ].map((item) => (
-                <a
+                <button
                   key={item.title}
-                  href={`#${item.title.toLowerCase().replace(/\s+/g, '-')}`}
-                  onClick={() => setIsMenuOpen(false)}
-                  className="w-full flex flex-col group"
+                  onClick={() => handleNavClick(item.title)}
+                  className="w-full flex flex-col group text-left"
                 >
                   <span className="text-white text-xl font-normal font-['Fustat'] leading-tight group-active:text-indigo-200 transition-colors">
                     {item.title}
@@ -108,7 +149,7 @@ export default function MobileNavbar({ forceHide = false }: MobileNavbarProps) {
                   <span className="text-indigo-200 text-[15px] font-light font-['Lato'] leading-tight mt-0.5 opacity-70">
                     {item.desc}
                   </span>
-                </a>
+                </button>
               ))}
             </nav>
 

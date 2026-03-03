@@ -416,6 +416,7 @@ export default function MobileApproach({ onStepChange }: { onStepChange?: (step:
 
       {/* ── Light Part: Entry Point (Release Step 61) ── */}
       <div 
+        id="entry-points"
         data-step="61"
         data-approach-block
         className="px-[11.87px] py-40 snap-start"
@@ -675,6 +676,7 @@ export default function MobileApproach({ onStepChange }: { onStepChange?: (step:
 
       {/* ── New Section: Direction Clear ── */}
       <div 
+        id="impact"
         className="w-full pb-40 px-0 mt-[-1px]"
         style={{ background: 'linear-gradient(to bottom, #171425, #FCFAF3)' }}
       >

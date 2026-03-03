@@ -1,0 +1,109 @@
+import { useState } from 'react';
+
+const faqs = [
+  {
+    question: "How long does this take?",
+    answer: "Calibration is measured in weeks, not quarters.\n\nThe goal isn’t to “study” your business — it’s to isolate the leverage point quickly and align on a clear path forward. The majority of teams leave the first few weeks with directional clarity and a concrete plan of action. From there, we either implement or integrate with your team to move.\n\nOur work is designed to accelerate decisions, not delay them."
+  },
+  {
+    question: "Who is this for (and not for)?",
+    answer: "This is built for post-traction teams.\n\nIf you have signal, revenue, or a working engine but growth feels scattered, stalled, or inefficient, this is for you.\n\nIt is not for pre-offer startups, and it’s not for teams looking for surface-level campaign support. This work assumes you’re serious about structural scale."
+  },
+  {
+    question: "What if we already have a direction?",
+    answer: "That’s ideal.\n\nIf you come in with a strong point of view, we pressure-test and refine it, not replace it. Calibration often sharpens what’s already working and removes the noise around it.\n\nIf conviction is there, we build from it. If it’s still forming, we shape it together.\n\nEither way, nothing resets unnecessarily."
+  },
+  {
+    question: "How do you work with our internal team?",
+    answer: "We integrate.\n\nSome clients rely on us for full cross-surface execution. Others have internal teams we collaborate with directly. In both cases, direction and decisions are shared, and execution is coordinated."
+  },
+  {
+    question: "What happens after calibration?",
+    answer: "You have options.\n\nSome teams implement internally with our guidance.\nOthers continue with us to extend the system across surfaces (site, funnels, product, acquisition, sales enablement).\n\nCalibration defines the path. What comes next depends on where scale is constrained."
+  },
+  {
+    question: "How is this different from hiring internally or a typical agency?",
+    answer: "Agencies execute tasks.\nInternal hires specialize in lanes.\n\nWe work at the structural layer: aligning Product, Marketing, and Sales around the same growth logic.\n\nThe outcome isn’t more campaigns.\nIt’s a unified system where what works carries across surfaces and compounds over time."
+  }
+];
+
+export default function MobileFAQs() {
+  const [openIdx, setOpenIdx] = useState<number | null>(null);
+
+  return (
+    <section id="faqs" className="w-full bg-[#FCFAF3] pb-40">
+      <div className="pl-[21px] pr-5">
+        <h2 
+          className="font-['Fustat'] font-medium leading-[1.05] text-[#171425]"
+          style={{ fontSize: '45.18px', marginTop: '87.62px' }}
+        >
+          Frequently <br /> Asked Questions
+        </h2>
+        
+        <p 
+          className="font-['Fustat'] font-normal text-[#48435D]"
+          style={{ fontSize: '16.21px', marginTop: '1px' }}
+        >
+          The practical details.
+        </p>
+
+        <p 
+          className="font-['Fustat'] font-light text-[#191432] leading-[1.3]"
+          style={{ fontSize: '22.05px', marginTop: '13px' }}
+        >
+          This isn’t a traditional consulting engagement. <br />
+          It’s a structural growth intervention.<br /><br />
+          Here’s what most teams want <br />
+          clarified before moving forward.
+        </p>
+      </div>
+
+      <div className="mt-[19.12px] flex flex-col gap-4 px-[15px]">
+        {faqs.map((faq, idx) => {
+          const isOpen = openIdx === idx;
+
+          return (
+            <div 
+              key={idx}
+              className="w-full bg-[#FFFEFE] overflow-hidden transition-colors duration-300"
+              style={{ 
+                border: '0.2px solid #191432',
+                borderRadius: '16px'
+              }}
+            >
+              <button
+                onClick={() => setOpenIdx(isOpen ? null : idx)}
+                className={`w-full flex items-center text-left pl-[16.48px] pr-6 outline-none transition-colors duration-300 ${isOpen ? 'bg-[#191432]' : 'bg-transparent'}`}
+                style={{ height: '55.66px' }}
+              >
+                <span 
+                  className={`font-['Fustat'] font-normal flex-1 transition-colors duration-300`}
+                  style={{ fontSize: '17px', color: isOpen ? '#FFFFFF' : '#191432' }}
+                >
+                  {faq.question}
+                </span>
+                <span 
+                  className={`ml-2 text-2xl font-light transition-colors duration-300`}
+                  style={{ color: isOpen ? '#FFFFFF' : '#191432' }}
+                >
+                  {isOpen ? '−' : '+'}
+                </span>
+              </button>
+
+              <div
+                className={`overflow-hidden transition-all duration-500 ease-in-out ${isOpen ? 'max-h-[1000px] opacity-100' : 'max-h-0 opacity-0'}`}
+              >
+                <div 
+                  className="pl-[16.48px] pr-[16.48px] pt-6 pb-8 font-['Fustat'] font-light text-[#191432] whitespace-pre-line bg-[#F0F3F4]"
+                  style={{ fontSize: '16px', lineHeight: '1.4' }}
+                >
+                  {faq.answer}
+                </div>
+              </div>
+            </div>
+          );
+        })}
+      </div>
+    </section>
+  );
+}

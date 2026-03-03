@@ -1,8 +1,8 @@
 import { useState, useEffect, useRef } from 'react'
 
-export default function StickyFooter() {
+export default function StickyFooter({ isStrategy = false }: { isStrategy?: boolean }) {
     const [isVisible, setIsVisible] = useState(false)
-    const [progress, setProgress] = useState(0)
+    const [progress, setProgress] = useState(isStrategy ? 0.5 : 0)
     const lastScrollTop = useRef(0)
     const ticking = useRef(false)
 
@@ -11,24 +11,36 @@ export default function StickyFooter() {
 
         const updateProgress = (target: HTMLElement) => {
             const scrollTop = target.scrollTop
-
-            // Buscamos el hero para saber dónde empezar a contar
-            const hero = target.querySelector('#hero') as HTMLElement
-            if (!hero) return
-
-            const heroHeight = hero.offsetHeight
             const maxScroll = target.scrollHeight - target.clientHeight
+            
+            let scrollableRange = 0;
+            let currentLevel = 0;
 
-            // El progreso empieza después del Hero
-            const scrollableRange = maxScroll - heroHeight
-            const currentLevel = Math.max(0, scrollTop - heroHeight)
-
-            if (scrollableRange > 0) {
-                const targetProgress = currentLevel / scrollableRange
-                setProgress(Math.max(0, Math.min(1, targetProgress)))
+            if (!isStrategy) {
+                // Buscamos el hero para saber dónde empezar a contar
+                const hero = target.querySelector('#hero') as HTMLElement
+                if (hero) {
+                    const heroHeight = hero.offsetHeight
+                    scrollableRange = maxScroll - heroHeight
+                    currentLevel = Math.max(0, scrollTop - heroHeight)
+                } else {
+                    scrollableRange = maxScroll
+                    currentLevel = scrollTop
+                }
             } else {
-                setProgress(0)
+                // En Strategy empieza a contar desde el tope
+                scrollableRange = maxScroll
+                currentLevel = scrollTop
             }
+
+            let pageProgress = 0
+            if (scrollableRange > 0) {
+                pageProgress = Math.max(0, Math.min(1, currentLevel / scrollableRange))
+            }
+            
+            // Mitad 1 para Home, Mitad 2 para Strategy
+            const finalProgress = isStrategy ? 0.5 + (pageProgress / 2) : (pageProgress / 2)
+            setProgress(finalProgress)
 
             // Lógica de visibilidad basada en dirección
             if (Math.abs(scrollTop - lastScrollTop.current) > THRESHOLD) {
@@ -55,8 +67,13 @@ export default function StickyFooter() {
 
         // Listener global para capturar el scroll del contenedor main
         window.addEventListener('scroll', handleScroll, { capture: true, passive: true })
+        
+        // Trigger initial calculation
+        const mainEl = document.querySelector('main')
+        if (mainEl) updateProgress(mainEl)
+
         return () => window.removeEventListener('scroll', handleScroll, { capture: true })
-    }, [])
+    }, [isStrategy])
 
     return (
         <div

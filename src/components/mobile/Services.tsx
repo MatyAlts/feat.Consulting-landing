@@ -121,6 +121,7 @@ export default function MobileServices({ onStepChange }: MobileServicesProps) {
       <>
         {/* 1. Frase Inicial (Step 0) */}
         <section
+          id="direction"
           data-step={0}
           data-color="#FCFAF3"
           ref={(el) => { sectionRefs.current[0] = el; }}

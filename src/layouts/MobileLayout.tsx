@@ -7,6 +7,7 @@ import MobileContact from '../components/mobile/Contact'
 import MobileFooter from '../components/mobile/Footer'
 import MobileDecisionStage from '../components/mobile/DecisionStage'
 import MobileApproach from '../components/mobile/Approach'
+import MobileFAQs from '../components/mobile/FAQs'
 import StickyFooter from '../components/mobile/StickyFooter'
 import { useDragScroll } from '../hooks/useDragScroll'
 import { useRef } from 'react'
@@ -74,6 +75,7 @@ export default function MobileLayout({ isDesktopContainer = false, showStrategy 
           <>
             <MobileDecisionStage onStepChange={setActiveStep} />
             <MobileApproach onStepChange={setActiveStep} />
+            <MobileFAQs />
             <section className="min-h-dvh bg-[#FCFAF3]">
               <MobileAbout />
             </section>
@@ -88,7 +90,7 @@ export default function MobileLayout({ isDesktopContainer = false, showStrategy 
           </section>
         )}
       </main>
-      {!isDesktopContainer && <StickyFooter />}
+      {!isDesktopContainer && <StickyFooter isStrategy={showStrategy} />}
     </div>
   )
 }
