@@ -135,7 +135,7 @@ export default function MobileApproach({ onStepChange }: { onStepChange?: (step:
         {/* Sticky phrase */}
         <div
           ref={stickyRef}
-          className="sticky top-0 z-10 bg-[#151324] overflow-hidden pl-[11.87px] pr-7.5 pt-40 pb-0"
+          className="sticky top-0 z-10 bg-[#151324] overflow-hidden px-7.5 pt-40 pb-0"
         >
           <div className="text-slate-200 text-base font-normal font-['Fustat'] mb-3 leading-6">
             You might have guessed...
@@ -158,7 +158,7 @@ export default function MobileApproach({ onStepChange }: { onStepChange?: (step:
         ref={containerRef}
       >
         {/* First Narrative Block */}
-        <div className="pl-[11.87px] text-left my-24.5">
+        <div className="px-7.5 text-left my-24.5">
           <StaggerReveal staggerDelay={80} baseDelay={100} rootMargin="0px">
             <h2 className="text-white font-light font-['Fustat'] leading-[1.1]" style={{ fontSize: '39.18px' }}>
               We don’t hand <br />
@@ -169,7 +169,7 @@ export default function MobileApproach({ onStepChange }: { onStepChange?: (step:
         </div>
 
         {/* Second Narrative Block */}
-        <div className="w-full flex justify-start pl-[11.87px] pr-7.5 mb-24.5">
+        <div className="w-full flex justify-start px-7.5 mb-24.5">
           <div className="text-left">
             <StaggerReveal staggerDelay={80} baseDelay={100} rootMargin="0px">
               <h2 className="text-white font-light font-['Fustat'] leading-[1.1]" style={{ fontSize: '39.18px' }}>
@@ -182,7 +182,7 @@ export default function MobileApproach({ onStepChange }: { onStepChange?: (step:
         </div>
 
         {/* Third Narrative Block */}
-        <div className="w-full flex justify-start pl-[11.87px] pr-7.5 mb-24.5">
+        <div className="w-full flex justify-start px-7.5 mb-24.5">
           <div className="text-left">
             <StaggerReveal staggerDelay={80} baseDelay={100} rootMargin="0px">
               <h2 className="text-white font-light font-['Fustat'] leading-[1.1]" style={{ fontSize: '39.18px' }}>
@@ -199,10 +199,10 @@ export default function MobileApproach({ onStepChange }: { onStepChange?: (step:
       <div 
         data-step="50"
         data-approach-block
-        className="snap-start snap-always full-height w-full flex flex-col justify-center items-start pl-[11.87px] pr-7.5 relative bg-[#151324]"
+        className="snap-start snap-always full-height w-full flex flex-col justify-center items-center px-7.5 relative bg-[#151324]"
       >
         <FadeInBlock delay={150}>
-          <div className="w-full text-left text-zinc-300 text-xl font-light font-['Fustat']">
+          <div className="w-full text-center text-zinc-300 text-xl font-light font-['Fustat']">
             How this actually works:
           </div>
         </FadeInBlock>
@@ -211,7 +211,7 @@ export default function MobileApproach({ onStepChange }: { onStepChange?: (step:
       <div 
         data-step="51"
         data-approach-block
-        className="snap-start snap-always full-height py-20 w-full flex flex-col justify-center items-start pl-[11.87px] pr-7.5 relative bg-[#151324]"
+        className="snap-start snap-always full-height py-20 w-full flex flex-col justify-center items-start px-7.5 relative bg-[#151324]"
       >
         <FadeInBlock>
           <div className="w-full justify-start">
@@ -227,7 +227,7 @@ export default function MobileApproach({ onStepChange }: { onStepChange?: (step:
       <div 
         data-step="52"
         data-approach-block
-        className="snap-start snap-always full-height py-20 w-full flex flex-col justify-center items-start pl-[11.87px] pr-7.5 relative bg-[#151324]"
+        className="snap-start snap-always full-height py-20 w-full flex flex-col justify-center items-start px-7.5 relative bg-[#151324]"
       >
         <FadeInBlock delay={150}>
           <div className="w-full justify-start">
@@ -243,7 +243,7 @@ export default function MobileApproach({ onStepChange }: { onStepChange?: (step:
       <div 
         data-step="53"
         data-approach-block
-        className="snap-start snap-always min-h-dvh py-20 w-full flex flex-col justify-center items-start pl-[11.87px] pr-7.5 relative bg-[#151324]"
+        className="snap-start snap-always min-h-dvh py-20 w-full flex flex-col justify-center items-start px-7.5 relative bg-[#151324]"
       >
         <div className="w-full flex flex-col items-start">
           <button 
@@ -288,7 +288,7 @@ export default function MobileApproach({ onStepChange }: { onStepChange?: (step:
       <div 
         data-step="54"
         data-approach-block
-        className="snap-start snap-always full-height py-20 w-full flex flex-col justify-center items-start pl-[11.87px] pr-7.5 relative bg-[#151324]"
+        className="snap-start snap-always full-height py-20 w-full flex flex-col justify-center items-start px-7.5 relative bg-[#151324]"
       >
         <FadeInBlock delay={150}>
           <div className="w-full justify-start">
@@ -310,7 +310,7 @@ export default function MobileApproach({ onStepChange }: { onStepChange?: (step:
       <div 
         data-step="55"
         data-approach-block
-        className="snap-start snap-always full-height py-20 w-full flex flex-col justify-center items-start pl-[11.87px] pr-7.5 relative bg-[#151324]"
+        className="snap-start snap-always full-height py-20 w-full flex flex-col justify-center items-start px-7.5 relative bg-[#151324]"
       >
         <FadeInBlock delay={300}>
           <div className="w-full justify-start">
@@ -331,7 +331,7 @@ export default function MobileApproach({ onStepChange }: { onStepChange?: (step:
       <div 
         data-step="56"
         data-approach-block
-        className="snap-start snap-always full-height py-20 w-full flex flex-col justify-center items-start pl-[11.87px] pr-7.5 relative bg-[#151324]"
+        className="snap-start snap-always full-height py-20 w-full flex flex-col justify-center items-start px-7.5 relative bg-[#151324]"
       >
         <FadeInBlock delay={150}>
           <div className="w-full justify-start">
