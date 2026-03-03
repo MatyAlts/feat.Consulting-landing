@@ -249,7 +249,7 @@ export default function MobileApproach({ onStepChange }: { onStepChange?: (step:
               <h2 className="text-white font-light font-['Fustat'] leading-[1.1]" style={{ fontSize: '39.18px' }}>
                 <span className="whitespace-nowrap">We build what your</span> <br />
                 reality demands <br />
-                <span className="opacity-20">— and see it <br /> through.</span>
+                <span className="opacity-100">— and see it <br /> through.</span>
               </h2>
             </StaggerReveal>
           </div>
