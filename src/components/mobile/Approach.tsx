@@ -8,15 +8,14 @@ function FadeInBlock({ children, delay = 0 }: { children: React.ReactNode, delay
 
   useEffect(() => {
     const observer = new IntersectionObserver(([entry]) => {
-      // Requiere que el elemento esté al menos a un 25% dentro del viewport (top y bottom)
-      // Esto previene que se dispare mientras aún estás en el "sticky" de la animación horizontal
+      // Trigger animations earlier
       if (entry.isIntersecting) {
         setIsVisible(true);
         observer.disconnect();
       }
     }, { 
       threshold: 0,
-      rootMargin: '0px 0px -40% 0px' 
+      rootMargin: '0px 0px -20% 0px' 
     });
 
     if (ref.current) observer.observe(ref.current);
@@ -45,6 +44,35 @@ export default function MobileApproach({ onStepChange }: { onStepChange?: (step:
   const containerRef = useRef<HTMLDivElement>(null);
   const [translateX, setTranslateX] = useState(0);
   const textOverflowRef = useRef(0);
+  const wordsScrollRef = useRef<HTMLDivElement>(null);
+
+  /* ── Interactive Infinite Scroll Logic (100% User Controlled, Bidirectional) ── */
+  useEffect(() => {
+    const scrollContainer = wordsScrollRef.current;
+    if (!scrollContainer) return;
+
+    const handleInfiniteScroll = () => {
+      const { scrollTop, scrollHeight } = scrollContainer;
+      const oneThirdHeight = scrollHeight / 3;
+
+      // Wrap around logic with buffer for inertia
+      if (scrollTop >= oneThirdHeight * 2) {
+        // We reached the bottom part, jump to middle part
+        scrollContainer.scrollTop = scrollTop - oneThirdHeight;
+      } else if (scrollTop <= oneThirdHeight * 0.5) {
+        // We reached the top part, jump to middle part
+        scrollContainer.scrollTop = scrollTop + oneThirdHeight;
+      }
+    };
+
+    scrollContainer.addEventListener('scroll', handleInfiniteScroll, { passive: true });
+    
+    // Initialize to middle part so both directions work from the start
+    const initialPos = (scrollContainer.scrollHeight / 3);
+    scrollContainer.scrollTop = initialPos;
+
+    return () => scrollContainer.removeEventListener('scroll', handleInfiniteScroll);
+  }, []);
 
   /* ── Step Tracker ── */
   useEffect(() => {
@@ -60,8 +88,8 @@ export default function MobileApproach({ onStepChange }: { onStepChange?: (step:
         }
       });
     }, {
-      threshold: 0.3, // Umbral más bajo para detectar antes el cambio al subir
-      root: null 
+      rootMargin: '-30% 0px -30% 0px',
+      threshold: 0
     });
 
     // Observar todos los elementos con data-step que pertenecen a esta lógica
@@ -130,7 +158,7 @@ export default function MobileApproach({ onStepChange }: { onStepChange?: (step:
         ref={wrapperRef} 
         data-step="48"
         data-approach-block
-        className="bg-[#151324] relative w-full snap-start"
+        className="bg-[#151324] relative w-full"
       >
         {/* Sticky phrase */}
         <div
@@ -154,7 +182,7 @@ export default function MobileApproach({ onStepChange }: { onStepChange?: (step:
       <div 
         data-step="49"
         data-approach-block
-        className="bg-[#151324] pt-40 pb-20 w-full overflow-hidden flex flex-col gap-40 snap-start" 
+        className="bg-[#151324] pt-40 pb-20 w-full overflow-hidden flex flex-col gap-40" 
         ref={containerRef}
       >
         {/* First Narrative Block */}
@@ -597,6 +625,167 @@ export default function MobileApproach({ onStepChange }: { onStepChange?: (step:
           <p className="font-['Lato'] font-light" style={{ color: '#191627', fontSize: '14.56px' }}>
             No obligation. Just alignment.
           </p>
+        </div>
+      </div>
+
+      {/* ── New Section: Direction Clear ── */}
+      <div 
+        className="w-full pb-40 px-0 mt-[-1px]"
+        style={{ background: 'linear-gradient(to bottom, #171425, #FCFAF3)' }}
+      >
+        <div style={{ paddingTop: '127.1px' }} className="flex flex-col">
+          <div className="mb-[60vh] px-7.5">
+            <FadeInBlock delay={100}>
+              <h2 className="text-white font-light font-['Fustat'] leading-[1.1]" style={{ fontSize: '37.18px' }}>
+                When direction <br />
+                is clear,
+              </h2>
+            </FadeInBlock>
+          </div>
+          
+          <div className="w-full flex justify-end pr-[19.5px] mb-[60vh]">
+            <FadeInBlock delay={100}>
+              <h2 className="text-white font-normal font-['Fustat'] leading-[1.1] text-left" style={{ fontSize: '37.18px' }}>
+                growth stops <br />
+                depending <br />
+                on effort.
+              </h2>
+            </FadeInBlock>
+          </div>
+
+          <div className="mt-40 px-0">
+            <div className="mb-[80vh] pl-[21.5px]">
+              <FadeInBlock delay={100}>
+                <h3 className="font-medium font-['Fustat'] leading-[1.1] mb-[13px]" style={{ color: '#FFFFFF', fontSize: '50.18px' }}>
+                  Finally Moving <br />
+                  Forward
+                </h3>
+                <p className="font-light font-['Fustat'] leading-tight mb-[40px]" style={{ color: '#BBBCF1', fontSize: '22.05px' }}>
+                  Alignment replaces debate.
+                </p>
+                <p className="font-medium font-['Fustat'] leading-tight text-white" style={{ fontSize: '22.05px' }}>
+                  Less rework. Fewer loops.<br />
+                  More forward motion.
+                </p>
+              </FadeInBlock>
+            </div>
+
+            <div className="mb-[80vh] pl-[21.5px]">
+              <FadeInBlock delay={100}>
+                <h3 className="font-medium font-['Fustat'] leading-[1.1] mb-[13px]" style={{ color: '#191432', fontSize: '50.18px' }}>
+                  Focus where <br />
+                  It Matters
+                </h3>
+                <p className="font-light font-['Fustat'] leading-tight mb-[40px]" style={{ color: '#191432', fontSize: '22.05px' }}>
+                  Allocation follows validated <br />
+                  traction.
+                </p>
+                <p className="font-medium font-['Fustat'] leading-tight" style={{ color: '#191432', fontSize: '22.05px' }}>
+                  No more scattered bets.<br />
+                  Double down on what works.
+                </p>
+              </FadeInBlock>
+            </div>
+
+            <div className="pb-0">
+              <div className="pl-[21.5px] mb-10">
+                <FadeInBlock delay={100}>
+                  <h3 className="font-medium font-['Fustat'] leading-[1.1] mb-[13px]" style={{ color: '#191432', fontSize: '50.18px' }}>
+                    Let It Work as <br />
+                    One
+                  </h3>
+                  <p className="font-light font-['Fustat'] leading-tight mb-[17px]" style={{ color: '#191432', fontSize: '22.05px' }}>
+                    Product, Marketing, and Sales <br />
+                    pull in the same direction.
+                  </p>
+                  <p className="font-normal font-['Fustat'] leading-tight mb-[40.44px]" style={{ color: '#191432', fontSize: '22.05px' }}>
+                    No more resets. What works <br />
+                    scales.
+                  </p>
+                </FadeInBlock>
+              </div>
+
+              <FadeInBlock delay={100}>
+                <div className="w-full px-[19px] flex justify-center text-left">
+                  <div 
+                    className="w-full h-[162px] rounded-[22px] overflow-hidden relative border-[0.5px] border-[#191432]"
+                    style={{ backgroundColor: 'rgba(25, 20, 50, 0.05)' }}
+                  >
+                    <div 
+                      ref={wordsScrollRef}
+                      className="absolute inset-0 flex flex-col pt-4 overflow-y-auto hide-scrollbar touch-pan-y"
+                    >
+                      <div className="flex flex-col gap-3 pl-[26px]">
+                        {[
+                          "Landing ecosystems", "Positioned homepage", "Conversion architecture", "Sales narrative", 
+                          "ICP refinement", "Messaging system", "Audience segmentation", "Channel prioritization", 
+                          "Campaign systems", "Acquisition experiments", "Ad frameworks", "Email sequences", 
+                          "Onboarding flows", "Offer architecture", "Product framing", "Pitch deck refinement", 
+                          "GTM roadmap", "Strategic brief"
+                        ].map((word, idx) => (
+                          <span key={`v1-${idx}`} className="font-['Fustat'] font-extralight text-[22.05px] text-black shrink-0">
+                            {word}
+                          </span>
+                        ))}
+                        {[
+                          "Landing ecosystems", "Positioned homepage", "Conversion architecture", "Sales narrative", 
+                          "ICP refinement", "Messaging system", "Audience segmentation", "Channel prioritization", 
+                          "Campaign systems", "Acquisition experiments", "Ad frameworks", "Email sequences", 
+                          "Onboarding flows", "Offer architecture", "Product framing", "Pitch deck refinement", 
+                          "GTM roadmap", "Strategic brief"
+                        ].map((word, idx) => (
+                          <span key={`v2-${idx}`} className="font-['Fustat'] font-extralight text-[22.05px] text-black shrink-0">
+                            {word}
+                          </span>
+                        ))}
+                        {[
+                          "Landing ecosystems", "Positioned homepage", "Conversion architecture", "Sales narrative", 
+                          "ICP refinement", "Messaging system", "Audience segmentation", "Channel prioritization", 
+                          "Campaign systems", "Acquisition experiments", "Ad frameworks", "Email sequences", 
+                          "Onboarding flows", "Offer architecture", "Product framing", "Pitch deck refinement", 
+                          "GTM roadmap", "Strategic brief"
+                        ].map((word, idx) => (
+                          <span key={`v3-${idx}`} className="font-['Fustat'] font-extralight text-[22.05px] text-black shrink-0">
+                            {word}
+                          </span>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </FadeInBlock>
+
+              <FadeInBlock delay={150}>
+                <div className="w-full mt-[36px] pl-[21px] text-left">
+                  <span 
+                    className="underline font-['Fustat'] font-light text-[22.05px]"
+                    style={{ color: '#191432' }}
+                  >
+                    Let’s get to work →
+                  </span>
+                </div>
+              </FadeInBlock>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* ── New Section: Strategy meets Execution ── */}
+      <div 
+        className="w-full mt-0"
+        style={{ backgroundColor: '#171425', paddingBottom: '120px' }}
+      >
+        <div style={{ paddingTop: '160px' }} className="pl-[21px] text-left flex flex-col">
+          <FadeInBlock delay={100}>
+            <h2 className="text-white font-medium font-['Fustat'] leading-[1.1] mb-[13px]" style={{ fontSize: '45.18px' }}>
+              Where Strategy <br />
+              Meets Execution.
+            </h2>
+            <p className="text-white font-light font-['Fustat'] leading-tight" style={{ fontSize: '22.05px' }}>
+              This only works if the thinking and <br />
+              the building move together.
+            </p>
+          </FadeInBlock>
         </div>
       </div>
     </>
