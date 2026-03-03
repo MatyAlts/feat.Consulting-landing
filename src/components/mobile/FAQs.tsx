@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import loadingFt from '../../assets/icons/loading ft.png';
 import flechaIcon from '../../assets/icons/flecha.svg';
 
@@ -30,6 +31,7 @@ const faqs = [
 ];
 
 export default function MobileFAQs() {
+  const navigate = useNavigate();
   const [openIdx, setOpenIdx] = useState<number | null>(null);
 
   return (
@@ -142,6 +144,7 @@ export default function MobileFAQs() {
             </p>
 
             <button 
+              onClick={() => navigate('/contact')}
               className="w-full max-w-[325px] flex items-center justify-center rounded-full active:scale-[0.98] transition-transform shadow-sm"
               style={{ 
                 backgroundColor: '#8B8CFB', 
@@ -185,7 +188,11 @@ export default function MobileFAQs() {
 
           <div style={{ marginTop: '29px' }}>
             <a 
-              href="#" 
+              href="/contact" 
+              onClick={(e) => {
+                e.preventDefault();
+                navigate('/contact');
+              }}
               className="flex items-center text-white font-['Fustat'] font-light tracking-tight group"
               style={{ fontSize: '23px' }}
             >
@@ -220,11 +227,11 @@ export default function MobileFAQs() {
             
             <div className="flex items-center" style={{ marginTop: '37px', gap: '37px' }}>
               <a 
-                href="mailto:hello@feat.consulting" 
+                href="mailto:hi@feat.consulting" 
                 className="font-['Fustat'] font-extralight underline underline-offset-[4px] decoration-[#D2D2FF]/30 hover:decoration-[#D2D2FF] transition-colors" 
                 style={{ fontSize: '16.32px', color: '#D2D2FF' }}
               >
-                hello@feat.consulting
+                hi@feat.consulting
               </a>
               <a 
                 href="https://www.linkedin.com/company/feat-consulting" 

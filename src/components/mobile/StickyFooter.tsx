@@ -90,7 +90,7 @@ export default function StickyFooter({ isStrategy = false }: { isStrategy?: bool
                     to="/contact"
                     className="text-brand-dark text-[15px] font-medium flex items-center gap-1"
                 >
-                    Let’s talk <span className="text-[12px]">↗</span>
+                    Direct your Growth <span className="text-[12px]">↗</span>
                 </Link>
 
                 {/* Progress Bar Container */}
