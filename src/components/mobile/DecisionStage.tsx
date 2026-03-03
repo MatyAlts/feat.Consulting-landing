@@ -250,6 +250,19 @@ export default function MobileDecisionStage({ onStepChange }: MobileDecisionStag
   const nextSlide = () => goToSlide((activeSlideIdx + 1) % activeProject.slides.length);
   const prevSlide = () => goToSlide((activeSlideIdx - 1 + activeProject.slides.length) % activeProject.slides.length);
 
+  // 4. Auto-rotation logic
+  useEffect(() => {
+    if (isChangingProject) return;
+
+    const interval = setInterval(() => {
+      // Don't auto-rotate if user is actively looking at the CTA (last slide)
+      // or if you prefer it to loop forever, remove the condition
+      nextSlide();
+    }, 5000);
+
+    return () => clearInterval(interval);
+  }, [activeSlideIdx, isChangingProject, activeProject.slides.length]);
+
   // Reset scroll on project change
   useEffect(() => {
     if (scrollRef.current) {

@@ -267,6 +267,15 @@
     }
   }
 
+  @keyframes marquee {
+    from {
+      transform: translateX(0);
+    }
+    to {
+      transform: translateX(-50%);
+    }
+  }
+
   --animate-bounce-slow: bounce-slow 2s ease-in-out infinite;
   --animate-fade-in-up: fade-in-up 0.8s ease-out forwards;
   --animate-marquee: marquee 30s linear infinite;
