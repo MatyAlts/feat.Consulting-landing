@@ -1,6 +1,15 @@
-
 import { useRef, useEffect, useState } from 'react'
 import { StaggerReveal } from '../shared/StaggerReveal'
+
+// Map all assets in /src/assets for dynamic lookup
+const assetModules = import.meta.glob('/src/assets/**/*.{png,jpg,jpeg,svg}', { eager: true, query: '?url', import: 'default' });
+
+const resolveAsset = (path: string) => {
+  // If it's already a resolved URL (starts with data: or http), return it
+  if (path.startsWith('data:') || path.startsWith('http') || path.startsWith('blob:')) return path;
+  // Look up in the glob map
+  return (assetModules[path] as any) || path;
+};
 
 interface MobileDecisionStageProps {
   onStepChange?: (step: number) => void;
@@ -388,7 +397,7 @@ export default function MobileDecisionStage({ onStepChange }: MobileDecisionStag
                   {slide.image && (
                     <>
                       <img 
-                        src={slide.image} 
+                        src={resolveAsset(slide.image)} 
                         alt="" 
                         className="w-full h-full object-cover opacity-60 mix-blend-overlay"
                       />
@@ -578,7 +587,7 @@ export default function MobileDecisionStage({ onStepChange }: MobileDecisionStag
                   }`}
                 >
                   <img 
-                    src={proj.logo} 
+                    src={resolveAsset(proj.logo)} 
                     alt={proj.name} 
                     className="max-h-8 w-auto object-contain"
                   />
