@@ -45,6 +45,8 @@ export default function MobileApproach({ onStepChange }: { onStepChange?: (step:
   const [translateX, setTranslateX] = useState(0);
   const textOverflowRef = useRef(0);
   const wordsScrollRef = useRef<HTMLDivElement>(null);
+  const horizontalScrollRef = useRef<HTMLDivElement>(null);
+  const cardsRowRef = useRef<HTMLDivElement>(null);
 
   /* ── Interactive Infinite Scroll Logic (100% User Controlled, Bidirectional) ── */
   useEffect(() => {
@@ -72,6 +74,43 @@ export default function MobileApproach({ onStepChange }: { onStepChange?: (step:
     scrollContainer.scrollTop = initialPos;
 
     return () => scrollContainer.removeEventListener('scroll', handleInfiniteScroll);
+  }, []);
+
+  /* ── Services Carousel (Vertical-to-Horizontal) Logic ── */
+  useEffect(() => {
+    let requestRef: number;
+    
+    const updatePosition = () => {
+      if (!horizontalScrollRef.current || !cardsRowRef.current) return;
+      
+      const container = horizontalScrollRef.current;
+      const row = cardsRowRef.current;
+      
+      const rect = container.getBoundingClientRect();
+      const windowHeight = window.innerHeight;
+      
+      // Calculate progress (0 to 1) based on container presence in viewport
+      const totalScrollableHeight = rect.height - windowHeight;
+      const currentScrollPos = -rect.top;
+      
+      let progress = currentScrollPos / totalScrollableHeight;
+      progress = Math.max(0, Math.min(1, progress));
+      
+      const viewportWidth = window.innerWidth;
+      const scrollWidth = row.scrollWidth;
+      
+      // Calculate travel: we want to move from 0 to negative (total width - viewport + right margin)
+      const maxTranslate = scrollWidth - viewportWidth + 21; 
+      
+      // Apply transform directly without transition for maximum smoothness
+      row.style.transform = `translate3d(${-progress * maxTranslate}px, 0, 0)`;
+      
+      requestRef = requestAnimationFrame(updatePosition);
+    };
+
+    requestRef = requestAnimationFrame(updatePosition);
+    
+    return () => cancelAnimationFrame(requestRef);
   }, []);
 
   /* ── Step Tracker ── */
@@ -786,6 +825,67 @@ export default function MobileApproach({ onStepChange }: { onStepChange?: (step:
               the building move together.
             </p>
           </FadeInBlock>
+        </div>
+
+        {/* ── Services Cards Carousel (Vertical-to-Horizontal Scroll) ── */}
+        <div 
+          ref={horizontalScrollRef}
+          className="relative w-full h-[400vh] mt-[52px]"
+        >
+          <div className="sticky top-0 h-screen w-full overflow-hidden flex flex-col justify-center">
+            <div 
+              ref={cardsRowRef}
+              className="flex px-[21px] gap-[21px] transition-transform duration-75 ease-out will-change-transform"
+            >
+              {[
+                {
+                  supra: "Context-Aware Strategy",
+                  title: "Built Around \nYour Reality",
+                  text: "Some teams need clarity at the narrative layer. Others at the funnel, product, or sales motion.\nWe intervene where leverage actually lives."
+                },
+                {
+                  supra: "Focused Calibration",
+                  title: "Decisive by \nDesign",
+                  text: "We focus on the decisions that unlock leverage first. We quickly cut through what’s blocking scale, so you can redirect with confidence and move without losing ground."
+                },
+                {
+                  supra: "Clear Direction",
+                  title: "Shared \nConviction.",
+                  text: "Whether you come in with a clear perspective or we shape the path forward together, all strategic calls are made deliberately and carried through to execution. So teams can move with total focus, and traction continues to build."
+                },
+                {
+                  supra: "Coordinated Execution",
+                  title: "One Team. \nAll Surfaces.",
+                  text: "Strategy, design, UX, media, and development move in sync, whether inside your team, ours, or both.\nNo fragmentation. Just coordinated execution."
+                },
+                {
+                  supra: "Embedded Capability",
+                  title: "Transferable \nSystems.",
+                  text: "What we build becomes part of your company as part of how your team operates, long after our collaboration ends."
+                }
+              ].map((card, idx) => (
+                <div 
+                  key={idx}
+                  className="shrink-0 rounded-[22px] border-[0.4px] border-[#E8E7E3]"
+                  style={{ 
+                    width: '327.03px',
+                    background: 'linear-gradient(225deg, #08141F 0%, #182431 100%)',
+                    padding: '36.14px 29.3px'
+                  }}
+                >
+                  <p className="font-['LatoExtraLight'] text-[20px] leading-tight mb-4" style={{ color: '#D6D6F0' }}>
+                    {card.supra}
+                  </p>
+                  <h3 className="font-['Fustat'] font-medium text-[31.21px] text-white leading-[1.1] mb-6 whitespace-pre-line">
+                    {card.title}
+                  </h3>
+                  <p className="font-['LatoExtraLight'] text-[20px] text-white leading-relaxed whitespace-pre-line">
+                    {card.text}
+                  </p>
+                </div>
+              ))}
+            </div>
+          </div>
         </div>
       </div>
     </>
