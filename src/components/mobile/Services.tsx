@@ -397,35 +397,24 @@ export default function MobileServices({ onStepChange }: MobileServicesProps) {
           data-step={19}
           data-color="rgba(21, 19, 36, 0.97)"
           ref={(el) => { sectionRefs.current[19] = el; }}
-          className="snap-start snap-always full-height w-full flex flex-col justify-center items-center px-5 overflow-hidden"
+          className="snap-start snap-always full-height w-full flex flex-col justify-center items-end pr-[37px] overflow-hidden"
         >
-          <div className="w-full text-center flex flex-col items-center gap-6">
-            <h2
-              className="font-medium tracking-tight"
-              style={{ fontSize: '74.18px', color: '#FCFAF3', ...getStepStyle(19, 0) }}
-            >
-              How?
-            </h2>
-            <div style={getStepStyle(19, 200)} className="flex flex-col items-center gap-4">
-              <p className="text-zinc-400 text-xl font-light font-['Fustat']">
-                Discover the mechanics of our strategy
-              </p>
-              <Link 
-                to="/strategy"
-                className="group flex items-center gap-2 px-6 py-3 bg-[#FCFAF3] rounded-full transition-all hover:bg-indigo-100"
-              >
-                <span className="text-[#151324] font-medium font-['Fustat'] text-lg">See our approach</span>
-                <svg 
-                  width="20" height="20" viewBox="0 0 24 24" fill="none" 
-                  stroke="#151324" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"
-                  className="transition-transform group-hover:translate-x-1"
-                >
-                  <line x1="5" y1="12" x2="19" y2="12"></line>
-                  <polyline points="12 5 19 12 12 19"></polyline>
-                </svg>
-              </Link>
-            </div>
-          </div>
+          <Link 
+            to="/strategy" 
+            style={{ 
+              ...getStepStyle(19, 0),
+              textDecoration: 'none',
+              textAlign: 'right',
+              fontFamily: 'Fustat',
+              fontWeight: 200,
+              fontSize: '27.54px',
+              color: '#FCFAF3',
+              lineHeight: 1.12
+            }}
+          >
+            So how does this<br />
+            <span className="underline">happen? →</span>
+          </Link>
         </section>
       </>
     </div>
