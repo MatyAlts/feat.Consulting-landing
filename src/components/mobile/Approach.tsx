@@ -276,7 +276,7 @@ export default function MobileApproach({ onStepChange }: { onStepChange?: (step:
       >
         <FadeInBlock>
           <div className="w-full justify-start">
-            <span className="text-stone-50 text-xl font-extralight font-['Fustat'] leading-7">We start by identifying your</span>
+            <span className="text-stone-50 text-xl font-extralight font-['Fustat'] leading-7">1. We start by identifying your</span>
             <span className="text-stone-50 text-xl font-normal font-['Fustat'] leading-7"> real buying cohort <br /></span>
             <span className="text-stone-50 text-xl font-extralight font-['Fustat'] leading-7">not demographically, but </span>
             <span className="text-stone-50 text-xl font-normal font-['Fustat'] leading-7">behaviorally</span>
@@ -292,7 +292,7 @@ export default function MobileApproach({ onStepChange }: { onStepChange?: (step:
       >
         <FadeInBlock delay={150}>
           <div className="w-full justify-start">
-            <span className="text-stone-50 text-xl font-extralight font-['Fustat'] leading-7">We reshape</span>
+            <span className="text-stone-50 text-xl font-extralight font-['Fustat'] leading-7">2. We reshape</span>
             <span className="text-stone-50 text-xl font-normal font-['Fustat'] leading-7"> narrative + structure </span>
             <span className="text-stone-50 text-xl font-extralight font-['Fustat'] leading-7">to</span>
             <span className="text-stone-50 text-xl font-normal font-['Fustat'] leading-7"> match </span>
@@ -312,7 +312,7 @@ export default function MobileApproach({ onStepChange }: { onStepChange?: (step:
             className="w-full flex justify-between items-center py-2 active:opacity-70 transition-opacity"
           >
             <h3 className="text-stone-50 font-['Fustat'] leading-tight" style={{ fontSize: '21.05px' }}>
-              <span className="font-extralight">We </span>
+              <span className="font-extralight">3. We </span>
               <span className="font-normal">create:</span>
             </h3>
             <img 
@@ -353,7 +353,7 @@ export default function MobileApproach({ onStepChange }: { onStepChange?: (step:
       >
         <FadeInBlock delay={150}>
           <div className="w-full justify-start">
-            <span className="text-stone-50 text-xl font-extralight font-['Fustat'] leading-7">We </span>
+            <span className="text-stone-50 text-xl font-extralight font-['Fustat'] leading-7">4. We </span>
             <span className="text-stone-50 text-xl font-normal font-['Fustat'] leading-7">launch</span>
             <span className="text-stone-50 text-xl font-extralight font-['Fustat'] leading-7"> under </span>
             <span className="text-stone-50 text-xl font-normal font-['Fustat'] leading-7">real conditions</span>
@@ -375,7 +375,7 @@ export default function MobileApproach({ onStepChange }: { onStepChange?: (step:
       >
         <FadeInBlock delay={300}>
           <div className="w-full justify-start">
-            <span className="text-stone-50 text-xl font-extralight font-['Fustat'] leading-7">And </span>
+            <span className="text-stone-50 text-xl font-extralight font-['Fustat'] leading-7">5. And </span>
             <span className="text-stone-50 text-xl font-normal font-['Fustat'] leading-7">align the system</span>
             <span className="text-stone-50 text-xl font-extralight font-['Fustat'] leading-7"> around </span>
             <span className="text-stone-50 text-xl font-medium font-['Fustat'] leading-7">what</span>
@@ -695,7 +695,7 @@ export default function MobileApproach({ onStepChange }: { onStepChange?: (step:
             <div className="mb-[80vh] pl-[21.5px]">
               <FadeInBlock delay={100}>
                 <h3 className="font-medium font-['Fustat'] leading-[1.1] mb-[13px]" style={{ color: '#FFFFFF', fontSize: '50.18px' }}>
-                  Finally Moving <br />
+                  Start Moving <br />
                   Forward
                 </h3>
                 <p className="font-light font-['Fustat'] leading-tight mb-[40px]" style={{ color: '#BBBCF1', fontSize: '22.05px' }}>
