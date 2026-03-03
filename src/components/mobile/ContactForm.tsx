@@ -146,7 +146,7 @@ export default function ContactForm() {
           correct it.
         </p>
 
-        <form id="contact-form" onSubmit={handleSubmit} className="flex flex-col gap-2.5 pb-55">
+        <form id="contact-form" onSubmit={handleSubmit} className="flex flex-col gap-2.5 pb-10">
           <input
             type="text"
             name="firstName"
@@ -206,33 +206,31 @@ export default function ContactForm() {
             placeholder="Tell us more (optional)"
             value={formData.moreInfo}
             onChange={handleInputChange}
-            className="w-full h-22.25 p-6 bg-[#F8F8F8] rounded-[15px] font-['Lato'] font-light text-[18px] text-[#011A1F] placeholder:text-[#011A1F]/50 outline-none border border-[#011A1F]/20 focus:border-brand-hero-body/40 transition-colors resize-none mb-4"
+            className="w-full h-22.25 p-6 bg-[#F8F8F8] rounded-[15px] font-['Lato'] font-light text-[18px] text-[#011A1F] placeholder:text-[#011A1F]/50 outline-none border border-[#011A1F]/20 focus:border-brand-hero-body/40 transition-colors resize-none mb-2"
           />
+
+          <div className="flex flex-col items-center">
+            <button
+              type="submit"
+              disabled={isSubmitting}
+              className="w-full h-13 mt-4 bg-brand-hero-body text-white rounded-full font-['Fustat'] font-medium text-[18px] flex items-center justify-center transition-all active:scale-[0.98] disabled:opacity-70"
+            >
+              {isSubmitting ? (
+                <span className="w-6 h-6 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+              ) : submitStatus === 'success' ? (
+                "Sent! →"
+              ) : (
+                "Start the conversation →"
+              )}
+            </button>
+            <p className="font-['Lato'] font-light text-[#171425] text-[15.19px] mt-2.5 opacity-70">
+              No obligation. Just clarity
+            </p>
+          </div>
         </form>
       </div>
 
-      <footer 
-        className="fixed bottom-0 left-0 right-0 h-50.75 rounded-t-[21px] flex flex-col items-center z-40 px-5.75 shadow-[0_-10px_25px_-5px_rgba(0,0,0,0.08)]"
-        style={{ background: 'linear-gradient(180deg, #DBE9EE 0%, #D2D3FF 100%)' }}
-      >
-        <button
-          form="contact-form"
-          type="submit"
-          disabled={isSubmitting}
-          className="w-full h-13 mt-5.25 bg-brand-hero-body text-white rounded-full font-['Fustat'] font-medium text-[18px] flex items-center justify-center transition-all active:scale-[0.98] disabled:opacity-70"
-        >
-          {isSubmitting ? (
-            <span className="w-6 h-6 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-          ) : submitStatus === 'success' ? (
-            "Sent! →"
-          ) : (
-            "Start the conversation →"
-          )}
-        </button>
-        <p className="font-['Lato'] font-light text-[#171425] text-[15.19px] mt-2.5 opacity-70">
-          No obligation. Just clarity
-        </p>
-      </footer>
+
 
       <div 
         className={`fixed inset-0 z-100 transition-all duration-300 ${showFrictionMenu ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'}`}
