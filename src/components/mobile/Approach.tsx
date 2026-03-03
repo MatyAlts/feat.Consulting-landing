@@ -46,38 +46,12 @@ export default function MobileApproach({ onStepChange }: { onStepChange?: (step:
   const containerRef = useRef<HTMLDivElement>(null);
   const [translateX, setTranslateX] = useState(0);
   const textOverflowRef = useRef(0);
-  const wordsScrollRef = useRef<HTMLDivElement>(null);
+
   const horizontalScrollRef = useRef<HTMLDivElement>(null);
   const cardsRowRef = useRef<HTMLDivElement>(null);
   const [activeCardIdx, setActiveCardIdx] = useState(0);
 
-  /* ── Interactive Infinite Scroll Logic (100% User Controlled, Bidirectional) ── */
-  useEffect(() => {
-    const scrollContainer = wordsScrollRef.current;
-    if (!scrollContainer) return;
 
-    const handleInfiniteScroll = () => {
-      const { scrollTop, scrollHeight } = scrollContainer;
-      const oneThirdHeight = scrollHeight / 3;
-
-      // Wrap around logic with buffer for inertia
-      if (scrollTop >= oneThirdHeight * 2) {
-        // We reached the bottom part, jump to middle part
-        scrollContainer.scrollTop = scrollTop - oneThirdHeight;
-      } else if (scrollTop <= oneThirdHeight * 0.5) {
-        // We reached the top part, jump to middle part
-        scrollContainer.scrollTop = scrollTop + oneThirdHeight;
-      }
-    };
-
-    scrollContainer.addEventListener('scroll', handleInfiniteScroll, { passive: true });
-    
-    // Initialize to middle part so both directions work from the start
-    const initialPos = (scrollContainer.scrollHeight / 3);
-    scrollContainer.scrollTop = initialPos;
-
-    return () => scrollContainer.removeEventListener('scroll', handleInfiniteScroll);
-  }, []);
 
   /* ── Services Carousel (Vertical-to-Horizontal) Logic ── */
   useEffect(() => {
@@ -775,11 +749,8 @@ export default function MobileApproach({ onStepChange }: { onStepChange?: (step:
                     className="w-full h-[162px] rounded-[22px] overflow-hidden relative border-[0.5px] border-[#191432]"
                     style={{ backgroundColor: 'rgba(25, 20, 50, 0.05)' }}
                   >
-                    <div 
-                      ref={wordsScrollRef}
-                      className="absolute inset-0 flex flex-col pt-4 overflow-y-auto hide-scrollbar touch-pan-y"
-                    >
-                      <div className="flex flex-col gap-3 pl-[26px]">
+                    <div className="absolute inset-0 pt-4 overflow-hidden pointer-events-none">
+                      <div className="flex flex-col gap-3 pl-[26px] animate-marquee-vertical">
                         {[
                           "Landing ecosystems", "Positioned homepage", "Conversion architecture", "Sales narrative", 
                           "ICP refinement", "Messaging system", "Audience segmentation", "Channel prioritization", 
@@ -799,17 +770,6 @@ export default function MobileApproach({ onStepChange }: { onStepChange?: (step:
                           "GTM roadmap", "Strategic brief"
                         ].map((word, idx) => (
                           <span key={`v2-${idx}`} className="font-['Fustat'] font-extralight text-[22.05px] text-black shrink-0">
-                            {word}
-                          </span>
-                        ))}
-                        {[
-                          "Landing ecosystems", "Positioned homepage", "Conversion architecture", "Sales narrative", 
-                          "ICP refinement", "Messaging system", "Audience segmentation", "Channel prioritization", 
-                          "Campaign systems", "Acquisition experiments", "Ad frameworks", "Email sequences", 
-                          "Onboarding flows", "Offer architecture", "Product framing", "Pitch deck refinement", 
-                          "GTM roadmap", "Strategic brief"
-                        ].map((word, idx) => (
-                          <span key={`v3-${idx}`} className="font-['Fustat'] font-extralight text-[22.05px] text-black shrink-0">
                             {word}
                           </span>
                         ))}
