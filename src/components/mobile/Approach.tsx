@@ -135,7 +135,7 @@ export default function MobileApproach({ onStepChange }: { onStepChange?: (step:
         {/* Sticky phrase */}
         <div
           ref={stickyRef}
-          className="sticky top-0 z-10 bg-[#151324] overflow-hidden px-[30px] pt-40 pb-0"
+          className="sticky top-0 z-10 bg-[#151324] overflow-hidden pl-[11.87px] pr-7.5 pt-40 pb-0"
         >
           <div className="text-slate-200 text-base font-normal font-['Fustat'] mb-3 leading-6">
             You might have guessed...
@@ -158,7 +158,7 @@ export default function MobileApproach({ onStepChange }: { onStepChange?: (step:
         ref={containerRef}
       >
         {/* First Narrative Block */}
-        <div className="pl-[38px] text-left my-24.5">
+        <div className="pl-[11.87px] text-left my-24.5">
           <StaggerReveal staggerDelay={80} baseDelay={100} rootMargin="0px">
             <h2 className="text-white font-light font-['Fustat'] leading-[1.1]" style={{ fontSize: '39.18px' }}>
               We don’t hand <br />
@@ -169,7 +169,7 @@ export default function MobileApproach({ onStepChange }: { onStepChange?: (step:
         </div>
 
         {/* Second Narrative Block */}
-        <div className="w-full flex justify-end pr-[38px] mb-24.5">
+        <div className="w-full flex justify-start pl-[11.87px] pr-7.5 mb-24.5">
           <div className="text-left">
             <StaggerReveal staggerDelay={80} baseDelay={100} rootMargin="0px">
               <h2 className="text-white font-light font-['Fustat'] leading-[1.1]" style={{ fontSize: '39.18px' }}>
@@ -182,8 +182,8 @@ export default function MobileApproach({ onStepChange }: { onStepChange?: (step:
         </div>
 
         {/* Third Narrative Block */}
-        <div className="w-full flex justify-center px-[30px] mb-24.5">
-          <div className="text-center">
+        <div className="w-full flex justify-start pl-[11.87px] pr-7.5 mb-24.5">
+          <div className="text-left">
             <StaggerReveal staggerDelay={80} baseDelay={100} rootMargin="0px">
               <h2 className="text-white font-light font-['Fustat'] leading-[1.1]" style={{ fontSize: '39.18px' }}>
                 <span className="whitespace-nowrap">We build what your</span> <br />
@@ -199,10 +199,10 @@ export default function MobileApproach({ onStepChange }: { onStepChange?: (step:
       <div 
         data-step="50"
         data-approach-block
-        className="snap-start snap-always full-height w-full flex flex-col justify-center items-center px-[30px] relative bg-[#151324]"
+        className="snap-start snap-always full-height w-full flex flex-col justify-center items-start pl-[11.87px] pr-7.5 relative bg-[#151324]"
       >
         <FadeInBlock delay={150}>
-          <div className="w-full text-center text-zinc-300 text-xl font-light font-['Fustat']">
+          <div className="w-full text-left text-zinc-300 text-xl font-light font-['Fustat']">
             How this actually works:
           </div>
         </FadeInBlock>
@@ -211,7 +211,7 @@ export default function MobileApproach({ onStepChange }: { onStepChange?: (step:
       <div 
         data-step="51"
         data-approach-block
-        className="snap-start snap-always full-height py-20 w-full flex flex-col justify-center items-start px-[30px] relative bg-[#151324]"
+        className="snap-start snap-always full-height py-20 w-full flex flex-col justify-center items-start pl-[11.87px] pr-7.5 relative bg-[#151324]"
       >
         <FadeInBlock>
           <div className="w-full justify-start">
@@ -227,7 +227,7 @@ export default function MobileApproach({ onStepChange }: { onStepChange?: (step:
       <div 
         data-step="52"
         data-approach-block
-        className="snap-start snap-always full-height py-20 w-full flex flex-col justify-center items-start px-[30px] relative bg-[#151324]"
+        className="snap-start snap-always full-height py-20 w-full flex flex-col justify-center items-start pl-[11.87px] pr-7.5 relative bg-[#151324]"
       >
         <FadeInBlock delay={150}>
           <div className="w-full justify-start">
@@ -243,7 +243,7 @@ export default function MobileApproach({ onStepChange }: { onStepChange?: (step:
       <div 
         data-step="53"
         data-approach-block
-        className="snap-start snap-always min-h-dvh py-20 w-full flex flex-col justify-center items-start px-[30px] relative bg-[#151324]"
+        className="snap-start snap-always min-h-dvh py-20 w-full flex flex-col justify-center items-start pl-[11.87px] pr-7.5 relative bg-[#151324]"
       >
         <div className="w-full flex flex-col items-start">
           <button 
@@ -288,7 +288,7 @@ export default function MobileApproach({ onStepChange }: { onStepChange?: (step:
       <div 
         data-step="54"
         data-approach-block
-        className="snap-start snap-always full-height py-20 w-full flex flex-col justify-center items-start px-[30px] relative bg-[#151324]"
+        className="snap-start snap-always full-height py-20 w-full flex flex-col justify-center items-start pl-[11.87px] pr-7.5 relative bg-[#151324]"
       >
         <FadeInBlock delay={150}>
           <div className="w-full justify-start">
@@ -310,7 +310,7 @@ export default function MobileApproach({ onStepChange }: { onStepChange?: (step:
       <div 
         data-step="55"
         data-approach-block
-        className="snap-start snap-always full-height py-20 w-full flex flex-col justify-center items-start px-[30px] relative bg-[#151324]"
+        className="snap-start snap-always full-height py-20 w-full flex flex-col justify-center items-start pl-[11.87px] pr-7.5 relative bg-[#151324]"
       >
         <FadeInBlock delay={300}>
           <div className="w-full justify-start">
@@ -331,7 +331,7 @@ export default function MobileApproach({ onStepChange }: { onStepChange?: (step:
       <div 
         data-step="56"
         data-approach-block
-        className="snap-start snap-always full-height py-20 w-full flex flex-col justify-center items-start px-[30px] relative bg-[#151324]"
+        className="snap-start snap-always full-height py-20 w-full flex flex-col justify-center items-start pl-[11.87px] pr-7.5 relative bg-[#151324]"
       >
         <FadeInBlock delay={150}>
           <div className="w-full justify-start">
@@ -345,24 +345,260 @@ export default function MobileApproach({ onStepChange }: { onStepChange?: (step:
       <div 
         data-step="61"
         data-approach-block
-        className="bg-[#FCFAF3] px-[30px] py-40 snap-start"
+        className="px-[11.87px] py-40 snap-start"
+        style={{ background: 'linear-gradient(to bottom, #DBE9EE, #FFFFFF)' }}
       >
         <div className="w-full flex flex-col justify-start items-start gap-8">
           <div className="self-stretch flex flex-col justify-start items-start gap-4">
-            <div className="self-stretch justify-start text-slate-400 text-2xl font-normal font-['Fustat'] leading-tight">
-              Scale starts with the right entry point.
+            <div className="self-stretch justify-start font-light font-['Fustat'] leading-[1.2]" style={{ color: '#516066', fontSize: '22.05px' }}>
+              Scaling isn’t a template.
             </div>
-            <div className="self-stretch justify-start text-gray-900 text-5xl font-medium font-['Fustat'] leading-tight">
-              Go from Friction to Focus
+            <div className="self-stretch justify-start font-medium font-['Fustat'] leading-[1.1]" style={{ color: '#171425', fontSize: '50.18px' }}>
+              Growth Depends on Where You’re Constrained
             </div>
           </div>
-          <div className="self-stretch justify-start text-zinc-800 text-2xl font-light font-['Fustat'] leading-tight">
-            Not every company needs the same intervention.<br />
-            We've designed our engagement accordingly.
+          <div className="self-stretch justify-start font-light font-['Fustat'] leading-[1.3] mb-[37px]" style={{ color: '#1E262D', fontSize: '22.05px' }}>
+            Some companies need clarity before momentum. Others need the system to scale what’s already working.<br />
+            We start where friction actually lives.
           </div>
         </div>
-      </div>
 
+        {/* ── Direction Sprint Card ── */}
+        <div 
+          className="rounded-[30px] px-6 py-10 flex flex-col items-start relative box-border w-full"
+          style={{ 
+            backgroundColor: '#C6D7F9', 
+            height: '760px',
+            boxShadow: 'inset 0 0 0 0.5px #191432',
+          }}
+        >
+          <div className="w-full flex-1 flex flex-col">
+            <h2 className="font-['Fustat'] font-semibold leading-none mb-1" style={{ color: '#171425', fontSize: '29.98px' }}>
+              Direction Sprint
+            </h2>
+            
+            <p className="font-['Lato'] italic leading-tight mb-2.5" style={{ color: '#1A1A2E', fontSize: '17px' }}>
+              When scaling feels busy, but not unified.
+            </p>
+
+            <p className="font-['Lato'] font-light leading-tight" style={{ color: '#171425', fontSize: '15px' }}>
+              You’ve tested angles, launched campaigns, optimized metrics, but growth still feels scattered.
+            </p>
+            <p className="font-['Lato'] font-normal leading-tight mb-[18px]" style={{ color: '#171425', fontSize: '15px' }}>
+              More activity isn’t the answer. Direction is.
+            </p>
+
+            <div className="w-full h-px mb-2.5" style={{ backgroundColor: '#1B1B2F' }} />
+
+            <h3 className="font-['Lato'] font-semibold leading-none mb-[3.85px]" style={{ color: '#171425', fontSize: '18.84px' }}>
+              We’ll be calibrating:
+            </h3>
+            <ul className="flex flex-col gap-1 mb-[13px]">
+              {[
+                "The exact cohort worth prioritizing, based on behavior and awareness stage",
+                "The entry point that matches their specific intent",
+                "The specific narrative structured around how your offer is processed",
+                "A custom experience built to surface signal and reduce friction"
+              ].map((item, i) => (
+                <li key={i} className="flex items-start gap-1">
+                  <span className="shrink-0" style={{ color: '#171425', fontSize: '15px' }}>•</span>
+                  <span className="font-['Lato'] font-light leading-tight" style={{ color: '#171425', fontSize: '15px' }}>
+                    {item}
+                  </span>
+                </li>
+              ))}
+            </ul>
+
+            <h3 className="font-['Lato'] font-semibold leading-none mb-[3.85px]" style={{ color: '#171425', fontSize: '18.84px' }}>
+              What you’ll leave with:
+            </h3>
+            <ul className="flex flex-col gap-1 mb-[19.7px]">
+              {[
+                "Clarity on what’s truly moving the needle",
+                "A validated approach worth scaling",
+                "Dedicated journeys (ads, landing pages, email flows) engineered to convert",
+                "A unified decision logic across teams",
+                "A practical roadmap, grounded in proof and ready for expansion"
+              ].map((item, i) => (
+                <li key={i} className="flex items-start gap-1">
+                  <span className="shrink-0" style={{ color: '#171425', fontSize: '15px' }}>•</span>
+                  <span className="font-['Lato'] font-light leading-tight" style={{ color: '#171425', fontSize: '15px' }}>
+                    {item}
+                  </span>
+                </li>
+              ))}
+            </ul>
+
+            <p className="font-['Lato'] font-normal leading-tight mb-[19px]" style={{ color: '#171425', fontSize: '15px' }}>
+              This is not consulting. It’s validated direction, built and pressure-tested in-market.
+            </p>
+          </div>
+
+          <div className="w-full mt-auto">
+            <button 
+              className="w-full flex items-center justify-center rounded-full active:scale-[0.98] transition-transform mb-2.5 shadow-sm"
+              style={{ backgroundColor: '#1A1A2E', height: '60px' }}
+            >
+              <span className="text-white font-['Fustat'] font-medium" style={{ fontSize: '18.75px' }}>
+                Calibrate your Growth →
+              </span>
+            </button>
+
+            <p className="w-full text-center font-['Lato'] font-light" style={{ color: '#3C3C3C', fontSize: '14.56px' }}>
+              Build once. Scale deliberately.
+            </p>
+          </div>
+        </div>
+
+        <div className="mt-5" />
+
+        {/* ── Expansion System Card ── */}
+        <div 
+          className="rounded-[30px] px-6 py-10 flex flex-col items-start relative box-border w-full mx-auto"
+          style={{ 
+            backgroundColor: '#171425', 
+            height: '980px',
+            boxShadow: 'inset 0 0 0 0.5px #191432',
+          }}
+        >
+          <div className="w-full flex-1 flex flex-col">
+            <h2 className="font-['Fustat'] font-semibold leading-none mb-1 text-white" style={{ fontSize: '29.98px' }}>
+              Expansion System
+            </h2>
+            
+            <p className="font-['Lato'] italic font-light leading-tight mb-2.5" style={{ color: '#D2D2FF', fontSize: '17px' }}>
+              When the approach is evident, but scale demands deeper execution.
+            </p>
+
+            <div className="flex flex-col gap-0 mb-6">
+              <p className="font-['Lato'] font-light leading-tight text-white" style={{ fontSize: '15px' }}>
+                You’ve validated the direction.
+              </p>
+              <p className="font-['Lato'] font-normal leading-tight text-white" style={{ fontSize: '15px' }}>
+                Now we extend it across your highest-leverage surfaces.
+              </p>
+            </div>
+
+            <div className="w-full h-px mb-6 opacity-20" style={{ backgroundColor: '#FFFFFF' }} />
+
+            <h3 className="font-['Lato'] font-semibold leading-none mb-[3.85px] text-white" style={{ fontSize: '18.84px' }}>
+              We operationalize it through:
+            </h3>
+            <ul className="flex flex-col gap-1 mb-6">
+              {[
+                "Upgrading your key growth assets for scale (site, funnels, decks)",
+                "Optimizing acquisition around proven signals",
+                "Reinforcing conversion systems for expansion and efficiency",
+                "Embedding narrative cohesion across Product, Marketing, and Sales"
+              ].map((item, i) => (
+                <li key={i} className="flex items-start gap-1">
+                  <span className="shrink-0 text-white" style={{ fontSize: '15px' }}>•</span>
+                  <span className="font-['Lato'] font-light leading-tight text-white" style={{ fontSize: '15px' }}>
+                    {item}
+                  </span>
+                </li>
+              ))}
+            </ul>
+
+            <h3 className="font-['Lato'] font-semibold leading-none mb-[3.85px] text-white" style={{ fontSize: '18.84px' }}>
+              Depending on where scale is bottlenecked, this can extend to:
+            </h3>
+            <ul className="flex flex-col gap-0.5 mb-6 pl-2">
+              {[
+                "Website restructuring",
+                "Landing ecosystems",
+                "Campaign systems",
+                "Sales enablement",
+                "Product narrative alignment"
+              ].map((item, i) => (
+                <li key={i} className="font-['Lato'] font-light leading-tight text-white" style={{ fontSize: '15px' }}>
+                  – {item}
+                </li>
+              ))}
+            </ul>
+
+            <h3 className="font-['Lato'] font-semibold leading-none mb-[3.85px] text-white" style={{ fontSize: '18.84px' }}>
+              What you’ll leave with:
+            </h3>
+            <ul className="flex flex-col gap-1 mb-6">
+              {[
+                "Structural alignment across critical channels and surfaces",
+                "Systems designed to convert and installed to scale, not strain",
+                "Cohesive execution across teams",
+                "Structural capacity to expand what works",
+                "Growth that compounds instead of resets"
+              ].map((item, i) => (
+                <li key={i} className="flex items-start gap-1">
+                  <span className="shrink-0 text-white" style={{ fontSize: '15px' }}>•</span>
+                  <span className="font-['Lato'] font-light leading-tight text-white" style={{ fontSize: '15px' }}>
+                    {item}
+                  </span>
+                </li>
+              ))}
+            </ul>
+
+            <div className="flex flex-col gap-0 mt-auto mb-4">
+              <p className="font-['Lato'] font-normal leading-tight text-white" style={{ fontSize: '15px' }}>
+                This is not more activity.
+              </p>
+              <p className="font-['Lato'] font-normal leading-tight text-white" style={{ fontSize: '15px' }}>
+                It’s structural expansion built on proof.
+              </p>
+            </div>
+          </div>
+
+          <div className="w-full mt-auto">
+            <button 
+              className="w-full flex items-center justify-center rounded-full active:scale-[0.98] transition-transform mb-2.5 shadow-sm"
+              style={{ backgroundColor: '#8B8CFB', height: '60px' }}
+            >
+              <span className="font-['Fustat'] font-semibold" style={{ color: '#171425', fontSize: '18.75px' }}>
+                Scale What Works →
+              </span>
+            </button>
+            <p className="w-full text-center font-['Lato'] font-light" style={{ color: '#9FAECB', fontSize: '14.56px' }}>
+              Build the system that scales.
+            </p>
+          </div>
+        </div>
+
+        {/* ── Final Call to Action Section ── */}
+        <div className="mt-20 flex flex-col items-center text-center">
+          <h2 className="font-['Fustat'] font-medium mb-1.5" style={{ color: '#191432', fontSize: '40.18px', lineHeight: '1.1' }}>
+            Not sure where <br />
+            you stand?
+          </h2>
+          
+          <p className="font-['Fustat'] font-extralight mb-[23px]" style={{ color: '#191432', fontSize: '20.05px' }}>
+            We’ll identify it in one focused session.
+          </p>
+
+          <p className="font-['Fustat'] font-light mb-[23px]" style={{ color: '#191432', fontSize: '22.05px', lineHeight: '1.3' }}>
+            Direction or expansion,<br />
+            you’ll leave knowing exactly <br />
+            where to start.
+          </p>
+
+          <div className="w-full px-[51.5px]">
+            <button 
+              className="w-full flex items-center justify-center rounded-full active:scale-[0.98] transition-transform mb-2.5 shadow-md"
+              style={{ 
+                backgroundColor: '#191432', 
+                height: '60px',
+                border: '0.5px solid #1A1A2E'
+              }}
+            >
+              <span className="text-white font-['Fustat'] font-medium" style={{ fontSize: '18.75px' }}>
+                Fix your Growth →
+              </span>
+            </button>
+          </div>
+
+          <p className="font-['Lato'] font-light" style={{ color: '#191627', fontSize: '14.56px' }}>
+            No obligation. Just alignment.
+          </p>
+        </div>
+      </div>
     </>
   );
 }
