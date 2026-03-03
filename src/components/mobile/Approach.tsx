@@ -930,6 +930,7 @@ export default function MobileApproach({ onStepChange }: { onStepChange?: (step:
             style={{ 
               height: '358.35px',
               background: 'linear-gradient(225deg, #D2D3FF 0%, #DBE9EE 100%)',
+              border: '0.2px solid #000000',
             }}
           >
             <p 
