@@ -32,7 +32,7 @@ function useDesktopScale() {
   return scale
 }
 
-export default function DesktopLayout({ showStrategy = false, showForm = false, isLoading = false }: { showStrategy?: boolean, showForm?: boolean, isLoading?: boolean }) {
+export default function DesktopLayout({ showStrategy = false, showForm = false }: { showStrategy?: boolean, showForm?: boolean }) {
   const [showMobile, setShowMobile] = useState(showForm)
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [btnHovered, setBtnHovered] = useState(false)

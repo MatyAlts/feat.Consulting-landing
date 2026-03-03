@@ -17,7 +17,7 @@ export default function App() {
       <Routes>
         <Route 
           path="/" 
-          element={isDesktop ? <DesktopLayout key={`home-desktop-${isLoading}`} isLoading={isLoading} /> : <MobileLayout key={`home-mobile-${isLoading}`} />} 
+          element={isDesktop ? <DesktopLayout key={`home-desktop-${isLoading}`} /> : <MobileLayout key={`home-mobile-${isLoading}`} />} 
         />
         <Route 
           path="/strategy" 
