@@ -19,7 +19,7 @@ export default function ContactForm() {
     lastName: '',
     workEmail: '',
     companyWebsite: '',
-    friction: '',
+    friction: [] as string[],
     moreInfo: ''
   })
   
@@ -49,16 +49,33 @@ export default function ContactForm() {
   }
 
   const handleFrictionSelect = (option: string) => {
-    if (option !== 'Other (please specify)') {
-      setFormData(prev => ({ ...prev, friction: option }))
-      setErrors(prev => {
-        const newErrors = { ...prev }
-        delete newErrors.friction
-        return newErrors
-      })
-    } else {
-      setFormData(prev => ({ ...prev, friction: 'Other:' }))
-    }
+    setFormData(prev => {
+      const current = prev.friction
+      let next: string[]
+      
+      if (option === 'Other (please specify)') {
+        const hasOther = current.some(f => f.startsWith('Other:'))
+        if (hasOther) {
+          next = current.filter(f => !f.startsWith('Other:'))
+        } else {
+          next = [...current, 'Other:']
+        }
+      } else {
+        if (current.includes(option)) {
+          next = current.filter(f => f !== option)
+        } else {
+          next = [...current, option]
+        }
+      }
+      
+      return { ...prev, friction: next }
+    })
+
+    setErrors(prev => {
+      const newErrors = { ...prev }
+      delete newErrors.friction
+      return newErrors
+    })
   }
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -72,7 +89,11 @@ export default function ContactForm() {
     } else if (!validateEmail(formData.workEmail)) {
       newErrors.workEmail = 'Invalid email'
     }
-    if (!formData.friction || formData.friction === 'Other:') newErrors.friction = 'Required'
+    if (formData.friction.length === 0) {
+      newErrors.friction = 'Required'
+    } else if (formData.friction.length === 1 && formData.friction[0] === 'Other:') {
+      newErrors.friction = 'Required'
+    }
 
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors)
@@ -96,6 +117,9 @@ export default function ContactForm() {
           },
           body: JSON.stringify({
             ...formData,
+            friction: formData.friction
+              .map(f => f.startsWith('Other:') ? (f.replace('Other:', 'Other: ') || "Other") : f)
+              .join(' + '),
             timestamp: new Date().toISOString()
           })
         })
@@ -191,10 +215,12 @@ export default function ContactForm() {
             onClick={() => setShowFrictionMenu(true)}
             className={`w-full h-13 px-6 bg-[#F8F8F8] rounded-[15px] font-['Lato'] font-light text-[18px] text-left flex items-center justify-between outline-none border border-[#011A1F]/20 transition-colors ${errors.friction ? 'border-red-400' : ''}`}
           >
-            <span className={formData.friction ? 'text-[#011A1F]' : 'text-[#011A1F]/50 truncate max-w-[90%]'}>
-              {(formData.friction && formData.friction.startsWith('Other:')) 
-                ? formData.friction.replace('Other:', 'Other: ') || "Other (specify below)"
-                : formData.friction || "Where are you experiencing friction?*"}
+            <span className={`truncate flex-1 min-w-0 ${formData.friction.length > 0 ? 'text-[#011A1F]' : 'text-[#011A1F]/50'}`}>
+              {formData.friction.length > 0 
+                ? formData.friction
+                    .map(f => f.startsWith('Other:') ? (f.replace('Other:', 'Other: ') || "Other") : f)
+                    .join(', ')
+                : "Where are you experiencing friction?*"}
             </span>
             <svg width="12" height="7" viewBox="0 0 12 7" fill="none" className={`transition-transform duration-300 ${showFrictionMenu ? 'rotate-180' : ''}`}>
               <path d="M1 1L6 6L11 1" stroke="#011A1F" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
@@ -230,8 +256,6 @@ export default function ContactForm() {
         </form>
       </div>
 
-
-
       <div 
         className={`fixed inset-0 z-100 transition-all duration-300 ${showFrictionMenu ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'}`}
       >
@@ -255,7 +279,9 @@ export default function ContactForm() {
           <div className="flex-1 overflow-y-auto px-6 pb-6">
             <div className="flex flex-col gap-0">
               {frictionOptions.map((option, idx) => {
-                const isSelected = formData.friction === option || (option === 'Other (please specify)' && formData.friction.startsWith('Other:'));
+                const isSelected = option === 'Other (please specify)' 
+                  ? formData.friction.some(f => f.startsWith('Other:'))
+                  : formData.friction.includes(option);
                 return (
                   <div key={idx}>
                     <label 
@@ -276,15 +302,18 @@ export default function ContactForm() {
                       </div>
                     </label>
                     
-                    {option === 'Other (please specify)' && formData.friction.startsWith('Other:') && (
+                    {option === 'Other (please specify)' && formData.friction.some(f => f.startsWith('Other:')) && (
                       <div className="pb-4 animate-slide-down">
                         <input 
                           type="text"
                           name="friction_other"
                           placeholder="Please specify..."
                           autoFocus
-                          value={formData.friction.replace('Other:', '')}
-                          onChange={(e) => setFormData(prev => ({ ...prev, friction: `Other:${e.target.value}` }))}
+                          value={formData.friction.find(f => f.startsWith('Other:'))?.replace('Other:', '') || ''}
+                          onChange={(e) => setFormData(prev => ({ 
+                            ...prev, 
+                            friction: prev.friction.map(f => f.startsWith('Other:') ? `Other:${e.target.value}` : f) 
+                          }))}
                           className="w-full h-11 px-4 bg-zinc-50 border border-zinc-200 rounded-xl font-['Lato'] font-light text-base outline-none focus:border-brand-hero-body/30 transition-all"
                         />
                       </div>
