@@ -55,44 +55,53 @@ export default function MobileApproach({ onStepChange }: { onStepChange?: (step:
 
   /* ── Services Carousel (Vertical-to-Horizontal) Logic ── */
   useEffect(() => {
-    let requestRef: number;
-    
+    let rafId: number | null = null;
+
     const updatePosition = () => {
+      rafId = null;
       if (!horizontalScrollRef.current || !cardsRowRef.current) return;
-      
+
       const container = horizontalScrollRef.current;
       const row = cardsRowRef.current;
-      
+
       const rect = container.getBoundingClientRect();
       const windowHeight = window.innerHeight;
-      
+
       // Calculate progress (0 to 1) based on container presence in viewport
       const totalScrollableHeight = rect.height - windowHeight;
       const currentScrollPos = -rect.top;
-      
+
       let progress = currentScrollPos / totalScrollableHeight;
       progress = Math.max(0, Math.min(1, progress));
-      
+
       const viewportWidth = window.innerWidth;
       const scrollWidth = row.scrollWidth;
-      
+
       // Calculate travel: we want to move from 0 to negative (total width - viewport + right margin)
-      const maxTranslate = scrollWidth - viewportWidth + 21; 
-      
+      const maxTranslate = scrollWidth - viewportWidth + 21;
+
       // Sync active dot: simple mapping of progress to index (0-4)
       const numCards = 5;
       const calculatedIdx = Math.min(numCards - 1, Math.floor(progress * (numCards - 0.1)));
       setActiveCardIdx(calculatedIdx);
-      
+
       // Apply transform directly without transition for maximum smoothness
       row.style.transform = `translate3d(${-progress * maxTranslate}px, 0, 0)`;
-      
-      requestRef = requestAnimationFrame(updatePosition);
     };
 
-    requestRef = requestAnimationFrame(updatePosition);
-    
-    return () => cancelAnimationFrame(requestRef);
+    const handleScroll = () => {
+      if (!rafId) rafId = requestAnimationFrame(updatePosition);
+    };
+
+    const main = document.querySelector('main');
+    main?.addEventListener('scroll', handleScroll, { passive: true });
+    // Run once for initial state
+    updatePosition();
+
+    return () => {
+      main?.removeEventListener('scroll', handleScroll);
+      if (rafId) cancelAnimationFrame(rafId);
+    };
   }, []);
 
   /* ── Step Tracker ── */
@@ -203,7 +212,7 @@ export default function MobileApproach({ onStepChange }: { onStepChange?: (step:
           </div>
           <div
             ref={textRef}
-            className="whitespace-nowrap text-white text-5xl font-medium font-['Fustat'] leading-[55.70px] will-change-transform"
+            className="whitespace-nowrap text-white text-5xl font-medium font-['Fustat'] leading-[1.16] will-change-transform"
             style={{ transform: `translateX(${translateX}px)` }}
           >
             feat's not your run-of-the-mill consultancy.
@@ -221,7 +230,7 @@ export default function MobileApproach({ onStepChange }: { onStepChange?: (step:
         {/* First Narrative Block */}
         <div className="px-7.5 text-left my-24.5">
           <StaggerReveal staggerDelay={80} baseDelay={100} rootMargin="0px">
-            <h2 className="text-white font-light font-['Fustat'] leading-[1.1]" style={{ fontSize: '39.18px' }}>
+            <h2 className="text-white font-light font-['Fustat'] leading-[1.1]" style={{ fontSize: 'clamp(32px, 10vw, 42px)' }}>
               We don’t hand <br />
               you a strategy <br />
               and disappear.
@@ -233,7 +242,7 @@ export default function MobileApproach({ onStepChange }: { onStepChange?: (step:
         <div className="w-full flex justify-start px-7.5 mb-24.5">
           <div className="text-left">
             <StaggerReveal staggerDelay={80} baseDelay={100} rootMargin="0px">
-              <h2 className="text-white font-light font-['Fustat'] leading-[1.1]" style={{ fontSize: '39.18px' }}>
+              <h2 className="text-white font-light font-['Fustat'] leading-[1.1]" style={{ fontSize: 'clamp(32px, 10vw, 42px)' }}>
                 And we don’t <br />
                 execute blindly <br />
                 either.
@@ -246,7 +255,7 @@ export default function MobileApproach({ onStepChange }: { onStepChange?: (step:
         <div className="w-full flex justify-start px-7.5 mb-24.5">
           <div className="text-left">
             <StaggerReveal staggerDelay={80} baseDelay={100} rootMargin="0px">
-              <h2 className="text-white font-light font-['Fustat'] leading-[1.1]" style={{ fontSize: '39.18px' }}>
+              <h2 className="text-white font-light font-['Fustat'] leading-[1.1]" style={{ fontSize: 'clamp(32px, 10vw, 42px)' }}>
                 <span className="whitespace-nowrap">We build what your</span> <br />
                 reality demands <br />
                 <span className="opacity-100">— and see it <br /> through.</span>
@@ -260,7 +269,7 @@ export default function MobileApproach({ onStepChange }: { onStepChange?: (step:
       <div 
         data-step="50"
         data-approach-block
-        className="snap-start snap-always full-height w-full flex flex-col justify-center items-center px-7.5 relative bg-[#151324]"
+        className="full-height w-full flex flex-col justify-center items-center px-7.5 relative bg-[#151324]"
       >
         <FadeInBlock delay={150}>
           <div className="w-full text-center text-zinc-300 text-xl font-light font-['Fustat']">
@@ -272,7 +281,7 @@ export default function MobileApproach({ onStepChange }: { onStepChange?: (step:
       <div 
         data-step="51"
         data-approach-block
-        className="snap-start snap-always full-height py-20 w-full flex flex-col justify-center items-start px-7.5 relative bg-[#151324]"
+        className="full-height py-20 w-full flex flex-col justify-center items-start px-7.5 relative bg-[#151324]"
       >
         <FadeInBlock>
           <div className="w-full justify-start">
@@ -288,7 +297,7 @@ export default function MobileApproach({ onStepChange }: { onStepChange?: (step:
       <div 
         data-step="52"
         data-approach-block
-        className="snap-start snap-always full-height py-20 w-full flex flex-col justify-center items-start px-7.5 relative bg-[#151324]"
+        className="full-height py-20 w-full flex flex-col justify-center items-start px-7.5 relative bg-[#151324]"
       >
         <FadeInBlock delay={150}>
           <div className="w-full justify-start">
@@ -304,7 +313,7 @@ export default function MobileApproach({ onStepChange }: { onStepChange?: (step:
       <div 
         data-step="53"
         data-approach-block
-        className="snap-start snap-always min-h-dvh py-20 w-full flex flex-col justify-center items-start px-7.5 relative bg-[#151324]"
+        className="min-h-dvh py-20 w-full flex flex-col justify-center items-start px-7.5 relative bg-[#151324]"
       >
         <div className="w-full flex flex-col items-start">
           <button 
@@ -349,7 +358,7 @@ export default function MobileApproach({ onStepChange }: { onStepChange?: (step:
       <div 
         data-step="54"
         data-approach-block
-        className="snap-start snap-always full-height py-20 w-full flex flex-col justify-center items-start px-7.5 relative bg-[#151324]"
+        className="full-height py-20 w-full flex flex-col justify-center items-start px-7.5 relative bg-[#151324]"
       >
         <FadeInBlock delay={150}>
           <div className="w-full justify-start">
@@ -371,7 +380,7 @@ export default function MobileApproach({ onStepChange }: { onStepChange?: (step:
       <div 
         data-step="55"
         data-approach-block
-        className="snap-start snap-always full-height py-20 w-full flex flex-col justify-center items-start px-7.5 relative bg-[#151324]"
+        className="full-height py-20 w-full flex flex-col justify-center items-start px-7.5 relative bg-[#151324]"
       >
         <FadeInBlock delay={300}>
           <div className="w-full justify-start">
@@ -392,7 +401,7 @@ export default function MobileApproach({ onStepChange }: { onStepChange?: (step:
       <div 
         data-step="56"
         data-approach-block
-        className="snap-start snap-always full-height py-20 w-full flex flex-col justify-center items-start px-7.5 relative bg-[#151324]"
+        className="full-height py-20 w-full flex flex-col justify-center items-start px-7.5 relative bg-[#151324]"
       >
         <FadeInBlock delay={150}>
           <div className="w-full justify-start">
@@ -407,19 +416,19 @@ export default function MobileApproach({ onStepChange }: { onStepChange?: (step:
         id="entry-points"
         data-step="61"
         data-approach-block
-        className="px-[11.87px] py-40 snap-start"
+        className="px-3 py-40 snap-start"
         style={{ background: 'linear-gradient(to bottom, #DBE9EE, #FFFFFF)' }}
       >
         <div className="w-full flex flex-col justify-start items-start gap-8">
           <div className="self-stretch flex flex-col justify-start items-start gap-4">
-            <div className="self-stretch justify-start font-light font-['Fustat'] leading-[1.2]" style={{ color: '#516066', fontSize: '22.05px' }}>
+            <div className="self-stretch justify-start font-light font-['Fustat'] leading-[1.2]" style={{ color: '#516066', fontSize: 'var(--text-hero-body)' }}>
               Scaling isn’t a template.
             </div>
-            <div className="self-stretch justify-start font-medium font-['Fustat'] leading-[1.1]" style={{ color: '#171425', fontSize: '50.18px' }}>
+            <div className="self-stretch justify-start font-medium font-['Fustat'] leading-[1.1]" style={{ color: '#171425', fontSize: 'var(--text-narrative-title)' }}>
               Growth Depends on Where You’re Constrained
             </div>
           </div>
-          <div className="self-stretch justify-start font-light font-['Fustat'] leading-[1.3] mb-[37px]" style={{ color: '#1E262D', fontSize: '22.05px' }}>
+          <div className="self-stretch justify-start font-light font-['Fustat'] leading-[1.3] mb-[37px]" style={{ color: '#1E262D', fontSize: 'var(--text-hero-body)' }}>
             Some companies need clarity before momentum. Others need the system to scale what’s already working.<br /><br />
             We start where friction actually lives.
           </div>
@@ -429,8 +438,8 @@ export default function MobileApproach({ onStepChange }: { onStepChange?: (step:
         <div 
           className="rounded-[30px] px-6 py-10 flex flex-col items-start relative box-border w-full"
           style={{ 
-            backgroundColor: '#C6D7F9', 
-            height: '760px',
+            backgroundColor: '#C6D7F9',
+            minHeight: '760px',
             boxShadow: 'inset 0 0 0 0.5px #191432',
           }}
         >
@@ -519,8 +528,8 @@ export default function MobileApproach({ onStepChange }: { onStepChange?: (step:
         <div 
           className="rounded-[30px] px-6 py-10 flex flex-col items-start relative box-border w-full mx-auto"
           style={{ 
-            backgroundColor: '#171425', 
-            height: '980px',
+            backgroundColor: '#171425',
+            minHeight: '980px',
             boxShadow: 'inset 0 0 0 0.5px #191432',
           }}
         >
@@ -628,7 +637,7 @@ export default function MobileApproach({ onStepChange }: { onStepChange?: (step:
 
         {/* ── Final Call to Action Section ── */}
         <div className="mt-20 flex flex-col items-center text-center">
-          <h2 className="font-['Fustat'] font-medium mb-1.5" style={{ color: '#191432', fontSize: '40.18px', lineHeight: '1.1' }}>
+          <h2 className="font-['Fustat'] font-medium mb-1.5" style={{ color: '#191432', fontSize: 'clamp(32px, 10.2vw, 43px)', lineHeight: '1.1' }}>
             Not sure where <br />
             you stand?
           </h2>
@@ -643,8 +652,8 @@ export default function MobileApproach({ onStepChange }: { onStepChange?: (step:
             where to start.
           </p>
 
-          <div className="w-full px-[51.5px]">
-            <button 
+          <div className="w-full max-w-[325px] mx-auto">
+            <button
               onClick={() => navigate('/contact')}
               className="w-full flex items-center justify-center rounded-full active:scale-[0.98] transition-transform mb-2.5 shadow-md"
               style={{ 

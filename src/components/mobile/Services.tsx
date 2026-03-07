@@ -126,9 +126,9 @@ export default function MobileServices({ onStepChange }: MobileServicesProps) {
           data-step={0}
           data-color="#FCFAF3"
           ref={(el) => { sectionRefs.current[0] = el; }}
-          className="snap-start snap-always full-height w-full flex items-start px-[17px] justify-start overflow-hidden"
+          className="full-height w-full flex items-start px-4 justify-start overflow-hidden"
         >
-          <div className="w-full pt-[100px]">
+          <div className="w-full" style={{ paddingTop: 'clamp(70px, 12dvh, 100px)' }}>
             <h2
               className="text-narrative-title font-medium text-brand-dark leading-[1.05] tracking-tight text-left"
               style={getStepStyle(0)}
@@ -143,7 +143,7 @@ export default function MobileServices({ onStepChange }: MobileServicesProps) {
           data-step={1}
           data-color="#010D17"
           ref={(el) => { sectionRefs.current[1] = el; section1Ref.current = el; }}
-          className="snap-start snap-always full-height w-full flex items-center px-[17px] justify-end overflow-hidden relative"
+          className="full-height w-full flex items-center px-4 justify-end overflow-hidden relative"
         >
           <div className="w-full relative z-10">
             <h2
@@ -165,7 +165,7 @@ export default function MobileServices({ onStepChange }: MobileServicesProps) {
         ].map((combo, i) => (
           <section key={i} className="relative h-[200dvh]">
             <div
-              className="sticky top-0 full-height w-full flex items-center pl-[64.5px] pr-[17px] justify-start overflow-hidden relative"
+              className="sticky top-0 full-height w-full flex items-center pl-[16vw] pr-4 justify-start overflow-hidden relative"
               ref={i === 0 ? section2Ref : null}
             >
               <div className="w-full flex flex-col gap-2 text-left relative z-10">
@@ -173,7 +173,7 @@ export default function MobileServices({ onStepChange }: MobileServicesProps) {
                   ref={i === 0 ? growingTextRef : null}
                   className="tracking-tight"
                   style={{
-                    fontSize: "28.13px",
+                    fontSize: "var(--text-narrative-small)",
                     fontWeight: "400",
                     color: "#D6D6F0",
                     ...getStepStyle(activeStep >= combo.start && activeStep <= combo.start + 1 ? activeStep : -2, 0)
@@ -184,7 +184,7 @@ export default function MobileServices({ onStepChange }: MobileServicesProps) {
                 <h2
                   className="leading-[1.05] tracking-tight"
                   style={{
-                    fontSize: "41.21px",
+                    fontSize: "var(--text-narrative-medium)",
                     fontWeight: "500",
                     color: "#FFFFFF",
                     ...getStepStyle(activeStep === combo.start + 1 ? activeStep : -2, 100)
@@ -195,8 +195,8 @@ export default function MobileServices({ onStepChange }: MobileServicesProps) {
               </div>
             </div>
             <div className="absolute top-0 left-0 w-full h-full pointer-events-none">
-              <div data-step={combo.start} data-color="#010D17" ref={(el) => { sectionRefs.current[combo.start] = el; }} className="full-height snap-start snap-always pointer-events-auto" />
-              <div data-step={combo.start + 1} data-color="#010D17" ref={(el) => { sectionRefs.current[combo.start + 1] = el; }} className="full-height snap-start snap-always pointer-events-auto" />
+              <div data-step={combo.start} data-color="#010D17" ref={(el) => { sectionRefs.current[combo.start] = el; }} className="full-height pointer-events-auto" />
+              <div data-step={combo.start + 1} data-color="#010D17" ref={(el) => { sectionRefs.current[combo.start + 1] = el; }} className="full-height pointer-events-auto" />
             </div>
           </section>
         ))}
@@ -206,25 +206,25 @@ export default function MobileServices({ onStepChange }: MobileServicesProps) {
           data-step={10}
           data-color="#D2D2FF"
           ref={(el) => { sectionRefs.current[10] = el; section10Ref.current = el; }}
-          className="snap-start snap-always full-height w-full flex flex-col justify-center px-5 overflow-hidden relative"
+          className="full-height w-full flex flex-col justify-center px-5 overflow-hidden relative"
         >
           <div className="flex flex-col relative z-10">
             <span
               className="text-brand-dark font-light"
-              style={{ fontSize: '17.05px', ...getStepStyle(10, 0) }}
+              style={{ fontSize: 'var(--text-services-label)', ...getStepStyle(10, 0) }}
             >
               We'll help you
             </span>
             <h2
               className="text-brand-dark font-medium leading-[1.1] tracking-tight mt-[3px]"
-              style={{ fontSize: '53.18px', ...getStepStyle(10, 100) }}
+              style={{ fontSize: 'var(--text-hero-title)', ...getStepStyle(10, 100) }}
             >
               Go from<br />effort to control.
             </h2>
             <p
               ref={soThatTextRef}
               className="text-brand-dark font-light mt-[23px]"
-              style={{ fontSize: '22.05px', ...getStepStyle(10, 200) }}
+              style={{ fontSize: 'var(--text-hero-body)', ...getStepStyle(10, 200) }}
             >
               So that you can...
             </p>
@@ -236,19 +236,19 @@ export default function MobileServices({ onStepChange }: MobileServicesProps) {
           data-step={11}
           data-color="#DBE9EE"
           ref={(el) => { sectionRefs.current[11] = el; section11Ref.current = el; }}
-          className="snap-start snap-always full-height w-full flex flex-col justify-center px-5 overflow-hidden relative"
+          className="full-height w-full flex flex-col justify-center px-5 overflow-hidden relative"
         >
           <div className="flex flex-col relative z-10">
             <span
               ref={soYouTextRef}
               className="text-brand-dark font-light"
-              style={{ fontSize: '17.05px', ...getStepStyle(11, 0) }}
+              style={{ fontSize: 'var(--text-services-label)', ...getStepStyle(11, 0) }}
             >
               So you can...
             </span>
             <h2
               className="text-brand-dark font-medium leading-[1.05] tracking-tight mt-[1px]"
-              style={{ fontSize: '56.18px', ...getStepStyle(11, 100) }}
+              style={{ fontSize: 'var(--text-services-large)', ...getStepStyle(11, 100) }}
             >
               Operate<br />from<br />strategy
             </h2>
@@ -260,12 +260,12 @@ export default function MobileServices({ onStepChange }: MobileServicesProps) {
           data-step={12}
           data-color="#010D17"
           ref={(el) => { sectionRefs.current[12] = el; }}
-          className="snap-start snap-always full-height w-full flex flex-col justify-center items-center px-5 overflow-hidden"
+          className="full-height w-full flex flex-col justify-center items-center px-5 overflow-hidden"
         >
           <div className="w-full text-center">
             <h2
               className="font-light tracking-tight"
-              style={{ fontSize: '42.18px', color: '#FCFAF3', ...getStepStyle(12, 0) }}
+              style={{ fontSize: 'var(--text-services-emphasis)', color: '#FCFAF3', ...getStepStyle(12, 0) }}
             >
               not urgency.
             </h2>
@@ -277,18 +277,18 @@ export default function MobileServices({ onStepChange }: MobileServicesProps) {
           data-step={13}
           data-color="#C6D7F9"
           ref={(el) => { sectionRefs.current[13] = el; }}
-          className="snap-start snap-always full-height w-full flex flex-col justify-center px-5 overflow-hidden"
+          className="full-height w-full flex flex-col justify-center px-5 overflow-hidden"
         >
           <div className="flex flex-col">
             <span
               className="text-brand-dark font-light"
-              style={{ fontSize: '17.05px', ...getStepStyle(13, 0) }}
+              style={{ fontSize: 'var(--text-services-label)', ...getStepStyle(13, 0) }}
             >
               So you can...
             </span>
             <h2
               className="text-brand-dark font-medium leading-[1.05] tracking-tight mt-[1px]"
-              style={{ fontSize: '56.18px', ...getStepStyle(13, 100) }}
+              style={{ fontSize: 'var(--text-services-large)', ...getStepStyle(13, 100) }}
             >
               Invest from evidence
             </h2>
@@ -300,12 +300,12 @@ export default function MobileServices({ onStepChange }: MobileServicesProps) {
           data-step={14}
           data-color="#010D17"
           ref={(el) => { sectionRefs.current[14] = el; }}
-          className="snap-start snap-always full-height w-full flex flex-col justify-center items-center px-5 overflow-hidden"
+          className="full-height w-full flex flex-col justify-center items-center px-5 overflow-hidden"
         >
           <div className="w-full text-center">
             <h2
               className="font-light tracking-tight"
-              style={{ fontSize: '42.18px', color: '#FCFAF3', ...getStepStyle(14, 0) }}
+              style={{ fontSize: 'var(--text-services-emphasis)', color: '#FCFAF3', ...getStepStyle(14, 0) }}
             >
               not instinct.
             </h2>
@@ -317,18 +317,18 @@ export default function MobileServices({ onStepChange }: MobileServicesProps) {
           data-step={15}
           data-color="#DBE9EE"
           ref={(el) => { sectionRefs.current[15] = el; }}
-          className="snap-start snap-always full-height w-full flex flex-col justify-center px-5 overflow-hidden"
+          className="full-height w-full flex flex-col justify-center px-5 overflow-hidden"
         >
           <div className="flex flex-col">
             <span
               className="text-brand-dark font-light"
-              style={{ fontSize: '17.05px', ...getStepStyle(15, 0) }}
+              style={{ fontSize: 'var(--text-services-label)', ...getStepStyle(15, 0) }}
             >
               So you can...
             </span>
             <h2
               className="text-brand-dark font-medium leading-[1.05] tracking-tight mt-[1px]"
-              style={{ fontSize: '56.18px', ...getStepStyle(15, 100) }}
+              style={{ fontSize: 'var(--text-services-large)', ...getStepStyle(15, 100) }}
             >
               Scale what's proven
             </h2>
@@ -340,15 +340,15 @@ export default function MobileServices({ onStepChange }: MobileServicesProps) {
           data-step={16}
           data-color="rgba(1, 13, 23, 0.7)"
           ref={(el) => { sectionRefs.current[16] = el; }}
-          className="snap-start snap-always full-height w-full flex flex-col justify-center items-center px-5 overflow-hidden"
+          className="full-height w-full flex flex-col justify-center items-center px-5 overflow-hidden"
         >
           <div className="w-full text-center">
               <h2
-                className="text-[42.18px] font-normal tracking-tight leading-[1.1] text-[#FCFAF3]"
-                style={getStepStyle(16, 0)}
+                className="font-normal tracking-tight leading-[1.1] text-[#FCFAF3]"
+                style={{ fontSize: 'var(--text-services-emphasis)', ...getStepStyle(16, 0) }}
               >
                 not what <br />
-                <span className="text-[42.18px] font-['Lato'] italic">feels</span> right.
+                <span className="font-['Lato'] italic">feels</span> right.
               </h2>
           </div>
         </section>
@@ -358,18 +358,18 @@ export default function MobileServices({ onStepChange }: MobileServicesProps) {
           data-step={17}
           data-color="#FCFAF3"
           ref={(el) => { sectionRefs.current[17] = el; }}
-          className="snap-start snap-always full-height w-full flex flex-col justify-center px-5 overflow-hidden"
+          className="full-height w-full flex flex-col justify-center px-5 overflow-hidden"
         >
           <div className="flex flex-col">
             <span
               className="text-brand-dark font-light"
-              style={{ fontSize: '17.05px', ...getStepStyle(17, 0) }}
+              style={{ fontSize: 'var(--text-services-label)', ...getStepStyle(17, 0) }}
             >
               And, finally,
             </span>
             <h2
               className="text-brand-dark font-medium leading-[1.05] tracking-tight mt-[1px]"
-              style={{ fontSize: '56.18px', ...getStepStyle(17, 100) }}
+              style={{ fontSize: 'var(--text-services-large)', ...getStepStyle(17, 100) }}
             >
               Lead your company
             </h2>
@@ -381,12 +381,12 @@ export default function MobileServices({ onStepChange }: MobileServicesProps) {
           data-step={18}
           data-color="#312E3C"
           ref={(el) => { sectionRefs.current[18] = el; }}
-          className="snap-start snap-always full-height w-full flex flex-col justify-center items-center px-5 overflow-hidden"
+          className="full-height w-full flex flex-col justify-center items-center px-5 overflow-hidden"
         >
           <div className="w-full text-center">
             <h2
               className="font-light tracking-tight"
-              style={{ fontSize: '42.18px', color: '#FCFAF3', ...getStepStyle(18, 0) }}
+              style={{ fontSize: 'var(--text-services-emphasis)', color: '#FCFAF3', ...getStepStyle(18, 0) }}
             >
               not "carry" it.
             </h2>
@@ -398,11 +398,12 @@ export default function MobileServices({ onStepChange }: MobileServicesProps) {
           data-step={19}
           data-color="rgba(21, 19, 36, 0.97)"
           ref={(el) => { sectionRefs.current[19] = el; }}
-          className="snap-start snap-always full-height w-full flex flex-col justify-center items-end pr-9.25 overflow-hidden"
+          className="full-height w-full flex flex-col justify-center items-end pr-9.25 overflow-hidden"
         >
           <button 
             onClick={() => {
-              navigate('/strategy#system');
+              sessionStorage.setItem('scrollTarget', '#system');
+              navigate('/strategy');
             }}
             style={{ 
               ...getStepStyle(19, 0),
@@ -410,7 +411,7 @@ export default function MobileServices({ onStepChange }: MobileServicesProps) {
               textAlign: 'right',
               fontFamily: 'Fustat',
               fontWeight: 200,
-              fontSize: '27.54px',
+              fontSize: 'var(--text-services-cta)',
               color: '#FCFAF3',
               lineHeight: 1.12,
               background: 'none',

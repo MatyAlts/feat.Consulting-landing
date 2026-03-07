@@ -2,8 +2,12 @@ export default function MobileHero() {
   return (
     <section
       id="hero"
-      className="snap-start snap-always bg-[#FCFAF3] flex flex-col justify-start px-5 pt-34 pb-16 overflow-hidden"
-      style={{ minHeight: '100dvh' }}
+      className="bg-[#FCFAF3] flex flex-col justify-start px-5 overflow-hidden"
+      style={{
+        minHeight: '100dvh',
+        paddingTop: 'clamp(80px, 16dvh, 136px)',
+        paddingBottom: 'clamp(40px, 8dvh, 64px)'
+      }}
     >
       <div className="flex flex-col">
         {/* Headline + subtítulo */}
@@ -24,7 +28,7 @@ export default function MobileHero() {
         </div>
 
         {/* Cuerpo */}
-        <div className="mt-25.75 flex flex-col gap-6">
+        <div className="flex flex-col gap-6" style={{ marginTop: 'clamp(64px, 13dvh, 108px)' }}>
           <div className="overflow-hidden will-change-transform">
             <p className="text-hero-body text-brand-hero-body leading-[1.3] animate-text-reveal-up [animation-delay:3000ms]">
               <span className="font-light">feat. builds </span>
@@ -42,7 +46,7 @@ export default function MobileHero() {
         </div>
 
         {/* Scroll Indicator */}
-        <div className="mt-12 overflow-hidden will-change-transform pb-4">
+        <div className="overflow-hidden will-change-transform pb-4" style={{ marginTop: 'clamp(32px, 5dvh, 48px)' }}>
           <div className="animate-text-reveal-up [animation-delay:4200ms]">
             <div className="animate-bounce-slow text-brand-dark">
               <svg

@@ -19,7 +19,6 @@ interface MobileLayoutProps {
 
 export default function MobileLayout({ isDesktopContainer = false, showStrategy = false, showForm = false }: MobileLayoutProps) {
   const [activeStep, setActiveStep] = useState(-1)
-  const [hasEnteredServices, setHasEnteredServices] = useState(false)
   const mainRef = useRef<HTMLElement>(null)
 
   // Habilitar drag to scroll para desktop emulation
@@ -34,48 +33,44 @@ export default function MobileLayout({ isDesktopContainer = false, showStrategy 
     const mainElement = mainRef.current;
     if (!mainElement) return;
 
+    const scrollKey = showStrategy ? 'scrollPos_strategy' : 'scrollPos_home';
+
     // 1. If we are entering a view that is NOT the form, check for saved position
     if (!showForm) {
-      const savedPos = sessionStorage.getItem('scrollPos');
-      if (savedPos) {
-        // Wait for components (DecisionStage/Services) to have rendered fully
+      // Check for a cross-route scroll target (e.g. navigate('/strategy') with #system anchor)
+      const scrollTarget = sessionStorage.getItem('scrollTarget');
+      if (scrollTarget) {
+        sessionStorage.removeItem('scrollTarget');
         setTimeout(() => {
-          if (mainRef.current) {
-            mainRef.current.scrollTo(0, parseInt(savedPos, 10));
-            sessionStorage.removeItem('scrollPos');
+          const el = document.querySelector(scrollTarget);
+          if (el && mainRef.current) {
+            mainRef.current.scrollTop = (el as HTMLElement).offsetTop;
           }
-        }, 100);
+        }, 150);
       } else {
-        // First enter (no saved pos), start at top
-        mainElement.scrollTo(0, 0);
+        const savedPos = sessionStorage.getItem(scrollKey);
+        if (savedPos) {
+          // Wait for components (DecisionStage/Services) to have rendered fully
+          setTimeout(() => {
+            if (mainRef.current) {
+              mainRef.current.scrollTo(0, parseInt(savedPos, 10));
+              sessionStorage.removeItem(scrollKey);
+            }
+          }, 100);
+        } else {
+          // First enter (no saved pos), start at top
+          mainElement.scrollTo(0, 0);
+        }
       }
     }
 
     // 2. Save scroll position only when leaving a non-form view
     return () => {
       if (!showForm && mainRef.current) {
-        sessionStorage.setItem('scrollPos', mainRef.current.scrollTop.toString());
+        sessionStorage.setItem(scrollKey, mainRef.current.scrollTop.toString());
       }
     };
-  }, [showForm]);
-
-  // Keep track of services entry
-  useEffect(() => {
-    if (!hasEnteredServices && activeStep >= 0 && activeStep <= 20) {
-      setHasEnteredServices((prev) => (prev === true ? prev : true))
-    }
-  }, [activeStep, hasEnteredServices])
-
-  // El snap está habilitado si:
-  // 1. En Strategy: Solo en los pasos de la metodología (50-60)
-  // 2. En Home: En Services (0-20) o al inicio del Hero (-1)
-  // 3. En Form: Deshabilitado por completo
-  const isSnapDisabled = showForm || (showStrategy
-    ? !(activeStep >= 50 && activeStep <= 60)
-    : !(
-        (activeStep >= 0 && activeStep <= 20) ||
-        (activeStep === -1 && !hasEnteredServices)
-      ))
+  }, [showForm, showStrategy]);
 
   return (
     <div
@@ -88,7 +83,6 @@ export default function MobileLayout({ isDesktopContainer = false, showStrategy 
         className={[
         'flex-1 overflow-y-auto hide-scrollbar',
         isDesktopContainer ? 'emulator-container' : 'scroll-smooth',
-        isSnapDisabled ? '' : 'snapping-locked'
       ].filter(Boolean).join(' ')}
       >
         {showForm ? (
