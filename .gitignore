@@ -24,7 +24,7 @@ dist-ssr
 *.sw?
 
 # Skills
-skills/
+#skills/
 
 # Claude
 .claude/
