@@ -16,6 +16,7 @@ const MENU_ITEMS = [
   { title: 'Impact', desc: 'What shifts inside your company when alignment is real.' },
   { title: 'FAQs', desc: 'Clarity around scope, timelines, and a little more about how we work.' },
 ]
+const HARD_TOP_JUMP_KEY = 'storyHardTopJumpTs'
 
 export default function MobileNavbar({ forceHide = false }: MobileNavbarProps) {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
@@ -65,10 +66,22 @@ export default function MobileNavbar({ forceHide = false }: MobileNavbarProps) {
   useEffect(() => {
     if (location.hash) {
       setTimeout(() => {
-        const el = document.querySelector(location.hash)
-        if (el) {
-          el.scrollIntoView({ behavior: 'smooth' })
+        const main = document.querySelector('main') as HTMLElement | null
+        const el = document.querySelector(location.hash) as HTMLElement | null
+        if (!el) return
+
+        if (location.hash === '#hero' && main) {
+          sessionStorage.setItem(HARD_TOP_JUMP_KEY, String(Date.now()))
+          main.scrollTo({ top: el.offsetTop, behavior: 'auto' })
+          return
         }
+
+        if (location.hash === '#hero') {
+          el.scrollIntoView({ behavior: 'auto' })
+          return
+        }
+
+        el.scrollIntoView({ behavior: 'smooth' })
       }, 100)
     }
   }, [location])
@@ -87,8 +100,16 @@ export default function MobileNavbar({ forceHide = false }: MobileNavbarProps) {
       >
         <button
           onClick={() => {
+            sessionStorage.setItem(HARD_TOP_JUMP_KEY, String(Date.now()))
             if (location.pathname === '/') {
-              document.querySelector('main')?.scrollTo({ top: 0, behavior: 'smooth' })
+              const main = document.querySelector('main') as HTMLElement | null
+              if (main) {
+                // Hard override: bypass active storytelling snap and jump to absolute top.
+                main.classList.remove('story-snap-enabled')
+                main.scrollTo({ top: 0, behavior: 'auto' })
+                return
+              }
+              document.querySelector('main')?.scrollTo({ top: 0, behavior: 'auto' })
             } else {
               navigate('/')
             }

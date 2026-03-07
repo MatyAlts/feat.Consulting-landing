@@ -10,24 +10,24 @@ export default function MobileHero() {
       }}
     >
       <div className="flex flex-col">
-        {/* Headline + subtítulo */}
+        {/* Headline + subtitle */}
         <div className="flex flex-col">
           <div className="overflow-hidden will-change-transform">
             <h1 className="text-hero-title font-medium text-brand-hero-title leading-[1.05] tracking-tight animate-text-reveal-up">
-              Scaling isn’t<br />
+              Scaling isn&apos;t<br />
               about pushing<br />
               harder.
             </h1>
           </div>
           <div className="overflow-hidden will-change-transform">
             <p className="text-hero-subtitle text-brand-hero-subtitle leading-tight font-medium animate-text-reveal-up [animation-delay:1500ms]">
-              It’s about matching<br />
+              It&apos;s about matching<br />
               how your market decides.
             </p>
           </div>
         </div>
 
-        {/* Cuerpo */}
+        {/* Body */}
         <div className="flex flex-col gap-6" style={{ marginTop: 'clamp(64px, 13dvh, 108px)' }}>
           <div className="overflow-hidden will-change-transform">
             <p className="text-hero-body text-brand-hero-body leading-[1.3] animate-text-reveal-up [animation-delay:3000ms]">

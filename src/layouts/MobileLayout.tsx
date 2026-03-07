@@ -16,9 +16,11 @@ interface MobileLayoutProps {
   showStrategy?: boolean;
   showForm?: boolean;
 }
+const HARD_TOP_JUMP_KEY = 'storyHardTopJumpTs'
 
 export default function MobileLayout({ isDesktopContainer = false, showStrategy = false, showForm = false }: MobileLayoutProps) {
   const [activeStep, setActiveStep] = useState(-1)
+  const [isStorySnapEnabled, setIsStorySnapEnabled] = useState(false)
   const mainRef = useRef<HTMLElement>(null)
 
   // Habilitar drag to scroll para desktop emulation
@@ -34,9 +36,19 @@ export default function MobileLayout({ isDesktopContainer = false, showStrategy 
     if (!mainElement) return;
 
     const scrollKey = showStrategy ? 'scrollPos_strategy' : 'scrollPos_home';
+    const hardTopJumpTsRaw = sessionStorage.getItem(HARD_TOP_JUMP_KEY)
+    const hardTopJumpActive = (() => {
+      if (!hardTopJumpTsRaw) return false
+      const hardTopJumpTs = Number(hardTopJumpTsRaw)
+      return Number.isFinite(hardTopJumpTs) && Date.now() - hardTopJumpTs < 1200
+    })()
 
     // 1. If we are entering a view that is NOT the form, check for saved position
     if (!showForm) {
+      if (!showStrategy && hardTopJumpActive) {
+        mainElement.scrollTo(0, 0)
+        sessionStorage.removeItem(scrollKey)
+      } else {
       // Check for a cross-route scroll target (e.g. navigate('/strategy') with #system anchor)
       const scrollTarget = sessionStorage.getItem('scrollTarget');
       if (scrollTarget) {
@@ -62,15 +74,66 @@ export default function MobileLayout({ isDesktopContainer = false, showStrategy 
           mainElement.scrollTo(0, 0);
         }
       }
+      }
     }
 
     // 2. Save scroll position only when leaving a non-form view
     return () => {
-      if (!showForm && mainRef.current) {
-        sessionStorage.setItem(scrollKey, mainRef.current.scrollTop.toString());
+      if (!showForm) {
+        sessionStorage.setItem(scrollKey, mainElement.scrollTop.toString());
       }
     };
   }, [showForm, showStrategy]);
+
+  useEffect(() => {
+    const isHomeStoryRoute = !showStrategy && !showForm
+    if (!isHomeStoryRoute) return
+
+    const main = mainRef.current
+    if (!main) return
+
+    const updateSnapBoundary = () => {
+      const bypassTsRaw = sessionStorage.getItem(HARD_TOP_JUMP_KEY)
+      if (bypassTsRaw) {
+        const bypassTs = Number(bypassTsRaw)
+        const bypassActive = Number.isFinite(bypassTs) && Date.now() - bypassTs < 1200
+        if (bypassActive) {
+          setIsStorySnapEnabled(false)
+          return
+        }
+        sessionStorage.removeItem(HARD_TOP_JUMP_KEY)
+      }
+
+      const firstStorySection = document.querySelector('#direction') as HTMLElement | null
+      if (!firstStorySection) return
+
+      const boundaryTop = Math.max(0, firstStorySection.offsetTop)
+      const enterThreshold = Math.max(0, boundaryTop - 12)
+      const exitThreshold = Math.max(0, boundaryTop - 84)
+      const currentTop = main.scrollTop
+
+      setIsStorySnapEnabled((prev) => {
+        if (prev) {
+          if (currentTop <= exitThreshold) return false
+          return true
+        }
+
+        if (currentTop >= enterThreshold) return true
+        return false
+      })
+    }
+
+    // Run after layout settles (hero + services mount).
+    const rafId = requestAnimationFrame(updateSnapBoundary)
+    main.addEventListener('scroll', updateSnapBoundary, { passive: true })
+    window.addEventListener('resize', updateSnapBoundary)
+
+    return () => {
+      cancelAnimationFrame(rafId)
+      main.removeEventListener('scroll', updateSnapBoundary)
+      window.removeEventListener('resize', updateSnapBoundary)
+    }
+  }, [showStrategy, showForm])
 
   return (
     <div
@@ -83,6 +146,8 @@ export default function MobileLayout({ isDesktopContainer = false, showStrategy 
         className={[
         'flex-1 overflow-y-auto hide-scrollbar',
         isDesktopContainer ? 'emulator-container' : 'scroll-smooth',
+        !showStrategy && !showForm ? 'story-snap-main' : '',
+        !showStrategy && !showForm && isStorySnapEnabled ? 'story-snap-enabled' : '',
       ].filter(Boolean).join(' ')}
       >
         {showForm ? (

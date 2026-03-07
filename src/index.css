@@ -386,6 +386,20 @@ body {
   min-height: 100dvh;
 }
 
+.story-snap-main {
+  scroll-snap-type: none;
+  scroll-padding-top: 0;
+}
+
+.story-snap-main.story-snap-enabled {
+  scroll-snap-type: y mandatory;
+}
+
+.story-snap-step {
+  scroll-snap-align: start;
+  scroll-snap-stop: always;
+}
+
 /* Italic descender fix for Lato inside StaggerReveal */
 .italic-lato-word .stagger-mask {
   padding-bottom: 0.3em;
