@@ -40,11 +40,11 @@ function useDesktopScale() {
 
 interface DesktopLayoutProps {
   showForm?: boolean
-  onDesktopIntroTrigger?: () => void
 }
 
-export default function DesktopLayout({ showForm = false, onDesktopIntroTrigger }: DesktopLayoutProps) {
+export default function DesktopLayout({ showForm = false }: DesktopLayoutProps) {
   const [showMobile, setShowMobile] = useState(showForm)
+  const [desktopHeroAnimationEnabled, setDesktopHeroAnimationEnabled] = useState(showForm)
   const [btnHovered, setBtnHovered] = useState(false)
   const scale = useDesktopScale()
 
@@ -186,7 +186,7 @@ export default function DesktopLayout({ showForm = false, onDesktopIntroTrigger 
               onMouseEnter={() => setBtnHovered(true)}
               onMouseLeave={() => setBtnHovered(false)}
               onClick={() => {
-                onDesktopIntroTrigger?.()
+                setDesktopHeroAnimationEnabled(true)
                 setShowMobile(true)
               }}
               className="absolute"
@@ -286,7 +286,11 @@ export default function DesktopLayout({ showForm = false, onDesktopIntroTrigger 
                   className="relative overflow-hidden"
                   style={{ height: `${LOGICAL_VIEWPORT_HEIGHT}px` }}
                 >
-                  <MobileLayout isDesktopContainer={true} showForm={showForm} />
+                  <MobileLayout
+                    isDesktopContainer={true}
+                    showForm={showForm}
+                    enableHeroEntryAnimation={desktopHeroAnimationEnabled}
+                  />
                 </div>
               </div>
             </div>

@@ -14,11 +14,16 @@ import ContactForm from '../components/mobile/ContactForm'
 interface MobileLayoutProps {
   isDesktopContainer?: boolean;
   showForm?: boolean;
+  enableHeroEntryAnimation?: boolean;
 }
 const HARD_TOP_JUMP_KEY = 'storyHardTopJumpTs'
 const ANCHOR_JUMP_BYPASS_KEY = 'storyAnchorJumpTs'
 
-export default function MobileLayout({ isDesktopContainer = false, showForm = false }: MobileLayoutProps) {
+export default function MobileLayout({
+  isDesktopContainer = false,
+  showForm = false,
+  enableHeroEntryAnimation = true
+}: MobileLayoutProps) {
   const [activeStep, setActiveStep] = useState(-1)
   const [isStorySnapEnabled, setIsStorySnapEnabled] = useState(false)
   const mainRef = useRef<HTMLElement>(null)
@@ -192,7 +197,7 @@ export default function MobileLayout({ isDesktopContainer = false, showForm = fa
           <ContactForm />
         ) : (
           <>
-            <MobileHero />
+            <MobileHero animateEntry={enableHeroEntryAnimation} />
             <MobileServices onStepChange={setActiveStep} />
             <MobileDecisionStage onStepChange={setActiveStep} />
             <MobileApproach onStepChange={setActiveStep} />
