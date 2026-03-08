@@ -7,11 +7,17 @@ import qrCode from '../assets/desktop/qr.png'
 import mobileSimulated from '../assets/desktop/mobile_simulated.png'
 import Logo from '../components/shared/Logo'
 
-/* ── Design-base constants (designed at 1920 × 1080) ── */
 const BASE_W = 1920
 const BASE_H = 1080
+const LOGICAL_VIEWPORT_WIDTH = 402
+const LOGICAL_VIEWPORT_HEIGHT = 724
+const EMULATOR_TOPBAR_HEIGHT = 60
+const EMULATOR_PRESENTATION_SCALE = 1.32
+const EMULATOR_FRAME_WIDTH = Math.round(LOGICAL_VIEWPORT_WIDTH * EMULATOR_PRESENTATION_SCALE)
+const EMULATOR_FRAME_HEIGHT = Math.round(
+  (LOGICAL_VIEWPORT_HEIGHT + EMULATOR_TOPBAR_HEIGHT) * EMULATOR_PRESENTATION_SCALE
+)
 
-/** Hook: returns a CSS scale factor so the 1920×1080 artboard fits any viewport */
 function useDesktopScale() {
   const [scale, setScale] = useState(() => {
     const sx = window.innerWidth / BASE_W
@@ -34,26 +40,23 @@ function useDesktopScale() {
 
 export default function DesktopLayout({ showForm = false }: { showForm?: boolean }) {
   const [showMobile, setShowMobile] = useState(showForm)
-  const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [btnHovered, setBtnHovered] = useState(false)
   const scale = useDesktopScale()
 
-  // Bloquea el scroll del body cuando el menú está abierto
-  useEffect(() => {
-    document.body.style.overflow = isMenuOpen ? 'hidden' : ''
-    return () => { document.body.style.overflow = '' }
-  }, [isMenuOpen])
+  const jumpToEmulatorTop = () => {
+    sessionStorage.setItem('storyHardTopJumpTs', String(Date.now()))
+    const main = document.querySelector('.emulator-container') as HTMLElement | null
+    if (!main) return
+    main.classList.remove('story-snap-enabled')
+    main.scrollTo({ top: 0, behavior: 'auto' })
+  }
 
   return (
     <div className="relative min-h-dvh w-full overflow-hidden bg-[#020A30] flex items-center justify-center">
-      
-      {/* ─── Landing Screen ──────────────────────────────────────────────────────── */}
-      <div 
+      <div
         className={`absolute inset-0 flex items-center justify-center transition-all duration-700 ease-in-out ${!showMobile ? 'opacity-100' : 'opacity-0 pointer-events-none scale-95 blur-sm'}`}
       >
-        {/* Outer sizer — takes up exactly the scaled artboard dimensions so flex centering works */}
         <div style={{ width: `${BASE_W * scale}px`, height: `${BASE_H * scale}px`, flexShrink: 0 }}>
-          {/* Inner artboard — 1920×1080 scaled from top-left */}
           <div
             style={{
               width: `${BASE_W}px`,
@@ -63,19 +66,13 @@ export default function DesktopLayout({ showForm = false }: { showForm?: boolean
               position: 'relative',
             }}
           >
-            {/* ── Left column: Logo → Headline → QR + Scan label ── */}
-            <div
-              className="absolute flex flex-col"
-              style={{ left: '92px', top: '80px' }}
-            >
-              {/* Logo 29.71 × 32.77 */}
+            <div className="absolute flex flex-col" style={{ left: '92px', top: '80px' }}>
               <img
                 src={logoBlanco}
                 alt="feat. Consulting"
                 style={{ width: '29.71px', height: '32.77px', flexShrink: 0 }}
               />
 
-              {/* Headline — 85 px below logo */}
               <div style={{ marginTop: '85px', maxWidth: '730px' }}>
                 <p
                   style={{
@@ -102,11 +99,10 @@ export default function DesktopLayout({ showForm = false }: { showForm?: boolean
                 </p>
               </div>
 
-              {/* QR + "Scan to continue on mobile." — side by side */}
               <div style={{ marginTop: '33px', display: 'flex', alignItems: 'center', gap: '20px' }}>
                 <img
                   src={qrCode}
-                  alt="Escanea el QR para continuar en móvil"
+                  alt="Escanea el QR para continuar en movil"
                   style={{ width: '150px', height: '150px', flexShrink: 0 }}
                 />
                 <p
@@ -126,7 +122,6 @@ export default function DesktopLayout({ showForm = false }: { showForm?: boolean
               </div>
             </div>
 
-            {/* ── Mobile simulated image — right-side, bottom-anchored, 50 % opacity ── */}
             <div
               className="absolute"
               style={{
@@ -146,7 +141,6 @@ export default function DesktopLayout({ showForm = false }: { showForm?: boolean
                   display: 'block',
                 }}
               />
-              {/* Gradient overlay — fades the bottom of the phone into the background */}
               <div
                 style={{
                   position: 'absolute',
@@ -160,7 +154,6 @@ export default function DesktopLayout({ showForm = false }: { showForm?: boolean
               />
             </div>
 
-            {/* ── "Prefer to stay on Desktop?" — centred with phone ── */}
             <p
               className="absolute whitespace-nowrap"
               style={{
@@ -169,7 +162,6 @@ export default function DesktopLayout({ showForm = false }: { showForm?: boolean
                 fontSize: '22.77px',
                 color: '#FFFFFF',
                 bottom: '100px',
-                /* phone centre = right:120 + 550/2 = 395 from right */
                 right: '395px',
                 transform: 'translateX(50%)',
                 margin: 0,
@@ -178,7 +170,6 @@ export default function DesktopLayout({ showForm = false }: { showForm?: boolean
               Prefer to stay on Desktop?
             </p>
 
-            {/* ── "Click here →" button — centred with phone, pill-shaped ── */}
             <button
               onMouseEnter={() => setBtnHovered(true)}
               onMouseLeave={() => setBtnHovered(false)}
@@ -214,20 +205,17 @@ export default function DesktopLayout({ showForm = false }: { showForm?: boolean
                   letterSpacing: '0.3px',
                 }}
               >
-                Click here →
+                Click here {'->'}
               </span>
             </button>
           </div>
         </div>
       </div>
 
-      {/* ─── Mobile Container Screen ────────────────────────────────────────── */}
-      <div 
+      <div
         className={`absolute inset-0 flex items-center justify-center transition-all duration-700 ease-in-out ${showMobile ? 'opacity-100 scale-100' : 'opacity-0 pointer-events-none scale-105'}`}
       >
-        {/* Outer sizer — takes up exactly the scaled artboard dimensions so flex centering works */}
         <div style={{ width: `${BASE_W * scale}px`, height: `${BASE_H * scale}px`, flexShrink: 0 }}>
-          {/* Inner artboard — 1920×1080 scaled from top-left */}
           <div
             style={{
               width: `${BASE_W}px`,
@@ -237,44 +225,58 @@ export default function DesktopLayout({ showForm = false }: { showForm?: boolean
               position: 'relative',
             }}
           >
-            {/* Logo */}
-            <img 
-              src={logoBlanco} 
-              alt="feat. logo" 
-              className="absolute" 
-              style={{ top: '35.66px', left: '87px', width: '35px', height: '38.6px' }} 
-            />
-
             <button
-              onClick={() => setIsMenuOpen(true)}
-              className="absolute flex items-center justify-center text-[#FFFFFF] font-light cursor-pointer hover:opacity-80 transition-opacity"
-              style={{ top: '41.42px', right: '89.17px', fontSize: '16.17px', lineHeight: 1 }}
-              aria-label="Abrir menú"
+              onClick={jumpToEmulatorTop}
+              className="absolute bg-transparent border-none p-0 m-0 cursor-pointer"
+              style={{ top: '35.66px', left: '87px' }}
+              aria-label="Volver al inicio"
             >
-              +
+              <img
+                src={logoBlanco}
+                alt="feat. logo"
+                style={{ width: '35px', height: '38.6px' }}
+              />
             </button>
 
-            {/* Device Emulator Container */}
             <div
               className={`absolute left-1/2 -translate-x-1/2 shadow-2xl rounded-t-[35px] bg-[#FCFAF3] flex flex-col overflow-hidden transition-all duration-1000 delay-300 ${showMobile ? 'translate-y-0 opacity-100' : 'translate-y-20 opacity-0'}`}
-              style={{ bottom: '0px', width: '450px', height: '760px' }}
+              style={{
+                bottom: '0px',
+                width: `${EMULATOR_FRAME_WIDTH}px`,
+                height: `${EMULATOR_FRAME_HEIGHT}px`,
+              }}
             >
-              <div className="shrink-0 flex items-center bg-[#FCFAF3] z-50 border-b border-brand-dark/10" style={{ height: '60px', paddingLeft: '23px' }}>
-                <Logo width={23} height={26} variant="dark" />
-              </div>
-              <div className="flex-1 relative overflow-hidden">
-                <MobileLayout isDesktopContainer={true} showForm={showForm} />
+              <div
+                className="w-full h-full flex flex-col"
+                style={{
+                  width: `${LOGICAL_VIEWPORT_WIDTH}px`,
+                  height: `${LOGICAL_VIEWPORT_HEIGHT + EMULATOR_TOPBAR_HEIGHT}px`,
+                  transform: `scale(${EMULATOR_PRESENTATION_SCALE})`,
+                  transformOrigin: 'top left',
+                }}
+              >
+                <div
+                  className="shrink-0 flex items-center bg-[#FCFAF3] z-50 border-b border-brand-dark/10"
+                  style={{ height: `${EMULATOR_TOPBAR_HEIGHT}px`, paddingLeft: '23px' }}
+                >
+                  <Logo width={23} height={26} variant="dark" />
+                </div>
+                <div
+                  className="relative overflow-hidden"
+                  style={{ height: `${LOGICAL_VIEWPORT_HEIGHT}px` }}
+                >
+                  <MobileLayout isDesktopContainer={true} showForm={showForm} />
+                </div>
               </div>
             </div>
 
-            {/* Bottom-right CTA */}
-            <p 
-              className="absolute whitespace-nowrap" 
-              style={{ 
-                color: '#C6D7F9', 
-                fontFamily: 'Lato', 
-                fontWeight: 300, 
-                fontSize: '18.21px', 
+            <p
+              className="absolute whitespace-nowrap"
+              style={{
+                color: '#C6D7F9',
+                fontFamily: 'Lato',
+                fontWeight: 300,
+                fontSize: '18.21px',
                 bottom: '95.46px',
                 right: '154px',
                 lineHeight: 1
@@ -283,9 +285,9 @@ export default function DesktopLayout({ showForm = false }: { showForm?: boolean
               Ready to get growing?
             </p>
 
-            <Link 
+            <Link
               to="/contact"
-              className="absolute flex items-center cursor-pointer group hover:opacity-80 transition-opacity" 
+              className="absolute flex items-center cursor-pointer group hover:opacity-80 transition-opacity"
               style={{ right: '164px', bottom: '36px', textDecoration: 'none' }}
             >
               <span style={{ color: '#FFFFFF', fontFamily: 'Fustat', fontWeight: 300, fontSize: '41.81px', lineHeight: 1 }}>
@@ -293,70 +295,12 @@ export default function DesktopLayout({ showForm = false }: { showForm?: boolean
               </span>
             </Link>
 
-            <img 
-              src={flechaIcon} 
-              alt="Arrow" 
-              className="absolute" 
-              style={{ bottom: '48.89px', right: '121.03px', width: '23.5px', height: '23.5px' }} 
+            <img
+              src={flechaIcon}
+              alt="Arrow"
+              className="absolute"
+              style={{ bottom: '48.89px', right: '121.03px', width: '23.5px', height: '23.5px' }}
             />
-          </div>
-        </div>
-      </div>
-
-      {/* Full-screen menu overlay — outside the artboard so it covers the entire viewport */}
-      <div
-        className={[
-          'fixed inset-0 z-100 transition-all duration-500 cubic-bezier(0.4, 0, 0.2, 1) overflow-hidden',
-          isMenuOpen ? 'translate-x-0' : 'translate-x-full',
-        ].join(' ')}
-        aria-hidden={!isMenuOpen}
-      >
-        <div className="w-full h-full relative bg-[#020A30]">
-          <div className="absolute top-0 left-0 right-0 h-25 flex items-center justify-between z-50" style={{ paddingLeft: '87px', paddingRight: '89.17px' }}>
-            <img 
-              src={logoBlanco} 
-              alt="feat. logo" 
-              style={{ width: '35px', height: '38.6px', marginTop: '35.66px' }} 
-              className={`absolute top-0 left-21.75 transition-transform duration-500 cubic-bezier(0.4, 0, 0.2, 1) ${isMenuOpen ? 'translate-x-0' : '-translate-x-full'}`}
-            />
-
-            <button
-              onClick={() => setIsMenuOpen(false)}
-              className="absolute flex items-center justify-center text-[#FFFFFF] font-light cursor-pointer hover:opacity-80 transition-opacity"
-              style={{ top: '41.42px', right: '89.17px', fontSize: '16.17px', lineHeight: 1 }}
-              aria-label="Cerrar menú"
-            >
-              x
-            </button>
-          </div>
-
-          <div className="absolute top-25 left-0 w-full h-[0.5px] bg-white/10" />
-
-          <div className="w-full h-full flex items-center justify-center pt-25">
-            <nav className="flex flex-col justify-center items-center gap-10">
-              {[
-                { title: 'Direction', desc: 'How we think about growth, and why force is never the answer.' },
-                { title: 'Mechanism', desc: 'How validated direction becomes structure, and structure becomes leverage.' },
-                { title: 'Work', desc: 'What installed direction looks like in practice.' },
-                { title: 'Entry Points', desc: 'Different ways to engage, depending on where you are.' },
-                { title: 'What Changes', desc: 'What shifts inside your company when alignment is real.' },
-                { title: 'FAQs', desc: 'Clarity around scope, timelines, and a little more about how we work.' },
-              ].map((item) => (
-                <a
-                  key={item.title}
-                  href={`#${item.title.toLowerCase().replace(/\s+/g, '-')}`}
-                  onClick={() => setIsMenuOpen(false)}
-                  className="w-full flex flex-col items-center group text-center"
-                >
-                  <span style={{ fontFamily: 'Fustat' }} className="text-white text-[32px] font-normal leading-tight group-hover:text-indigo-200 transition-colors">
-                    {item.title}
-                  </span>
-                  <span style={{ fontFamily: 'Lato' }} className="text-indigo-200 text-[18px] font-light leading-tight mt-2 opacity-70">
-                    {item.desc}
-                  </span>
-                </a>
-              ))}
-            </nav>
           </div>
         </div>
       </div>

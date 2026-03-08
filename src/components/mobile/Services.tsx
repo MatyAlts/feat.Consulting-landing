@@ -233,7 +233,7 @@ export default function MobileServices({ onStepChange }: MobileServicesProps) {
               if (i === 0) section2Ref.current = el as HTMLDivElement | null
             }}
             stageClassName="full-height"
-            stickyClassName="w-full flex items-center pl-[16vw] pr-4 justify-start overflow-hidden relative"
+            stickyClassName="w-full flex items-center pl-[16%] pr-4 justify-start overflow-hidden relative"
           >
             <div className="w-full flex flex-col gap-2 text-left relative z-10">
               <p

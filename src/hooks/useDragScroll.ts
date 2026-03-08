@@ -271,7 +271,7 @@ export function useDragScroll(
       // Acumular el delta para evitar que movimientos mínimos disparen el snap
       wheelAccumulator += e.deltaY
 
-      const TRIGGER_THRESHOLD = 50 // Requerir cierta "fuerza" de scroll
+      const TRIGGER_THRESHOLD = 110 // Requerir una intención más clara por gesto de rueda
       if (Math.abs(wheelAccumulator) < TRIGGER_THRESHOLD) return
 
       wheelCooldown = true
@@ -292,8 +292,8 @@ export function useDragScroll(
         el.scrollTo({ top: target, behavior: 'smooth' })
       }
 
-      // Cooldown más corto para mejor respuesta (400ms es suficiente)
-      setTimeout(() => { wheelCooldown = false }, 400)
+      // Keep one-step-per-gesture behavior and absorb wheel momentum bursts.
+      setTimeout(() => { wheelCooldown = false }, 720)
     }
 
     // ── Pointer Event Handlers ──
