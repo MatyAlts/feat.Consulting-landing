@@ -38,17 +38,23 @@ function useDesktopScale() {
   return scale
 }
 
-export default function DesktopLayout({ showForm = false }: { showForm?: boolean }) {
+interface DesktopLayoutProps {
+  showForm?: boolean
+  onDesktopIntroTrigger?: () => void
+}
+
+export default function DesktopLayout({ showForm = false, onDesktopIntroTrigger }: DesktopLayoutProps) {
   const [showMobile, setShowMobile] = useState(showForm)
   const [btnHovered, setBtnHovered] = useState(false)
   const scale = useDesktopScale()
 
-  const jumpToEmulatorTop = () => {
-    sessionStorage.setItem('storyHardTopJumpTs', String(Date.now()))
+  const scrollEmulatorToStart = () => {
     const main = document.querySelector('.emulator-container') as HTMLElement | null
     if (!main) return
     main.classList.remove('story-snap-enabled')
-    main.scrollTo({ top: 0, behavior: 'auto' })
+    sessionStorage.setItem('storyAnchorJumpTs', '1')
+    window.setTimeout(() => sessionStorage.removeItem('storyAnchorJumpTs'), 1700)
+    main.scrollTo({ top: 0, behavior: 'smooth' })
   }
 
   return (
@@ -67,11 +73,17 @@ export default function DesktopLayout({ showForm = false }: { showForm?: boolean
             }}
           >
             <div className="absolute flex flex-col" style={{ left: '92px', top: '80px' }}>
-              <img
-                src={logoBlanco}
-                alt="feat. Consulting"
-                style={{ width: '29.71px', height: '32.77px', flexShrink: 0 }}
-              />
+              <button
+                onClick={scrollEmulatorToStart}
+                className="bg-transparent border-none p-0 m-0 cursor-pointer w-fit"
+                aria-label="Volver al inicio"
+              >
+                <img
+                  src={logoBlanco}
+                  alt="feat. Consulting"
+                  style={{ width: '29.71px', height: '32.77px', flexShrink: 0 }}
+                />
+              </button>
 
               <div style={{ marginTop: '85px', maxWidth: '730px' }}>
                 <p
@@ -173,7 +185,10 @@ export default function DesktopLayout({ showForm = false }: { showForm?: boolean
             <button
               onMouseEnter={() => setBtnHovered(true)}
               onMouseLeave={() => setBtnHovered(false)}
-              onClick={() => setShowMobile(true)}
+              onClick={() => {
+                onDesktopIntroTrigger?.()
+                setShowMobile(true)
+              }}
               className="absolute"
               style={{
                 bottom: '40px',
@@ -226,7 +241,7 @@ export default function DesktopLayout({ showForm = false }: { showForm?: boolean
             }}
           >
             <button
-              onClick={jumpToEmulatorTop}
+              onClick={scrollEmulatorToStart}
               className="absolute bg-transparent border-none p-0 m-0 cursor-pointer"
               style={{ top: '35.66px', left: '87px' }}
               aria-label="Volver al inicio"
@@ -259,7 +274,13 @@ export default function DesktopLayout({ showForm = false }: { showForm?: boolean
                   className="shrink-0 flex items-center bg-[#FCFAF3] z-50 border-b border-brand-dark/10"
                   style={{ height: `${EMULATOR_TOPBAR_HEIGHT}px`, paddingLeft: '23px' }}
                 >
-                  <Logo width={23} height={26} variant="dark" />
+                  <button
+                    onClick={scrollEmulatorToStart}
+                    className="bg-transparent border-none p-0 m-0 cursor-pointer flex items-center"
+                    aria-label="Volver al inicio"
+                  >
+                    <Logo width={23} height={26} variant="dark" />
+                  </button>
                 </div>
                 <div
                   className="relative overflow-hidden"

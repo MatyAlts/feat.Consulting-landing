@@ -9,15 +9,29 @@ import Loading from './components/shared/Loading'
 export default function App() {
   const { isDesktop } = useViewport()
   const [isLoading, setIsLoading] = useState(true)
+  const [desktopIntroRequested, setDesktopIntroRequested] = useState(false)
   useViewportHeight()
+  const shouldShowLoading = isDesktop ? desktopIntroRequested && isLoading : isLoading
 
   return (
     <BrowserRouter>
-      <Loading onComplete={() => setIsLoading(false)} />
+      {shouldShowLoading && <Loading onComplete={() => setIsLoading(false)} />}
       <Routes>
         <Route 
           path="/" 
-          element={isDesktop ? <DesktopLayout key={`home-desktop-${isLoading}`} /> : <MobileLayout key={`home-mobile-${isLoading}`} />} 
+          element={
+            isDesktop
+              ? (
+                <DesktopLayout
+                  key="home-desktop"
+                  onDesktopIntroTrigger={() => {
+                    setIsLoading(true)
+                    setDesktopIntroRequested(true)
+                  }}
+                />
+              )
+              : <MobileLayout key={`home-mobile-${isLoading}`} />
+          } 
         />
         <Route 
           path="/strategy" 
