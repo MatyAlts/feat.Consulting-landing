@@ -32,7 +32,7 @@ function useDesktopScale() {
   return scale
 }
 
-export default function DesktopLayout({ showStrategy = false, showForm = false }: { showStrategy?: boolean, showForm?: boolean }) {
+export default function DesktopLayout({ showForm = false }: { showForm?: boolean }) {
   const [showMobile, setShowMobile] = useState(showForm)
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [btnHovered, setBtnHovered] = useState(false)
@@ -43,12 +43,6 @@ export default function DesktopLayout({ showStrategy = false, showForm = false }
     document.body.style.overflow = isMenuOpen ? 'hidden' : ''
     return () => { document.body.style.overflow = '' }
   }, [isMenuOpen])
-
-  useEffect(() => {
-    if (showForm) {
-      setShowMobile((prev) => (prev === true ? prev : true))
-    }
-  }, [showForm])
 
   return (
     <div className="relative min-h-dvh w-full overflow-hidden bg-[#020A30] flex items-center justify-center">
@@ -269,7 +263,7 @@ export default function DesktopLayout({ showStrategy = false, showForm = false }
                 <Logo width={23} height={26} variant="dark" />
               </div>
               <div className="flex-1 relative overflow-hidden">
-                <MobileLayout isDesktopContainer={true} showStrategy={showStrategy} showForm={showForm} />
+                <MobileLayout isDesktopContainer={true} showForm={showForm} />
               </div>
             </div>
 

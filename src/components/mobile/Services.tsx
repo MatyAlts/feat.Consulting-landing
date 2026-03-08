@@ -1,5 +1,4 @@
 import { useRef, useEffect, useState, type ReactNode } from 'react'
-import { useNavigate } from 'react-router-dom'
 
 interface MobileServicesProps {
   onStepChange?: (step: number) => void;
@@ -43,7 +42,6 @@ function StoryStage({
 }
 
 export default function MobileServices({ onStepChange }: MobileServicesProps) {
-  const navigate = useNavigate()
   const [activeColor, setActiveColor] = useState("#FCFAF3")
   const [activeStep, setActiveStep] = useState(0)
   const [revealedSecondSteps, setRevealedSecondSteps] = useState<Record<number, boolean>>({})
@@ -471,6 +469,7 @@ export default function MobileServices({ onStepChange }: MobileServicesProps) {
 
         {/* 15. How? (Step 19) */}
         <StoryStage
+          id="how-does-this-happen"
           step={19}
           color="rgba(21, 19, 36, 0.97)"
           sectionRef={(el) => { sectionRefs.current[19] = el; }}
@@ -479,8 +478,21 @@ export default function MobileServices({ onStepChange }: MobileServicesProps) {
         >
           <button
             onClick={() => {
-              sessionStorage.setItem('scrollTarget', '#system');
-              navigate('/strategy');
+              sessionStorage.setItem('storyAnchorJumpTs', '1')
+              window.setTimeout(() => sessionStorage.removeItem('storyAnchorJumpTs'), 1400)
+              const main = document.querySelector('main') as HTMLElement | null
+              const strategy = document.querySelector('#strategy') as HTMLElement | null
+              if (!strategy) return
+
+              if (main) {
+                main.scrollTo({
+                  top: strategy.offsetTop,
+                  behavior: 'auto'
+                })
+                return
+              }
+
+              strategy.scrollIntoView({ behavior: 'auto', block: 'start' })
             }}
             style={{
               ...getStepStyle(19, 0),

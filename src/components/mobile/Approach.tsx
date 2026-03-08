@@ -416,7 +416,7 @@ export default function MobileApproach({ onStepChange }: { onStepChange?: (step:
         id="entry-points"
         data-step="61"
         data-approach-block
-        className="px-3 py-40 snap-start"
+        className="px-3 py-40"
         style={{ background: 'linear-gradient(to bottom, #DBE9EE, #FFFFFF)' }}
       >
         <div className="w-full flex flex-col justify-start items-start gap-8">

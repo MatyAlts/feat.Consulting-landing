@@ -290,7 +290,7 @@ export default function MobileDecisionStage({ onStepChange }: MobileDecisionStag
     <>
       {/* 16. Final Narrative Sequence (Previously Step 20) */}
       <section
-        id="system"
+        id="strategy"
         className="w-full flex flex-col justify-start px-7.5 overflow-hidden py-24 bg-[#0D111F]"
       >
         <div className="self-stretch flex flex-col justify-start items-start relative z-10 w-full pt-8 text-left">

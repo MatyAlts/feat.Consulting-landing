@@ -17,6 +17,8 @@ const MENU_ITEMS = [
   { title: 'FAQs', desc: 'Clarity around scope, timelines, and a little more about how we work.' },
 ]
 const HARD_TOP_JUMP_KEY = 'storyHardTopJumpTs'
+const ANCHOR_JUMP_BYPASS_KEY = 'storyAnchorJumpTs'
+const STRATEGY_HASH = '#strategy'
 
 export default function MobileNavbar({ forceHide = false }: MobileNavbarProps) {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
@@ -34,16 +36,32 @@ export default function MobileNavbar({ forceHide = false }: MobileNavbarProps) {
     }
   }, [isMenuOpen])
 
+  const navigateToHashInMain = (hash: string, behavior: ScrollBehavior = 'smooth') => {
+    const main = document.querySelector('main') as HTMLElement | null
+    const el = document.querySelector(hash) as HTMLElement | null
+    if (!el) return
+
+    sessionStorage.setItem(ANCHOR_JUMP_BYPASS_KEY, '1')
+    window.setTimeout(() => sessionStorage.removeItem(ANCHOR_JUMP_BYPASS_KEY), 1400)
+
+    if (main) {
+      main.scrollTo({ top: el.offsetTop, behavior })
+      return
+    }
+
+    el.scrollIntoView({ behavior, block: 'start' })
+  }
+
   const handleNavClick = (title: string) => {
     setIsMenuOpen(false)
 
     const navMap: Record<string, { path: string, hash: string }> = {
       Direction: { path: '/', hash: '#direction' },
-      System: { path: '/strategy', hash: '#system' },
-      'In Practice': { path: '/strategy', hash: '#in-practice' },
-      'Entry Points': { path: '/strategy', hash: '#entry-points' },
-      Impact: { path: '/strategy', hash: '#impact' },
-      FAQs: { path: '/strategy', hash: '#faqs' },
+      System: { path: '/', hash: '#strategy' },
+      'In Practice': { path: '/', hash: '#in-practice' },
+      'Entry Points': { path: '/', hash: '#entry-points' },
+      Impact: { path: '/', hash: '#impact' },
+      FAQs: { path: '/', hash: '#faqs' },
     }
 
     const target = navMap[title]
@@ -51,10 +69,8 @@ export default function MobileNavbar({ forceHide = false }: MobileNavbarProps) {
 
     if (location.pathname === target.path) {
       if (target.hash) {
-        const el = document.querySelector(target.hash)
-        if (el) {
-          el.scrollIntoView({ behavior: 'smooth' })
-        }
+        const behavior: ScrollBehavior = target.hash === STRATEGY_HASH ? 'auto' : 'smooth'
+        navigateToHashInMain(target.hash, behavior)
       } else {
         window.scrollTo({ top: 0, behavior: 'smooth' })
       }
@@ -81,7 +97,8 @@ export default function MobileNavbar({ forceHide = false }: MobileNavbarProps) {
           return
         }
 
-        el.scrollIntoView({ behavior: 'smooth' })
+        const behavior: ScrollBehavior = location.hash === STRATEGY_HASH ? 'auto' : 'smooth'
+        navigateToHashInMain(location.hash, behavior)
       }, 100)
     }
   }, [location])

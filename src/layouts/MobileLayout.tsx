@@ -13,15 +13,16 @@ import ContactForm from '../components/mobile/ContactForm'
 
 interface MobileLayoutProps {
   isDesktopContainer?: boolean;
-  showStrategy?: boolean;
   showForm?: boolean;
 }
 const HARD_TOP_JUMP_KEY = 'storyHardTopJumpTs'
+const ANCHOR_JUMP_BYPASS_KEY = 'storyAnchorJumpTs'
 
-export default function MobileLayout({ isDesktopContainer = false, showStrategy = false, showForm = false }: MobileLayoutProps) {
+export default function MobileLayout({ isDesktopContainer = false, showForm = false }: MobileLayoutProps) {
   const [activeStep, setActiveStep] = useState(-1)
   const [isStorySnapEnabled, setIsStorySnapEnabled] = useState(false)
   const mainRef = useRef<HTMLElement>(null)
+  const ctaBoundaryReleasedRef = useRef(false)
 
   // Habilitar drag to scroll para desktop emulation
   useDragScroll(mainRef, isDesktopContainer)
@@ -35,7 +36,7 @@ export default function MobileLayout({ isDesktopContainer = false, showStrategy 
     const mainElement = mainRef.current;
     if (!mainElement) return;
 
-    const scrollKey = showStrategy ? 'scrollPos_strategy' : 'scrollPos_home';
+    const scrollKey = 'scrollPos_home';
     const hardTopJumpTsRaw = sessionStorage.getItem(HARD_TOP_JUMP_KEY)
     const hardTopJumpActive = (() => {
       if (!hardTopJumpTsRaw) return false
@@ -45,11 +46,11 @@ export default function MobileLayout({ isDesktopContainer = false, showStrategy 
 
     // 1. If we are entering a view that is NOT the form, check for saved position
     if (!showForm) {
-      if (!showStrategy && hardTopJumpActive) {
+      if (hardTopJumpActive) {
         mainElement.scrollTo(0, 0)
         sessionStorage.removeItem(scrollKey)
       } else {
-      // Check for a cross-route scroll target (e.g. navigate('/strategy') with #system anchor)
+      // Check for a cross-route scroll target
       const scrollTarget = sessionStorage.getItem('scrollTarget');
       if (scrollTarget) {
         sessionStorage.removeItem('scrollTarget');
@@ -83,19 +84,19 @@ export default function MobileLayout({ isDesktopContainer = false, showStrategy 
         sessionStorage.setItem(scrollKey, mainElement.scrollTop.toString());
       }
     };
-  }, [showForm, showStrategy]);
+  }, [showForm]);
 
   useEffect(() => {
-    const isHomeStoryRoute = !showStrategy && !showForm
-    if (!isHomeStoryRoute) return
+    if (showForm) return
 
     const main = mainRef.current
     if (!main) return
+    let previousTop = main.scrollTop
 
     const updateSnapBoundary = () => {
-      const bypassTsRaw = sessionStorage.getItem(HARD_TOP_JUMP_KEY)
-      if (bypassTsRaw) {
-        const bypassTs = Number(bypassTsRaw)
+      const hardTopBypassTsRaw = sessionStorage.getItem(HARD_TOP_JUMP_KEY)
+      if (hardTopBypassTsRaw) {
+        const bypassTs = Number(hardTopBypassTsRaw)
         const bypassActive = Number.isFinite(bypassTs) && Date.now() - bypassTs < 1200
         if (bypassActive) {
           setIsStorySnapEnabled(false)
@@ -104,21 +105,58 @@ export default function MobileLayout({ isDesktopContainer = false, showStrategy 
         sessionStorage.removeItem(HARD_TOP_JUMP_KEY)
       }
 
-      const firstStorySection = document.querySelector('#direction') as HTMLElement | null
-      if (!firstStorySection) return
+      const anchorJumpBypassActive = sessionStorage.getItem(ANCHOR_JUMP_BYPASS_KEY) === '1'
+      if (anchorJumpBypassActive) {
+        setIsStorySnapEnabled(false)
+        return
+      }
 
-      const boundaryTop = Math.max(0, firstStorySection.offsetTop)
-      const enterThreshold = Math.max(0, boundaryTop - 12)
-      const exitThreshold = Math.max(0, boundaryTop - 84)
+      const firstStorySection = document.querySelector('#direction') as HTMLElement | null
+      const ctaBoundarySection = document.querySelector('#how-does-this-happen') as HTMLElement | null
+      const normalScrollStartSection = document.querySelector('#strategy') as HTMLElement | null
+      if (!firstStorySection || !ctaBoundarySection || !normalScrollStartSection) return
+
+      const snapStartTop = Math.max(0, firstStorySection.offsetTop)
+      const ctaBoundaryTop = Math.max(0, ctaBoundarySection.offsetTop)
+      const normalScrollStartTop = Math.max(0, normalScrollStartSection.offsetTop)
+
+      const enterSnapThreshold = Math.max(0, snapStartTop - 12)
+      const exitToHeroThreshold = Math.max(0, snapStartTop - 84)
+      const disableSnapAtNormalThreshold = Math.max(0, normalScrollStartTop - 12)
+      const reenableSnapFromNormalThreshold = Math.max(0, normalScrollStartTop - 96)
       const currentTop = main.scrollTop
+      const scrollDelta = currentTop - previousTop
+      previousTop = currentTop
+
+      if (currentTop <= exitToHeroThreshold) {
+        ctaBoundaryReleasedRef.current = false
+      }
+
+      // Re-entry reset: when user comes back up to CTA boundary, arm snap zone again.
+      if (ctaBoundaryReleasedRef.current && scrollDelta < 0 && currentTop <= ctaBoundaryTop + 12) {
+        ctaBoundaryReleasedRef.current = false
+      }
+
+      // Downward release: once user pushes down from CTA, keep snap disabled until reset above.
+      if (!ctaBoundaryReleasedRef.current && currentTop >= ctaBoundaryTop - 10 && scrollDelta > 0) {
+        ctaBoundaryReleasedRef.current = true
+      }
+
+      if (ctaBoundaryReleasedRef.current && currentTop < normalScrollStartTop + 12) {
+        setIsStorySnapEnabled(false)
+        return
+      }
 
       setIsStorySnapEnabled((prev) => {
         if (prev) {
-          if (currentTop <= exitThreshold) return false
+          if (currentTop <= exitToHeroThreshold) return false
+          // Final snap stage can settle, but must release when user keeps pushing down.
+          if (currentTop >= ctaBoundaryTop - 10 && scrollDelta > 0) return false
+          if (currentTop >= disableSnapAtNormalThreshold) return false
           return true
         }
 
-        if (currentTop >= enterThreshold) return true
+        if (currentTop >= enterSnapThreshold && currentTop < reenableSnapFromNormalThreshold) return true
         return false
       })
     }
@@ -133,7 +171,7 @@ export default function MobileLayout({ isDesktopContainer = false, showStrategy 
       main.removeEventListener('scroll', updateSnapBoundary)
       window.removeEventListener('resize', updateSnapBoundary)
     }
-  }, [showStrategy, showForm])
+  }, [showForm])
 
   return (
     <div
@@ -146,26 +184,23 @@ export default function MobileLayout({ isDesktopContainer = false, showStrategy 
         className={[
         'flex-1 overflow-y-auto hide-scrollbar',
         isDesktopContainer ? 'emulator-container' : 'scroll-smooth',
-        !showStrategy && !showForm ? 'story-snap-main' : '',
-        !showStrategy && !showForm && isStorySnapEnabled ? 'story-snap-enabled' : '',
+        !showForm ? 'story-snap-main' : '',
+        !showForm && isStorySnapEnabled ? 'story-snap-enabled' : '',
       ].filter(Boolean).join(' ')}
       >
         {showForm ? (
           <ContactForm />
-        ) : !showStrategy ? (
+        ) : (
           <>
             <MobileHero />
             <MobileServices onStepChange={setActiveStep} />
-          </>
-        ) : (
-          <>
             <MobileDecisionStage onStepChange={setActiveStep} />
             <MobileApproach onStepChange={setActiveStep} />
             <MobileFAQs />
           </>
         )}
       </main>
-      {!isDesktopContainer && !showForm && <StickyFooter isStrategy={showStrategy} />}
+      {!isDesktopContainer && !showForm && <StickyFooter />}
     </div>
   )
 }

@@ -21,7 +21,7 @@ export default function App() {
         />
         <Route 
           path="/strategy" 
-          element={isDesktop ? <DesktopLayout key="strategy" showStrategy /> : <MobileLayout key={`strategy-${isLoading}`} showStrategy />} 
+          element={<Navigate to="/#strategy" replace />} 
         />
         <Route 
           path="/contact" 
