@@ -40,7 +40,7 @@ export default function MobileFAQs() {
         <div className="pl-[21px] pr-5">
           <h2 
             className="font-['Fustat'] font-medium leading-[1.05] text-[#171425]"
-            style={{ fontSize: '45.18px', paddingTop: '87.62px' }}
+            style={{ fontSize: 'clamp(36px, 11.5vw, 48px)', paddingTop: 'clamp(56px, 10dvh, 90px)' }}
           >
             Frequently <br /> Asked Questions
           </h2>
@@ -54,7 +54,7 @@ export default function MobileFAQs() {
 
           <p 
             className="font-['Fustat'] font-light text-[#191432] leading-[1.3]"
-            style={{ fontSize: '22.05px', marginTop: '13px' }}
+            style={{ fontSize: 'var(--text-hero-body)', marginTop: '13px' }}
           >
             This isn’t a traditional consulting engagement. <br />
             It’s a structural growth intervention.<br /><br />
@@ -79,7 +79,7 @@ export default function MobileFAQs() {
                 <button
                   onClick={() => setOpenIdx(isOpen ? null : idx)}
                   className={`w-full flex items-center text-left pl-[16.48px] pr-6 outline-none transition-colors duration-300 ${isOpen ? 'bg-[#191432]' : 'bg-transparent'}`}
-                  style={{ height: '55.66px' }}
+                  style={{ minHeight: '3.5rem' }}
                 >
                   <span 
                     className={`font-['Fustat'] font-normal flex-1 transition-colors duration-300`}
@@ -131,7 +131,7 @@ export default function MobileFAQs() {
           >
             <h2 
               className="font-['Fustat'] font-semibold text-[#191432] leading-tight"
-              style={{ fontSize: '39.69px', marginTop: '54.91px' }}
+              style={{ fontSize: 'clamp(32px, 10vw, 42px)', marginTop: 'clamp(36px, 6dvh, 56px)' }}
             >
               Have a specific <br /> question?
             </h2>
@@ -147,8 +147,8 @@ export default function MobileFAQs() {
               onClick={() => navigate('/contact')}
               className="w-full max-w-[325px] flex items-center justify-center rounded-full active:scale-[0.98] transition-transform shadow-sm"
               style={{ 
-                backgroundColor: '#8B8CFB', 
-                height: '60px',
+                backgroundColor: '#8B8CFB',
+                minHeight: '3.75rem',
                 marginTop: '15.98px'
               }}
             >
@@ -174,12 +174,12 @@ export default function MobileFAQs() {
             src={loadingFt} 
             alt="feat. logo" 
             className="w-[66px] object-contain"
-            style={{ marginTop: '119.56px' }}
+            style={{ marginTop: 'clamp(80px, 14dvh, 120px)' }}
           />
           
           <h2 
             className="text-white font-['Fustat'] font-light leading-[1.1] tracking-tight" 
-            style={{ fontSize: '48px', marginTop: '29px' }}
+            style={{ fontSize: 'clamp(36px, 12vw, 50px)', marginTop: '29px' }}
           >
             It’s time to <br />
             optimize your <br />
@@ -211,7 +211,7 @@ export default function MobileFAQs() {
             </a>
           </div>
 
-          <div style={{ marginTop: '231px' }}>
+          <div style={{ marginTop: 'clamp(120px, 27dvh, 240px)' }}>
             <p 
               className="font-['Fustat'] font-light" 
               style={{ fontSize: '20.61px', color: '#D2D2FF' }}

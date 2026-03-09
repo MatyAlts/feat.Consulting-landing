@@ -67,7 +67,8 @@ export function useDragScroll(
 
     /** Recopila las posiciones scrollTop de todos los snap points */
     const getSnapPositions = (): number[] => {
-      const snapEls = el.querySelectorAll('.snap-start')
+      // Only the storytelling track should participate in vertical snap progression.
+      const snapEls = el.querySelectorAll('.story-snap-step')
       if (snapEls.length === 0) return []
 
       const elRect = el.getBoundingClientRect()
@@ -121,12 +122,12 @@ export function useDragScroll(
         for (const pos of positions) {
           if (pos > current + threshold) return pos
         }
-        return positions[positions.length - 1] // último
+        return null
       } else {
         for (let i = positions.length - 1; i >= 0; i--) {
           if (positions[i] < current - threshold) return positions[i]
         }
-        return positions[0] // primero
+        return null
       }
     }
 
@@ -270,7 +271,7 @@ export function useDragScroll(
       // Acumular el delta para evitar que movimientos mínimos disparen el snap
       wheelAccumulator += e.deltaY
 
-      const TRIGGER_THRESHOLD = 50 // Requerir cierta "fuerza" de scroll
+      const TRIGGER_THRESHOLD = 110 // Requerir una intención más clara por gesto de rueda
       if (Math.abs(wheelAccumulator) < TRIGGER_THRESHOLD) return
 
       wheelCooldown = true
@@ -279,12 +280,20 @@ export function useDragScroll(
 
       const target = findNextSnap(direction)
 
-      if (target !== null) {
+      if (target === null) {
+        // If there is no next snap target (end of storytelling zone),
+        // release the gesture into normal scrolling instead of trapping.
+        el.style.scrollSnapType = 'none'
+        el.scrollTop += e.deltaY
+        requestAnimationFrame(() => {
+          el.style.scrollSnapType = ''
+        })
+      } else {
         el.scrollTo({ top: target, behavior: 'smooth' })
       }
 
-      // Cooldown más corto para mejor respuesta (400ms es suficiente)
-      setTimeout(() => { wheelCooldown = false }, 400)
+      // Keep one-step-per-gesture behavior and absorb wheel momentum bursts.
+      setTimeout(() => { wheelCooldown = false }, 720)
     }
 
     // ── Pointer Event Handlers ──
@@ -337,7 +346,7 @@ export function useDragScroll(
           disableSnap()
           // scrollBehavior auto solo durante drag
           el.style.scrollBehavior = 'auto'
-          try { el.setPointerCapture(e.pointerId) } catch (err) { /* ignore */ }
+          try { el.setPointerCapture(e.pointerId) } catch { /* ignore */ }
           el.style.userSelect = 'none'
           el.style.cursor = 'grabbing'
         } else {
@@ -345,7 +354,7 @@ export function useDragScroll(
           hTarget = target.closest?.('[data-horizontal-drag]') as HTMLElement | null
 
           if (hTarget) {
-            try { el.setPointerCapture(e.pointerId) } catch (err) { /* ignore */ }
+            try { el.setPointerCapture(e.pointerId) } catch { /* ignore */ }
             hTarget.style.userSelect = 'none'
             hTarget.style.cursor = 'grabbing'
             hTarget.style.scrollBehavior = 'auto'
@@ -358,7 +367,7 @@ export function useDragScroll(
             inSnapZone = !!(snapType && snapType !== 'none')
             disableSnap()
             el.style.scrollBehavior = 'auto'
-            try { el.setPointerCapture(e.pointerId) } catch (err) { /* ignore */ }
+            try { el.setPointerCapture(e.pointerId) } catch { /* ignore */ }
             el.style.userSelect = 'none'
             el.style.cursor = 'grabbing'
           }
@@ -398,7 +407,7 @@ export function useDragScroll(
       if (!pointerDown || e.pointerId !== pointerId) return
       pointerDown = false
 
-      try { el.releasePointerCapture(e.pointerId) } catch (err) { /* ignore */ }
+      try { el.releasePointerCapture(e.pointerId) } catch { /* ignore */ }
 
       if (dragging) {
         if (axis === 'x' && hTarget) {
@@ -482,7 +491,7 @@ export function useDragScroll(
       pointerDown = false
       dragging = false
 
-      try { el.releasePointerCapture(e.pointerId) } catch (err) { /* ignore */ }
+      try { el.releasePointerCapture(e.pointerId) } catch { /* ignore */ }
 
       if (hTarget) {
         hTarget.style.userSelect = ''
