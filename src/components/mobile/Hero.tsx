@@ -1,58 +1,79 @@
 interface MobileHeroProps {
-  animateEntry?: boolean
+  animateEntry?: boolean;
 }
 
 export default function MobileHero({ animateEntry = true }: MobileHeroProps) {
-  const revealClass = animateEntry ? 'animate-text-reveal-up' : ''
+  const revealClass = animateEntry ? "animate-text-reveal-up" : "";
   return (
     <section
       id="hero"
       className="bg-[#FCFAF3] flex flex-col justify-start px-5 overflow-hidden"
       style={{
-        minHeight: '100dvh',
-        paddingTop: 'clamp(80px, 16dvh, 136px)',
-        paddingBottom: 'clamp(40px, 8dvh, 64px)'
+        minHeight: "100dvh",
+        paddingTop: "clamp(80px, 16dvh, 136px)",
+        paddingBottom: "clamp(40px, 8dvh, 64px)",
       }}
     >
       <div className="flex flex-col">
         {/* Headline + subtitle */}
         <div className="flex flex-col">
           <div className="overflow-hidden will-change-transform">
-            <h1 className={`text-hero-title font-medium text-brand-hero-title leading-[1.05] tracking-tight ${revealClass}`}>
-              Scaling isn&apos;t<br />
-              about pushing<br />
+            <h1
+              className={`text-hero-title font-medium text-brand-hero-title leading-[1.05] tracking-tight ${revealClass}`}
+            >
+              Scaling isn&apos;t
+              <br />
+              about pushing
+              <br />
               harder.
             </h1>
           </div>
           <div className="overflow-hidden will-change-transform">
-            <p className={`text-hero-subtitle text-brand-hero-subtitle leading-tight font-medium ${revealClass} ${animateEntry ? '[animation-delay:1500ms]' : ''}`}>
-              It&apos;s about matching<br />
-              how your market decides.
+            <p
+              className={`text-hero-subtitle text-brand-hero-subtitle leading-tight font-medium ${revealClass} ${animateEntry ? "[animation-delay:1200ms]" : ""}`}
+            >
+              It&apos;s about matching how
+              <br />
+              your customers decide.
             </p>
           </div>
         </div>
 
         {/* Body */}
-        <div className="flex flex-col gap-6" style={{ marginTop: 'clamp(64px, 13dvh, 108px)' }}>
+        <div
+          className="flex flex-col gap-6"
+          style={{ marginTop: "clamp(64px, 13dvh, 108px)" }}
+        >
           <div className="overflow-hidden will-change-transform">
-            <p className={`text-hero-body text-brand-hero-body leading-[1.3] ${revealClass} ${animateEntry ? '[animation-delay:3000ms]' : ''}`}>
-              <span className="font-light">feat. builds </span>
-              <span className="font-normal">custom journeys </span><br />
+            <p
+              className={`text-hero-body text-brand-hero-body leading-[1.3] ${revealClass} ${animateEntry ? "[animation-delay:1900ms]" : ""}`}
+            >
+              <span className="font-light">feat. designs </span>
+              <span className="font-normal">custom journeys </span>
+              <br />
               <span className="font-light">around </span>
               <span className="font-normal">real buyer behavior</span>
-            </p>
-          </div>
-          <div className="overflow-hidden will-change-transform">
-            <p className={`text-hero-body text-brand-hero-body leading-[1.3] ${revealClass} ${animateEntry ? '[animation-delay:4200ms]' : ''}`}>
-              <span className="font-light">and turns them into </span><br />
-              <span className="font-normal">repeatable growth.</span>
+              <div className="overflow-hidden will-change-transform">
+                <p
+                  className={`text-hero-body text-brand-hero-body leading-[1.3] ${revealClass} ${animateEntry ? "[animation-delay:2600ms]" : ""}`}
+                >
+                  <span className="font-light">and turns them into </span>
+                  <br />
+                  <span className="font-normal">repeatable growth.</span>
+                </p>
+              </div>
             </p>
           </div>
         </div>
 
         {/* Scroll Indicator */}
-        <div className="overflow-hidden will-change-transform pb-4" style={{ marginTop: 'clamp(32px, 5dvh, 48px)' }}>
-          <div className={`${revealClass} ${animateEntry ? '[animation-delay:4200ms]' : ''}`}>
+        <div
+          className="overflow-hidden will-change-transform pb-4"
+          style={{ marginTop: "clamp(32px, 5dvh, 48px)" }}
+        >
+          <div
+            className={`${revealClass} ${animateEntry ? "[animation-delay:2600ms]" : ""}`}
+          >
             <div className="animate-bounce-slow text-brand-dark">
               <svg
                 width="18"
