@@ -351,6 +351,7 @@ export default function DesktopLayout({
 
             <Link
               to="/contact"
+              onClick={() => localStorage.removeItem("selectedTier")}
               className="absolute flex items-center cursor-pointer group hover:opacity-80 transition-opacity"
               style={{ right: "164px", bottom: "36px", textDecoration: "none" }}
             >

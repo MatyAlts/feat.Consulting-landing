@@ -610,7 +610,10 @@ export default function MobileDecisionStage({
 
                           {/* CTA Button */}
                           <button
-                            onClick={() => navigate("/contact")}
+                            onClick={() => {
+                              localStorage.removeItem("selectedTier");
+                              navigate("/contact");
+                            }}
                             className="absolute w-72 h-15 bg-white rounded-[50px] shadow-lg flex items-center justify-center active:scale-95 transition-transform"
                             style={{
                               top:

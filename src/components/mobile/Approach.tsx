@@ -677,7 +677,10 @@ export default function MobileApproach({
 
           <div className="w-full mt-auto">
             <button
-              onClick={() => navigate("/contact")}
+              onClick={() => {
+                localStorage.setItem("selectedTier", "Direction Sprint");
+                navigate("/contact");
+              }}
               className="w-full flex items-center justify-center rounded-full active:scale-[0.98] transition-transform mb-2.5 shadow-sm"
               style={{ backgroundColor: "#1A1A2E", height: "60px" }}
             >
@@ -847,7 +850,10 @@ export default function MobileApproach({
 
           <div className="w-full mt-auto">
             <button
-              onClick={() => navigate("/contact")}
+              onClick={() => {
+                localStorage.setItem("selectedTier", "Expansion System");
+                navigate("/contact");
+              }}
               className="w-full flex items-center justify-center rounded-full active:scale-[0.98] transition-transform mb-2.5 shadow-sm"
               style={{ backgroundColor: "#8B8CFB", height: "60px" }}
             >
