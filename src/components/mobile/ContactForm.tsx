@@ -137,11 +137,18 @@ export default function ContactForm() {
           tier: tier,
         };
 
+        const jwtToken = import.meta.env.VITE_N8N_WEBHOOK_JWT;
+        const headers: Record<string, string> = {
+          "Content-Type": "application/json",
+        };
+
+        if (jwtToken) {
+          headers["Authorization"] = `Bearer ${jwtToken}`;
+        }
+
         const response = await fetch(webhookUrl, {
           method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
+          headers: headers,
           body: JSON.stringify(payload),
         });
 
