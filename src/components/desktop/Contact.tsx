@@ -3,7 +3,6 @@ import { useNavigate } from "react-router-dom";
 import logoImg from "../../assets/icons/loading ft.png";
 import doinGlobal from "../../assets/logos/doinGlobal.png";
 import ISCP from "../../assets/logos/ISCP.png";
-import logoVertical from "../../assets/logos/logo vertical.png";
 import MobyBots from "../../assets/logos/MobyBots.png";
 import ObrasDeMar from "../../assets/logos/ObrasDeMar.png";
 
@@ -215,7 +214,7 @@ export default function DesktopContactPage() {
 
       {/* Main content */}
       <main className="flex-1 overflow-y-auto">
-        <div className="max-w-[1240px] mx-auto px-8 py-12">
+        <div className="max-w-310 mx-auto px-8 py-12">
           {/* Heading */}
           <h1
             className="font-['Fustat'] font-semibold text-[#171425] leading-[1.05] mb-3 text-center"
@@ -235,7 +234,7 @@ export default function DesktopContactPage() {
           <div className="flex gap-10 items-start">
             {/* LEFT: Form card */}
             <div
-              className="flex-[7] min-w-0 rounded-2xl p-8"
+              className="flex-7 min-w-0 rounded-2xl p-8"
               style={{
                 background: "linear-gradient(180deg, #D2D3FF 0%, #DBE9EE 100%)",
               }}
@@ -435,7 +434,7 @@ export default function DesktopContactPage() {
             </div>
 
             {/* RIGHT: Info panel */}
-            <div className="flex-[4] pt-2 max-w-[400px]">
+            <div className="flex-4 pt-2 max-w-100">
               <h2
                 className="font-['Fustat'] font-medium text-[#171425] leading-[1.2] mb-5"
                 style={{ fontSize: "27.82px" }}
