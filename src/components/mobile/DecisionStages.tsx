@@ -1,3 +1,7 @@
+import { useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { ChevronDown } from "lucide-react";
+import { Link } from "react-router-dom";
 import { StaggerReveal } from "../shared/StaggerReveal";
 
 const STAGES = [
@@ -13,7 +17,7 @@ const STAGES = [
 
 export default function DecisionStages() {
   return (
-    <section className="w-full flex flex-col items-center pt-32 pb-32 bg-[#FCFAF3] overflow-hidden">
+    <section className="w-full flex flex-col items-center pt-32 pb-40 bg-[#FCFAF3] overflow-hidden">
       {/* Title */}
       <div className="w-full px-5 mb-[8px] text-center">
         <StaggerReveal staggerDelay={80}>
@@ -121,6 +125,333 @@ export default function DecisionStages() {
         </StaggerReveal>
       </div>
 
+      {/* Stage 1 Container */}
+      <div className="w-full px-[17.5px] pb-[77.44px] flex flex-col pt-24 bg-[#FCFAF3]">
+        {/* Stage Header */}
+        <div className="flex flex-col gap-2 mb-[3px]">
+          <span
+            style={{
+              fontFamily: "Lato",
+              fontStyle: "italic",
+              fontWeight: 400,
+              fontSize: "17.07px",
+              color: "#7A71A5",
+            }}
+          >
+            Stage 1 — Calibration Sprint
+          </span>
+          <h3
+            style={{
+              fontFamily: "Fustat",
+              fontWeight: 600,
+              fontSize: "25px",
+              color: "#000000",
+              lineHeight: "1.15",
+            }}
+          >
+            When growth is moving, but <br />
+            it still feels scattered.
+          </h3>
+        </div>
+
+        {/* Narrative */}
+        <div className="flex flex-col gap-0 mb-[18px]">
+          <p
+            style={{
+              fontFamily: "Lato",
+              fontWeight: 300,
+              fontSize: "17.07px",
+              color: "#171425",
+              lineHeight: "1.21",
+            }}
+          >
+            You’ve tested angles, launched campaigns, <br />
+            optimized metrics.
+          </p>
+          <p
+            style={{
+              fontFamily: "Lato",
+              fontWeight: 500,
+              fontSize: "17.07px",
+              color: "#171425",
+              lineHeight: "1.21",
+            }}
+          >
+            But the repeatable logic hasn’t fully <br />
+            surfaced yet.
+          </p>
+        </div>
+
+        {/* Lists Wrapper */}
+        <div className="flex flex-col gap-[18px]">
+          <CollapsibleList
+            title="What we clarify:"
+            type="bullet"
+            items={[
+              "The cohort worth prioritizing",
+              "The entry point that matches their intent",
+              "The narrative that makes your offer click",
+              "The journey that reveals signal and removes friction.",
+            ]}
+          />
+
+          <CollapsibleList
+            title="What this enables:"
+            type="check"
+            items={[
+              "Market-backed clarity on what's actually moving the needle",
+              "A validated direction the team can confidently scale",
+              "Conversion journeys engineered around real buyer behavior",
+              "A unified decision logic to leverage across teams",
+            ]}
+            initialCount={1}
+          />
+        </div>
+
+        {/* CTA Button */}
+        <div className="flex flex-col items-center gap-4 mt-8">
+          <Link
+            to="/contact"
+            className="w-full flex items-center justify-center bg-[#1A1A2E] px-4 rounded-full h-[59.56px]"
+            onClick={() => localStorage.setItem("selectedTier", "Stage 1")}
+          >
+            <span
+              style={{
+                fontFamily: "Fustat",
+                fontWeight: 500,
+                fontSize: "18.75px",
+                color: "#FFFFFF",
+              }}
+            >
+              Calibrate your Growth →
+            </span>
+          </Link>
+          <span
+            style={{
+              fontFamily: "Lato",
+              fontWeight: 300,
+              fontSize: "14.56px",
+              color: "#0A0B26",
+              opacity: 0.9,
+            }}
+          >
+            Build once. Scale deliberately.
+          </span>
+        </div>
+      </div>
+
+      {/* Stage 2 Container */}
+      <div className="w-full px-[17.5px] pt-[86.56px] pb-24 flex flex-col bg-[#1A1A2E]">
+        {/* Stage Header */}
+        <div className="flex flex-col gap-2 mb-[3px]">
+          <span
+            style={{
+              fontFamily: "Lato",
+              fontStyle: "italic",
+              fontWeight: 400,
+              fontSize: "17.07px",
+              color: "#D2D2FF",
+            }}
+          >
+            Stage 2 — Expansion Architecture
+          </span>
+          <h3
+            style={{
+              fontFamily: "Fustat",
+              fontWeight: 600,
+              fontSize: "25px",
+              color: "#FFFFFF",
+              lineHeight: "1.15",
+            }}
+          >
+            When the direction is clear, <br />
+            but scale demands deeper <br />
+            execution.
+          </h3>
+        </div>
+
+        {/* Narrative */}
+        <div className="flex flex-col gap-0 mb-[18px]">
+          <p
+            style={{
+              fontFamily: "Lato",
+              fontWeight: 300,
+              fontSize: "17.07px",
+              color: "#FFFFFF",
+              lineHeight: "1.21",
+            }}
+          >
+            The direction is proven.
+          </p>
+          <p
+            style={{
+              fontFamily: "Lato",
+              fontWeight: 500,
+              fontSize: "17.07px",
+              color: "#FFFFFF",
+              lineHeight: "1.21",
+            }}
+          >
+            Now it needs to be activated for scale <br />
+            across your highest-leverage surfaces.
+          </p>
+        </div>
+
+        {/* Lists Wrapper */}
+        <div className="flex flex-col gap-[18px]">
+          <CollapsibleList
+            title="We operationalize it through:"
+            type="bullet"
+            theme="dark"
+            items={[
+              "Upgrading your key assets for scale",
+              "Optimizing acquisition around proven signals",
+              "Reinforcing conversion systems for expansion and efficiency",
+              "Embedding narrative cohesion across Product, Marketing, and Sales",
+            ]}
+          />
+
+          <CollapsibleList
+            title="Depending on where scale is bottlenecked, this can extend to:"
+            type="dash"
+            theme="dark"
+            items={[
+              "Website restructuring",
+              "Landing ecosystems",
+              "Campaign systems",
+              "Sales enablement",
+              "Product narrative alignment",
+            ]}
+          />
+
+          <CollapsibleList
+            title="What this enables:"
+            type="check"
+            theme="dark"
+            items={[
+              "Structural alignment across critical channels and surfaces",
+              "Systems designed to convert and scale",
+              "Cohesive execution across disciplines",
+              "Structural capacity to expand what works",
+              "Growth that compounds instead of resets",
+            ]}
+            initialCount={1}
+          />
+        </div>
+
+        {/* CTA Button */}
+        <div className="flex flex-col items-center gap-4 mt-8">
+          <Link
+            to="/contact"
+            className="w-full flex items-center justify-center bg-[#8B8CFB] px-4 rounded-full h-[59.56px]"
+            onClick={() => localStorage.setItem("selectedTier", "Stage 2")}
+          >
+            <span
+              style={{
+                fontFamily: "Fustat",
+                fontWeight: 600,
+                fontSize: "18.75px",
+                color: "#171425",
+              }}
+            >
+              Scale What Works →
+            </span>
+          </Link>
+          <span
+            style={{
+              fontFamily: "Lato",
+              fontWeight: 300,
+              fontSize: "14.56px",
+              color: "#FFFFFF",
+              opacity: 0.9,
+            }}
+          >
+            Design the system that scales.
+          </span>
+        </div>
+
+        {/* Secondary CTA Card */}
+        <div 
+          className="mt-16 pt-[67.91px] pb-[67.91px] w-full rounded-[28.96px] flex flex-col items-center text-center overflow-hidden"
+          style={{
+            background: "linear-gradient(135deg, #E0E7FF 0%, #E1E0FF 100%)",
+          }}
+        >
+          <h2
+            className="mb-[9px] px-2"
+            style={{
+              fontFamily: "Fustat",
+              fontWeight: 600,
+              fontSize: "40.18px",
+              color: "#191432",
+              lineHeight: "1.05",
+            }}
+          >
+            Not sure where <br />
+            you stand?
+          </h2>
+
+          <div className="flex flex-col gap-[12px] mb-[16px] w-full px-2">
+            <p
+              style={{
+                fontFamily: "Fustat",
+                fontWeight: 300,
+                fontSize: "clamp(16px, 4.5vw, 19px)",
+                color: "#191432",
+                whiteSpace: "nowrap",
+                letterSpacing: "-0.02em",
+              }}
+            >
+              We’ll pinpoint it in one focused session.
+            </p>
+            <p
+              style={{
+                fontFamily: "Fustat",
+                fontWeight: 500,
+                fontSize: "clamp(17px, 4.8vw, 20px)",
+                color: "#191432",
+                lineHeight: "1.2",
+                letterSpacing: "-0.03em",
+              }}
+            >
+              <span className="whitespace-nowrap">You’ll leave with a clear starting point</span><br />
+              <span className="whitespace-nowrap">and the right path to scale.</span>
+            </p>
+          </div>
+
+          <div className="w-full px-[30.37px] mb-[10px]">
+            <Link
+              to="/contact"
+              className="w-full flex items-center justify-center bg-[#191432] rounded-full h-[59.56px]"
+            >
+              <span
+                style={{
+                  fontFamily: "Fustat",
+                  fontWeight: 500,
+                  fontSize: "18.75px",
+                  color: "#FFFFFF",
+                }}
+              >
+                Direct your Growth →
+              </span>
+            </Link>
+          </div>
+          
+          <span
+            className="px-2"
+            style={{
+              fontFamily: "Lato",
+              fontWeight: 300,
+              fontSize: "14.56px",
+              color: "#191627",
+              opacity: 0.8,
+            }}
+          >
+            No obligation. Just alignment.
+          </span>
+        </div>
+      </div>
+
       <style>{`
         @keyframes ticker-left {
           0% { transform: translate3d(0, 0, 0); }
@@ -131,5 +462,115 @@ export default function DecisionStages() {
         }
       `}</style>
     </section>
+  );
+}
+
+function CollapsibleList({
+  title,
+  items,
+  type = "bullet",
+  initialCount = 2,
+  theme = "light",
+}: {
+  title: string;
+  items: string[];
+  type?: "bullet" | "check" | "dash";
+  initialCount?: number;
+  theme?: "light" | "dark";
+}) {
+  const [isOpen, setIsOpen] = useState(false);
+  const textColor = theme === "dark" ? "#FFFFFF" : "#171425";
+
+  return (
+    <div className="flex flex-col gap-[2px]">
+      <h4
+        style={{
+          fontFamily: "Lato",
+          fontWeight: 600,
+          fontSize: "17.07px",
+          color: textColor,
+        }}
+      >
+        {title}
+      </h4>
+      <div className="flex flex-col gap-0">
+        {items.slice(0, initialCount).map((item, idx) => (
+          <div key={idx} className="flex items-start gap-2.5">
+            <span
+              className="shrink-0 mt-[2px]"
+              style={{
+                fontFamily: "Lato",
+                fontWeight: 400,
+                fontSize: "17.07px",
+                color: textColor,
+              }}
+            >
+              {type === "bullet" ? "•" : type === "check" ? "✓" : "–"}
+            </span>
+            <div className="flex-1 flex items-start gap-1">
+              <p
+                style={{
+                  fontFamily: "Lato",
+                  fontWeight: 300,
+                  fontSize: "17.07px",
+                  color: textColor,
+                  lineHeight: "1.21",
+                }}
+              >
+                {item}
+                {!isOpen && idx === initialCount - 1 && "..."}
+              </p>
+              {!isOpen && idx === initialCount - 1 && (
+                <button
+                  onClick={() => setIsOpen(true)}
+                  className="mt-[3px] shrink-0"
+                >
+                  <ChevronDown size={14} color={theme === "dark" ? "#FFFFFF" : "#ACA9BE"} />
+                </button>
+              )}
+            </div>
+          </div>
+        ))}
+
+        <AnimatePresence>
+          {isOpen && (
+            <motion.div
+              initial={{ height: 0, opacity: 0 }}
+              animate={{ height: "auto", opacity: 1 }}
+              exit={{ height: 0, opacity: 0 }}
+              transition={{ duration: 0.4, ease: "easeOut" }}
+              className="overflow-hidden flex flex-col gap-0"
+            >
+              {items.slice(initialCount).map((item, idx) => (
+                <div key={idx} className="flex items-start gap-2.5">
+                  <span
+                    className="shrink-0 mt-[2px]"
+                    style={{
+                      fontFamily: "Lato",
+                      fontWeight: 400,
+                      fontSize: "17.07px",
+                      color: textColor,
+                    }}
+                  >
+                    {type === "bullet" ? "•" : type === "check" ? "✓" : "–"}
+                  </span>
+                  <p
+                    style={{
+                      fontFamily: "Lato",
+                      fontWeight: 300,
+                      fontSize: "17.07px",
+                      color: textColor,
+                      lineHeight: "1.21",
+                    }}
+                  >
+                    {item}
+                  </p>
+                </div>
+              ))}
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </div>
+    </div>
   );
 }
