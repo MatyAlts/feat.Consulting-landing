@@ -1,8 +1,7 @@
 import { useRef, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { motion, useScroll, useTransform } from "framer-motion";
-import { StaggerReveal } from "../shared/StaggerReveal";
-import chevronIcon from "../../assets/icons/si_chevron-right-circle-line.png";
+import { motion } from "framer-motion";
+
 
 function FadeInBlock({
   children,
@@ -49,7 +48,7 @@ function FadeInBlock({
 }
 
 export default function MobileApproach({
-  onStepChange,
+  onStepChange: _onStepChange,
 }: {
   onStepChange?: (step: number) => void;
 }) {
@@ -113,13 +112,11 @@ export default function MobileApproach({
     };
   }, []);
 
-  const impactRef = useRef<HTMLDivElement>(null);
 
   return (
     <>
       {/* ── New Section: Direction Clear ── */}
       <div
-        ref={impactRef}
         id="impact"
         className="w-full pb-40 px-0 -mt-0.5 relative z-0"
         style={{
