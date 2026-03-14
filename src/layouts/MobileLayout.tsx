@@ -3,7 +3,9 @@ import MobileNavbar from '../components/mobile/Navbar'
 import MobileHero from '../components/mobile/Hero'
 import MobileServices from '../components/mobile/Services'
 import MobileDecisionStage from '../components/mobile/DecisionStage'
+import TractionReveal from '../components/mobile/TractionReveal'
 import MobileApproach from '../components/mobile/Approach'
+import DecisionStages from '../components/mobile/DecisionStages'
 import MobileFAQs from '../components/mobile/FAQs'
 import StickyFooter from '../components/mobile/StickyFooter'
 import { useDragScroll } from '../hooks/useDragScroll'
@@ -117,7 +119,7 @@ export default function MobileLayout({
       }
 
       const firstStorySection = document.querySelector('#direction') as HTMLElement | null
-      const ctaBoundarySection = document.querySelector('#how-does-this-happen') as HTMLElement | null
+      const ctaBoundarySection = document.querySelector('#feat-comes-in') as HTMLElement | null
       const normalScrollStartSection = document.querySelector('#strategy') as HTMLElement | null
       if (!firstStorySection || !ctaBoundarySection || !normalScrollStartSection) return
 
@@ -200,6 +202,8 @@ export default function MobileLayout({
             <MobileHero animateEntry={enableHeroEntryAnimation} />
             <MobileServices onStepChange={setActiveStep} />
             <MobileDecisionStage onStepChange={setActiveStep} />
+            <TractionReveal />
+            <DecisionStages />
             <MobileApproach onStepChange={setActiveStep} />
             <MobileFAQs />
           </>
