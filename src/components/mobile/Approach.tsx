@@ -1,5 +1,6 @@
 import { useRef, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { motion, useScroll, useTransform } from "framer-motion";
 import { StaggerReveal } from "../shared/StaggerReveal";
 import chevronIcon from "../../assets/icons/si_chevron-right-circle-line.png";
 
@@ -53,12 +54,6 @@ export default function MobileApproach({
   onStepChange?: (step: number) => void;
 }) {
   const navigate = useNavigate();
-  
-  
-  
-  
-  
-  
 
   const horizontalScrollRef = useRef<HTMLDivElement>(null);
   const cardsRowRef = useRef<HTMLDivElement>(null);
@@ -118,18 +113,21 @@ export default function MobileApproach({
     };
   }, []);
 
-  
-  
+  const impactRef = useRef<HTMLDivElement>(null);
 
   return (
     <>
       {/* ── New Section: Direction Clear ── */}
       <div
+        ref={impactRef}
         id="impact"
-        className="w-full pb-40 px-0 mt-[-1px]"
-        style={{ background: "linear-gradient(to bottom, #171425, #FCFAF3)" }}
+        className="w-full pb-40 px-0 -mt-0.5 relative z-0"
+        style={{
+          background:
+            "linear-gradient(to bottom, #1A1A2E 0%, #171425 23%, #FCFAF3 65%, #FCFAF3 100%)",
+        }}
       >
-        <div style={{ paddingTop: "127.1px" }} className="flex flex-col">
+        <div style={{ paddingTop: "80px" }} className="flex flex-col">
           <div className="mb-[60vh] px-7.5">
             <FadeInBlock delay={100}>
               <h2
@@ -145,7 +143,7 @@ export default function MobileApproach({
           <div className="w-full flex justify-end pr-[19.5px] mb-[60vh]">
             <FadeInBlock delay={100}>
               <h2
-                className="text-white font-normal font-['Fustat'] leading-[1.1] text-left"
+                className="text-white font-normal font-['Fustat'] leading-[1.1] text-right"
                 style={{ fontSize: "37.18px" }}
               >
                 growth stops <br />
@@ -162,7 +160,7 @@ export default function MobileApproach({
                   className="font-medium font-['Fustat'] leading-[1.1] mb-[13px]"
                   style={{ color: "#FFFFFF", fontSize: "50.18px" }}
                 >
-                  Start Moving <br />
+                  Finally Moving <br />
                   Forward
                 </h3>
                 <p
@@ -305,7 +303,7 @@ export default function MobileApproach({
               </FadeInBlock>
 
               <FadeInBlock delay={150}>
-                <div className="w-full mt-[36px] pl-[21px] text-left">
+                <div className="w-full mt-[36px] text-right pr-[21px]">
                   <button
                     onClick={() => navigate("/contact")}
                     className="underline font-['Fustat'] font-light text-[22.05px] border-none bg-transparent p-0 cursor-pointer outline-none active:opacity-70 transition-opacity"
@@ -321,11 +319,11 @@ export default function MobileApproach({
       </div>
 
       {/* ── New Section: Strategy meets Execution ── */}
-      <div
+      <motion.div
         className="w-full mt-0"
         style={{
           background:
-            "linear-gradient(to bottom, #191432 0%, #0C1831 16%, #021B30 56%, #021B30 100%)",
+            "linear-gradient(to bottom, #171425 0%, #0C1831 30%, #021B30 100%)",
         }}
       >
         <div
@@ -494,12 +492,12 @@ export default function MobileApproach({
           </div>
         </div>
 
-        {/* ── CTA Container with Split Background ── */}
+        {/* ── CTA Container with Smooth Background Transition ── */}
         <div
           className="w-full relative pt-[121.11px] pb-24"
           style={{
             background:
-              "linear-gradient(to bottom, #021B30 300.29px, #FCFAF3 300.29px)",
+              "linear-gradient(to bottom, #021B30 0%, #FCFAF3 200px, #FCFAF3 100%)",
           }}
         >
           {/* The CTA Card */}
@@ -567,7 +565,7 @@ export default function MobileApproach({
             </div>
           </div>
         </div>
-      </div>
+      </motion.div>
     </>
   );
 }

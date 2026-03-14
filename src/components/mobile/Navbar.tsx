@@ -83,7 +83,7 @@ export default function MobileNavbar({ forceHide = false }: MobileNavbarProps) {
       Direction: { path: "/", hash: "#direction" },
       System: { path: "/", hash: "#strategy" },
       "In Practice": { path: "/", hash: "#in-practice" },
-      "Entry Points": { path: "/", hash: "#entry-points" },
+      "Entry Points": { path: "/", hash: "#stages" },
       Impact: { path: "/", hash: "#impact" },
       FAQs: { path: "/", hash: "#faqs" },
     };

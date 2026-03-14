@@ -17,7 +17,10 @@ const STAGES = [
 
 export default function DecisionStages() {
   return (
-    <section className="w-full flex flex-col items-center pt-32 pb-40 bg-[#FCFAF3] overflow-hidden">
+    <section 
+      id="stages" 
+      className="w-full flex flex-col items-center pt-32 pb-0 overflow-hidden relative z-1 bg-[#FCFAF3]"
+    >
       {/* Title */}
       <div className="w-full px-5 mb-[8px] text-center">
         <StaggerReveal staggerDelay={80}>
@@ -126,9 +129,9 @@ export default function DecisionStages() {
       </div>
 
       {/* Stage 1 Container */}
-      <div className="w-full px-[17.5px] pb-[77.44px] flex flex-col pt-24 bg-[#FCFAF3]">
+      <div className="w-full px-[17.5px] pb-0 flex flex-col pt-24 bg-[#FCFAF3]">
         {/* Stage Header */}
-        <div className="flex flex-col gap-2 mb-[3px]">
+        <div className="flex flex-col gap-2 mb-0.75">
           <span
             style={{
               fontFamily: "Lato",
@@ -155,7 +158,7 @@ export default function DecisionStages() {
         </div>
 
         {/* Narrative */}
-        <div className="flex flex-col gap-0 mb-[18px]">
+        <div className="flex flex-col gap-0 mb-4.5">
           <p
             style={{
               fontFamily: "Lato",
@@ -183,7 +186,7 @@ export default function DecisionStages() {
         </div>
 
         {/* Lists Wrapper */}
-        <div className="flex flex-col gap-[18px]">
+        <div className="flex flex-col gap-4.5">
           <CollapsibleList
             title="What we clarify:"
             type="bullet"
@@ -233,6 +236,7 @@ export default function DecisionStages() {
               fontSize: "14.56px",
               color: "#0A0B26",
               opacity: 0.9,
+              paddingBottom: "77.44px",
             }}
           >
             Build once. Scale deliberately.
@@ -241,9 +245,9 @@ export default function DecisionStages() {
       </div>
 
       {/* Stage 2 Container */}
-      <div className="w-full px-[17.5px] pt-[86.56px] pb-24 flex flex-col bg-[#1A1A2E]">
+      <div className="w-full px-[17.5px] pt-[86.56px] pb-0 flex flex-col bg-[#1A1A2E]">
         {/* Stage Header */}
-        <div className="flex flex-col gap-2 mb-[3px]">
+        <div className="flex flex-col gap-2 mb-0.75">
           <span
             style={{
               fontFamily: "Lato",
@@ -271,7 +275,7 @@ export default function DecisionStages() {
         </div>
 
         {/* Narrative */}
-        <div className="flex flex-col gap-0 mb-[18px]">
+        <div className="flex flex-col gap-0 mb-4.5">
           <p
             style={{
               fontFamily: "Lato",
@@ -298,7 +302,7 @@ export default function DecisionStages() {
         </div>
 
         {/* Lists Wrapper */}
-        <div className="flex flex-col gap-[18px]">
+        <div className="flex flex-col gap-4.5">
           <CollapsibleList
             title="We operationalize it through:"
             type="bullet"
@@ -372,13 +376,13 @@ export default function DecisionStages() {
 
         {/* Secondary CTA Card */}
         <div 
-          className="mt-16 pt-[67.91px] pb-[67.91px] w-full rounded-[28.96px] flex flex-col items-center text-center overflow-hidden"
+          className="mt-8 mb-12 pt-[67.91px] pb-[67.91px] w-full rounded-[28.96px] flex flex-col items-center text-center overflow-hidden"
           style={{
             background: "linear-gradient(135deg, #E0E7FF 0%, #E1E0FF 100%)",
           }}
         >
           <h2
-            className="mb-[9px] px-2"
+            className="mb-2.25 px-2"
             style={{
               fontFamily: "Fustat",
               fontWeight: 600,
@@ -391,7 +395,7 @@ export default function DecisionStages() {
             you stand?
           </h2>
 
-          <div className="flex flex-col gap-[12px] mb-[16px] w-full px-2">
+          <div className="flex flex-col gap-3 mb-4 w-full px-2">
             <p
               style={{
                 fontFamily: "Fustat",
@@ -419,10 +423,10 @@ export default function DecisionStages() {
             </p>
           </div>
 
-          <div className="w-full px-[30.37px] mb-[10px]">
+          <div className="w-full px-[30.37px] mb-2.5">
             <Link
               to="/contact"
-              className="w-full flex items-center justify-center bg-[#191432] rounded-full h-[59.56px]"
+              className="w-full flex items-center justify-center bg-brand-hero-body rounded-full h-[59.56px]"
             >
               <span
                 style={{
