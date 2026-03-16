@@ -2,6 +2,7 @@ import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { ChevronDown } from "lucide-react";
 import { Link } from "react-router-dom";
+import { saveScrollAnchor } from "../../utils/scrollRestore";
 import { StaggerReveal } from "../shared/StaggerReveal";
 
 const STAGES = [
@@ -216,7 +217,10 @@ export default function DecisionStages() {
           <Link
             to="/contact"
             className="w-full flex items-center justify-center bg-[#1A1A2E] px-4 rounded-full h-[59.56px]"
-            onClick={() => localStorage.setItem("selectedTier", "Stage 1")}
+            onClick={() => {
+              saveScrollAnchor();
+              localStorage.setItem("selectedTier", "Stage 1");
+            }}
           >
             <span
               style={{
@@ -348,7 +352,10 @@ export default function DecisionStages() {
           <Link
             to="/contact"
             className="w-full flex items-center justify-center bg-[#8B8CFB] px-4 rounded-full h-[59.56px]"
-            onClick={() => localStorage.setItem("selectedTier", "Stage 2")}
+            onClick={() => {
+              saveScrollAnchor();
+              localStorage.setItem("selectedTier", "Stage 2");
+            }}
           >
             <span
               style={{
@@ -426,7 +433,8 @@ export default function DecisionStages() {
           <div className="w-full px-[30.37px] mb-2.5">
             <Link
               to="/contact"
-              className="w-full flex items-center justify-center bg-brand-hero-body rounded-full h-[59.56px]"
+              onClick={saveScrollAnchor}
+            className="w-full flex items-center justify-center bg-brand-hero-body rounded-full h-[59.56px]"
             >
               <span
                 style={{

@@ -1,6 +1,23 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { motion } from "framer-motion";
 import logoImg from "../../assets/icons/loading ft.png";
+
+// Import all logos except vertical one
+const logoFiles = import.meta.glob("../../assets/logos/*.png", {
+  eager: true,
+  import: "default",
+});
+const logos = Object.entries(logoFiles)
+  .filter(([path]) => !path.includes("logo vertical.png"))
+  .map(([_, value]) => value as string);
+
+const outcomes = [
+  "What’s structurally blocking growth",
+  "What your current traction is telling you",
+  "Which specific cohort and intent deserve focus",
+  "What’s worth scaling, and what to stop feeding",
+];
 
 const frictionOptions = [
   "We’re testing a lot, but not sure what to double down on.",
@@ -196,21 +213,18 @@ export default function ContactForm() {
       <div className="px-5.75 pt-7.75">
         <h1
           className="font-['Fustat'] font-semibold leading-[1.05] text-[#171425]"
-          style={{ fontSize: "39.69px" }}
+          style={{ fontSize: "32px" }}
         >
-          Turn your traction <br />
-          into durable scale.
+          Turn your traction into <br />
+          scalable growth.
         </h1>
 
         <p
-          className="font-['Lato'] font-light text-[#171425] leading-[1.3] mt-2 mb-8"
-          style={{ fontSize: "21.3px" }}
+          className="font-['Lato'] font-light text-[#171425] leading-[1.3] mt-1 mb-5"
+          style={{ fontSize: "18px" }}
         >
-          One focused session to identify
-          <br />
-          where scale is stalling, and how to
-          <br />
-          correct it.
+          One focused session to identify where scale is stalling, and what to
+          do next.
         </p>
 
         <form
@@ -251,7 +265,7 @@ export default function ContactForm() {
           <input
             type="text"
             name="companyWebsite"
-            placeholder="Company Website"
+            placeholder="Company Website (help us prepare)"
             value={formData.companyWebsite}
             onChange={handleInputChange}
             className="w-full h-13 px-6 bg-[#F8F8F8] rounded-[15px] font-['Lato'] font-light text-[18px] text-[#011A1F] placeholder:text-[#011A1F]/50 outline-none border border-[#011A1F]/20 focus:border-brand-hero-body/40 transition-colors"
@@ -292,26 +306,28 @@ export default function ContactForm() {
             </svg>
           </button>
 
-          <textarea
+          <input
+            type="text"
             name="moreInfo"
             placeholder="Tell us more (optional)"
             value={formData.moreInfo}
             onChange={handleInputChange}
-            className="w-full h-22.25 p-6 bg-[#F8F8F8] rounded-[15px] font-['Lato'] font-light text-[18px] text-[#011A1F] placeholder:text-[#011A1F]/50 outline-none border border-[#011A1F]/20 focus:border-brand-hero-body/40 transition-colors resize-none mb-2"
+            className="w-full h-13 px-6 bg-[#F8F8F8] rounded-[15px] font-['Lato'] font-light text-[18px] text-[#011A1F] placeholder:text-[#011A1F]/50 outline-none border border-[#011A1F]/20 focus:border-brand-hero-body/40 transition-colors"
           />
 
-          <div className="flex flex-col items-center">
+          <div className="flex flex-col items-center mt-2">
             <button
               type="submit"
               disabled={isSubmitting}
-              className="w-full h-13 mt-4 bg-brand-hero-body text-white rounded-full font-['Fustat'] font-medium text-[18px] flex items-center justify-center transition-all active:scale-[0.98] disabled:opacity-70"
+              className="w-full bg-brand-hero-body text-white rounded-full font-['Fustat'] font-medium text-[18px] flex items-center justify-center transition-all active:scale-[0.98] disabled:opacity-70"
+              style={{ height: "59.56px" }}
             >
               {isSubmitting ? (
                 <span className="w-6 h-6 border-2 border-white/30 border-t-white rounded-full animate-spin" />
               ) : submitStatus === "success" ? (
                 "Sent! →"
               ) : (
-                "Start the conversation →"
+                "Direct your Growth →"
               )}
             </button>
             <p className="font-['Lato'] font-light text-[#171425] text-[15.19px] mt-2.5 opacity-70">
@@ -319,6 +335,90 @@ export default function ContactForm() {
             </p>
           </div>
         </form>
+
+        <section style={{ marginTop: "128.44px" }} className="pb-20">
+          <h2
+            className="font-['Fustat'] font-semibold text-[#020A30] leading-tight"
+            style={{ fontSize: "34px" }}
+          >
+            By the end of this
+            <br />
+            session, you’ll know:
+          </h2>
+
+          <ul className="mt-2.5 space-y-1">
+            {outcomes.map((outcome, idx) => (
+              <li
+                key={idx}
+                className="font-['Lato'] font-light text-brand-hero-body flex items-start"
+                style={{ fontSize: "19px", lineHeight: "116%" }}
+              >
+                <span className="mr-2">✓</span>
+                <span>{outcome}</span>
+              </li>
+            ))}
+          </ul>
+
+          <div style={{ marginTop: "57px" }}>
+            <p
+              className="font-['Lato'] font-light text-[#676682] text-center"
+              style={{ fontSize: "17px" }}
+            >
+              Trusted by global teams scaling what works.
+            </p>
+
+            <div className="mt-6 overflow-hidden relative w-[calc(100%+2.875rem)] -ml-5.75">
+              <motion.div
+                className="flex w-max"
+                animate={{
+                  x: ["0%", "-50%"],
+                }}
+                transition={{
+                  x: {
+                    repeat: Infinity,
+                    repeatType: "loop",
+                    duration: 50,
+                    ease: "linear",
+                  },
+                }}
+              >
+                {/* Two identical sets for a seamless loop */}
+                {[0, 1].map((setIdx) => (
+                  <div
+                    key={setIdx}
+                    className="flex gap-6.25 items-center mr-6.25"
+                  >
+                    {logos.map((logo, idx) => (
+                      <img
+                        key={idx}
+                        src={logo}
+                        alt="Trusted Team Logo"
+                        className="h-8 w-auto object-contain hover:scale-105 transition-all"
+                      />
+                    ))}
+                  </div>
+                ))}
+              </motion.div>
+            </div>
+          </div>
+
+          <div className="mt-16 flex flex-col items-center">
+            <button
+              type="button"
+              onClick={() => {
+                const form = document.getElementById("contact-form");
+                form?.scrollIntoView({ behavior: "smooth" });
+              }}
+              className="w-full bg-brand-hero-body text-white rounded-full font-['Fustat'] font-medium text-[18px] flex items-center justify-center transition-all active:scale-[0.98]"
+              style={{ height: "59.56px" }}
+            >
+              Direct your Growth →
+            </button>
+            <p className="font-['Lato'] font-light text-[#171425] text-[15.19px] mt-2.5 opacity-70">
+              No obligation. Just clarity
+            </p>
+          </div>
+        </section>
       </div>
 
       <div

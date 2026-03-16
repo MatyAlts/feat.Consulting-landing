@@ -1,5 +1,6 @@
 import { useRef, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { saveScrollAnchor } from "../../utils/scrollRestore";
 import { motion } from "framer-motion";
 
 
@@ -244,7 +245,10 @@ export default function MobileApproach({
               <FadeInBlock delay={150}>
                 <div className="w-full mt-[36px] text-right pr-[21px]">
                   <button
-                    onClick={() => navigate("/contact")}
+                    onClick={() => {
+                      saveScrollAnchor();
+                      navigate("/contact");
+                    }}
                     className="underline font-['Fustat'] font-light text-[22.05px] border-none bg-transparent p-0 cursor-pointer outline-none active:opacity-70 transition-opacity"
                     style={{ color: "#191432" }}
                   >
@@ -455,7 +459,10 @@ export default function MobileApproach({
           </h2>
 
           <button
-            onClick={() => navigate("/contact")}
+            onClick={() => {
+              saveScrollAnchor();
+              navigate("/contact");
+            }}
             className="rounded-full flex items-center justify-center transition-transform active:scale-95 shadow-sm"
             style={{
               width: "320px",

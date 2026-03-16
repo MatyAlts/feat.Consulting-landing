@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { saveScrollAnchor } from "../../utils/scrollRestore";
 import { motion, AnimatePresence } from "framer-motion";
 import loadingFt from "../../assets/icons/loading ft.png";
 import flechaIcon from "../../assets/icons/flecha.svg";
@@ -174,6 +175,7 @@ export default function MobileFAQs() {
 
             <button
               onClick={() => {
+                saveScrollAnchor();
                 localStorage.removeItem("selectedTier");
                 navigate("/contact");
               }}
@@ -240,6 +242,7 @@ export default function MobileFAQs() {
               href="/contact"
               onClick={(e) => {
                 e.preventDefault();
+                saveScrollAnchor();
                 localStorage.removeItem("selectedTier");
                 navigate("/contact");
               }}

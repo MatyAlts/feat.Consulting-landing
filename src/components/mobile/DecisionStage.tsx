@@ -1,5 +1,6 @@
 import { useRef, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { saveScrollAnchor } from "../../utils/scrollRestore";
 
 // Map all assets in /src/assets for dynamic lookup
 const assetModules = import.meta.glob("/src/assets/**/*.{png,jpg,jpeg,svg}", {
@@ -487,6 +488,7 @@ export default function MobileDecisionStage({
                           {/* CTA Button */}
                           <button
                             onClick={() => {
+                              saveScrollAnchor();
                               localStorage.removeItem("selectedTier");
                               navigate("/contact");
                             }}

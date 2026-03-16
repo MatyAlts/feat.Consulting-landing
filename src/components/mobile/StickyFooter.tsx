@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
+import { saveScrollAnchor } from "../../utils/scrollRestore";
 
 export default function StickyFooter() {
   const [isVisible, setIsVisible] = useState(false);
@@ -82,7 +83,10 @@ export default function StickyFooter() {
       <div className="flex items-center justify-center gap-12 h-full px-4 relative">
         <Link
           to="/contact"
-          onClick={() => localStorage.removeItem("selectedTier")}
+          onClick={() => {
+            saveScrollAnchor();
+            localStorage.removeItem("selectedTier");
+          }}
           className="text-brand-dark text-[15px] font-medium flex items-center gap-1"
         >
           Direct your Growth <span className="text-[12px]">-&gt;</span>

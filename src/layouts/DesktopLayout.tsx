@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
+import { saveScrollAnchor } from "../utils/scrollRestore";
 import MobileLayout from "./MobileLayout";
 import logoBlanco from "../assets/icons/LOGO BLANCO.svg";
 import flechaIcon from "../assets/icons/flecha.svg";
@@ -351,7 +352,10 @@ export default function DesktopLayout({
 
             <Link
               to="/contact"
-              onClick={() => localStorage.removeItem("selectedTier")}
+              onClick={() => {
+                saveScrollAnchor();
+                localStorage.removeItem("selectedTier");
+              }}
               className="absolute flex items-center cursor-pointer group hover:opacity-80 transition-opacity"
               style={{ right: "164px", bottom: "36px", textDecoration: "none" }}
             >

@@ -3,6 +3,7 @@ import Logo from "../shared/Logo";
 import { useScrollDirection } from "../../hooks/useScrollDirection";
 import flechaIcon from "../../assets/icons/flecha.svg";
 import { useNavigate, useLocation } from "react-router-dom";
+import { saveScrollAnchor } from "../../utils/scrollRestore";
 
 interface MobileNavbarProps {
   forceHide?: boolean;
@@ -284,6 +285,7 @@ export default function MobileNavbar({ forceHide = false }: MobileNavbarProps) {
                 </span>
                 <button
                   onClick={() => {
+                    saveScrollAnchor();
                     localStorage.removeItem("selectedTier");
                     setIsMenuOpen(false);
                     navigate("/contact");
