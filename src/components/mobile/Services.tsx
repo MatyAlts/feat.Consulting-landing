@@ -1,11 +1,15 @@
 import { useRef, useEffect, useState, type ReactNode } from "react";
+import { ScrollRevealItem } from "../shared/ScrollRevealItem";
+import icon1 from "../../assets/icons/icon_1.png";
+import icon2 from "../../assets/icons/icon_2.png";
+import icon3 from "../../assets/icons/icon_3.png";
 
 interface MobileServicesProps {
   onStepChange?: (step: number) => void;
 }
 
-const DOUBLE_PHRASE_STAGE_ENTRIES = [2, 4, 6, 8] as const;
-const AUTO_REVEAL_DELAY_MS = 220;
+const DOUBLE_PHRASE_STAGE_ENTRIES = [2, 4, 6, 8, 11, 12, 14] as const;
+const AUTO_REVEAL_DELAY_MS = 800;
 
 interface StoryStageProps {
   id?: string;
@@ -48,10 +52,6 @@ export default function MobileServices({ onStepChange }: MobileServicesProps) {
   const sectionRefs = useRef<(HTMLElement | null)[]>([]);
 
   // Refs para medir la posición exacta de los textos
-  const soThatTextRef = useRef<HTMLParagraphElement>(null); // "So that you can..."
-  const soYouTextRef = useRef<HTMLSpanElement>(null); // "So you can..."
-  const section10Ref = useRef<HTMLElement>(null);
-  const section11Ref = useRef<HTMLElement>(null);
 
   const buildsTextRef = useRef<HTMLHeadingElement>(null); // "It builds gradually."
   const growingTextRef = useRef<HTMLParagraphElement>(null); // "Your brand is growing."
@@ -190,7 +190,11 @@ export default function MobileServices({ onStepChange }: MobileServicesProps) {
     <div
       data-services-container
       className="transition-colors duration-500 ease-in-out"
-      style={{ backgroundColor: activeColor }}
+      style={{
+        background: activeColor,
+        backgroundAttachment: "fixed",
+        backgroundSize: "cover",
+      }}
     >
       {/* Sections 1-19 */}
       <>
@@ -333,335 +337,429 @@ export default function MobileServices({ onStepChange }: MobileServicesProps) {
           </StoryStage>
         ))}
 
-        {/* Step 10: Outcome */}
+        {/* Step 10: Growth stalls */}
         <StoryStage
           step={10}
-          color="#D2D2FF"
+          color="linear-gradient(to bottom, #DBE9EE, #D2D3FF)"
           sectionRef={(el) => {
             sectionRefs.current[10] = el;
-            section10Ref.current = el;
           }}
           stageClassName="full-height"
-          stickyClassName="w-full flex flex-col justify-center px-5 overflow-hidden relative"
+          stickyClassName="w-full flex items-start px-5 justify-start overflow-hidden pt-[15vh]"
         >
-          <div className="flex flex-col relative z-10">
-            <span
-              className="text-brand-dark font-light"
-              style={{
-                fontSize: "var(--text-services-label)",
-                ...getStepStyle(10, 0),
-              }}
-            >
-              We'll help you
-            </span>
+          <div className="w-full">
             <h2
-              className="text-brand-dark font-medium leading-[1.1] tracking-tight mt-[3px]"
+              className="tracking-tight text-left"
               style={{
-                fontSize: "var(--text-hero-title)",
+                fontFamily: "Fustat",
+                fontWeight: 500,
+                fontSize: "25.3px",
+                color: "#1A1A2E",
+                lineHeight: "1.2",
                 ...getStepStyle(10, 100),
               }}
             >
-              Go from
-              <br />
-              effort to control.
-            </h2>
-            <p
-              ref={soThatTextRef}
-              className="text-brand-dark font-light mt-[23px]"
-              style={{
-                fontSize: "var(--text-hero-body)",
-                ...getStepStyle(10, 200),
-              }}
-            >
-              So that you can...
-            </p>
-          </div>
-        </StoryStage>
-
-        {/* 7. Strategy (Step 11) */}
-        <StoryStage
-          step={11}
-          color="#DBE9EE"
-          sectionRef={(el) => {
-            sectionRefs.current[11] = el;
-            section11Ref.current = el;
-          }}
-          stageClassName="full-height"
-          stickyClassName="w-full flex flex-col justify-center px-5 overflow-hidden relative"
-        >
-          <div className="flex flex-col relative z-10">
-            <span
-              ref={soYouTextRef}
-              className="text-brand-dark font-light"
-              style={{
-                fontSize: "var(--text-services-label)",
-                ...getStepStyle(11, 0),
-              }}
-            >
-              So you can...
-            </span>
-            <h2
-              className="text-brand-dark font-medium leading-[1.05] tracking-tight mt-[1px]"
-              style={{
-                fontSize: "var(--text-services-large)",
-                ...getStepStyle(11, 100),
-              }}
-            >
-              Operate
-              <br />
-              from
-              <br />
-              strategy
+              Growth stalls when <br /> everyone is moving, but <br /> not in
+              the same direction.
             </h2>
           </div>
         </StoryStage>
 
-        {/* 8. Urgency (Step 12) */}
-        <StoryStage
-          step={12}
-          color="#010D17"
-          sectionRef={(el) => {
-            sectionRefs.current[12] = el;
-          }}
-          stageClassName="full-height"
-          stickyClassName="w-full flex flex-col justify-center items-center px-5 overflow-hidden"
-        >
-          <div className="w-full text-center">
-            <h2
-              className="font-light tracking-tight"
-              style={{
-                fontSize: "var(--text-services-emphasis)",
-                color: "#FCFAF3",
-                ...getStepStyle(12, 0),
-              }}
-            >
-              not urgency.
-            </h2>
-          </div>
-        </StoryStage>
+        {/* Steps 11 and 12 combined for shared text transition */}
+        <div className="relative w-full">
+          <div className="sticky top-0 h-dvh w-full overflow-hidden z-10 pointer-events-none">
+            {/* Step 11: Activity multiplies */}
+            <div className="absolute inset-0 w-full flex items-start px-5 justify-end pt-[15vh]">
+              <h2
+                className="tracking-tight text-right leading-[1.2]"
+                style={{
+                  fontFamily: "Fustat",
+                  fontWeight: 500,
+                  fontSize: "25.3px",
+                  color: "#1A1A2E",
+                  ...getStepStyle(11, 0),
+                }}
+              >
+                Activity multiplies.
+              </h2>
+            </div>
 
-        {/* 9. Evidence (Step 13) */}
-        <StoryStage
-          step={13}
-          color="#C6D7F9"
-          sectionRef={(el) => {
-            sectionRefs.current[13] = el;
-          }}
-          stageClassName="full-height"
-          stickyClassName="w-full flex flex-col justify-center px-5 overflow-hidden"
-        >
-          <div className="flex flex-col">
-            <span
-              className="text-brand-dark font-light"
+            {/* Shared Text visible on 11 and 12 */}
+            <div
+              className="absolute top-0 w-full px-5 transition-all duration-700 ease-in-out"
               style={{
-                fontSize: "var(--text-services-label)",
-                ...getStepStyle(13, 0),
+                opacity:
+                  activeStep === 12 ||
+                  (activeStep === 11 && revealedSecondSteps[11])
+                    ? 1
+                    : 0,
+                filter:
+                  activeStep === 12 ||
+                  (activeStep === 11 && revealedSecondSteps[11])
+                    ? "blur(0px)"
+                    : "blur(20px)",
+                transform:
+                  activeStep < 11
+                    ? "translateY(calc(85vh - 100% + 40px))"
+                    : activeStep === 11
+                      ? revealedSecondSteps[11]
+                        ? "translateY(calc(85vh - 100%))"
+                        : "translateY(calc(85vh - 100% + 40px))"
+                      : activeStep === 12
+                        ? "translateY(15vh)"
+                        : "translateY(calc(15vh - 60px))",
               }}
             >
-              So you can...
-            </span>
-            <h2
-              className="text-brand-dark font-medium leading-[1.05] tracking-tight mt-[1px]"
-              style={{
-                fontSize: "var(--text-services-large)",
-                ...getStepStyle(13, 100),
-              }}
-            >
-              Invest from evidence
-            </h2>
-          </div>
-        </StoryStage>
+              <h2
+                className="tracking-tight text-left leading-[1.2]"
+                style={{
+                  fontFamily: "Fustat",
+                  fontWeight: 500,
+                  fontSize: "25.3px",
+                  color: "#1A1A2E",
+                }}
+              >
+                But what was working
+                <br />
+                becomes harder to see,
+              </h2>
+            </div>
 
-        {/* 10. Instinct (Step 14) */}
+            {/* Step 12: and even harder to scale */}
+            <div className="absolute inset-0 w-full flex items-end px-5 justify-end pb-[15vh]">
+              <h2
+                className="tracking-tight text-right leading-[1.2]"
+                style={{
+                  fontFamily: "Fustat",
+                  fontWeight: 500,
+                  fontSize: "25.3px",
+                  color: "#1A1A2E",
+                  ...getStepStyle(
+                    activeStep === 12 && revealedSecondSteps[12] ? 12 : -1,
+                    100,
+                  ),
+                }}
+              >
+                and even harder to scale.
+              </h2>
+            </div>
+          </div>
+
+          <div className="mt-[-100dvh]">
+            <StoryStage
+              step={11}
+              color="linear-gradient(to bottom, #DBE9EE, #D2D3FF)"
+              sectionRef={(el) => {
+                sectionRefs.current[11] = el;
+              }}
+              stageClassName="full-height opacity-0 pointer-events-none"
+            >
+              <></>
+            </StoryStage>
+            <StoryStage
+              step={12}
+              color="linear-gradient(to bottom, #DBE9EE, #D2D3FF)"
+              sectionRef={(el) => {
+                sectionRefs.current[12] = el;
+              }}
+              stageClassName="full-height opacity-0 pointer-events-none"
+            >
+              <></>
+            </StoryStage>
+          </div>
+        </div>
+
+        {/* Step 14: That's where feat comes in */}
         <StoryStage
+          id="feat-comes-in"
           step={14}
-          color="#010D17"
+          color="#000000"
           sectionRef={(el) => {
             sectionRefs.current[14] = el;
           }}
           stageClassName="full-height"
-          stickyClassName="w-full flex flex-col justify-center items-center px-5 overflow-hidden"
+          stickyClassName="w-full flex flex-col px-5 pt-[12vh] overflow-hidden relative"
         >
-          <div className="w-full text-center">
+          <div className="w-full flex justify-start">
             <h2
-              className="font-light tracking-tight"
+              className="tracking-tight text-left leading-[1.2]"
               style={{
-                fontSize: "var(--text-services-emphasis)",
+                fontFamily: "Fustat",
+                fontWeight: 300,
+                fontSize: "24.5px",
                 color: "#FCFAF3",
                 ...getStepStyle(14, 0),
               }}
             >
-              not instinct.
+              That's where{" "}
+              <span
+                style={{
+                  fontFamily: "Lato",
+                  fontStyle: "italic",
+                  fontSize: "24.5px",
+                }}
+              >
+                feat
+              </span>{" "}
+              comes in.
             </h2>
           </div>
-        </StoryStage>
-
-        {/* 11. Scale (Step 15) */}
-        <StoryStage
-          step={15}
-          color="#DBE9EE"
-          sectionRef={(el) => {
-            sectionRefs.current[15] = el;
-          }}
-          stageClassName="full-height"
-          stickyClassName="w-full flex flex-col justify-center px-5 overflow-hidden"
-        >
-          <div className="flex flex-col">
-            <span
-              className="text-brand-dark font-light"
-              style={{
-                fontSize: "var(--text-services-label)",
-                ...getStepStyle(15, 0),
-              }}
-            >
-              So you can...
-            </span>
+          <div className="w-full flex justify-start absolute top-1/2 left-0 -translate-y-1/2 px-5">
             <h2
-              className="text-brand-dark font-medium leading-[1.05] tracking-tight mt-[1px]"
+              className="tracking-tight text-left leading-[1.2]"
               style={{
-                fontSize: "var(--text-services-large)",
-                ...getStepStyle(15, 100),
+                fontFamily: "Fustat",
+                fontWeight: 300,
+                fontSize: "24.5px",
+                color: "#FCFAF3",
+                ...getStepStyle(
+                  activeStep === 14 && revealedSecondSteps[14]
+                    ? 14
+                    : -1,
+                  200
+                ),
               }}
             >
-              Scale what's proven
+              We help companies{" "}
+              <span style={{ fontWeight: 600 }}>
+                turn <br /> traction into scalable growth
+              </span>
+              <br />
+              <span>by:</span>
             </h2>
           </div>
         </StoryStage>
 
-        {/* 12. Feeling (Step 16) */}
-        <StoryStage
-          step={16}
-          color="rgba(1, 13, 23, 0.7)"
-          sectionRef={(el) => {
+        {/* Progressive reveal + visual hierarchy (Normal scroll section) */}
+        <section
+          id="strategy"
+          data-step="16"
+          data-color="#000000"
+          ref={(el) => {
             sectionRefs.current[16] = el;
           }}
-          stageClassName="full-height"
-          stickyClassName="w-full flex flex-col justify-center items-center px-5 overflow-hidden"
+          className="w-full flex flex-col px-5 pt-[5vh] pb-[20vh] gap-[15vh]"
+          style={{ background: "linear-gradient(to bottom, #000000, #626472)" }}
         >
-          <div className="w-full text-center">
-            <h2
-              className="font-normal tracking-tight leading-[1.1] text-[#FCFAF3]"
-              style={{
-                fontSize: "var(--text-services-emphasis)",
-                ...getStepStyle(16, 0),
-              }}
-            >
-              not what <br />
-              <span className="font-['Lato'] italic">feels</span> right.
-            </h2>
-          </div>
-        </StoryStage>
+          {/* Item 1 */}
+          <ScrollRevealItem>
+            <div className="w-full flex flex-col gap-4">
+              <img src={icon1} alt="Icon 1" className="w-10.5 h-10.5 object-contain" style={{ opacity: 0.09 }} />
+              <div className="flex flex-col gap-2">
+                <h3
+                  className="tracking-tight text-left leading-[1.2]"
+                  style={{
+                    fontFamily: "Fustat",
+                    fontWeight: 500,
+                    fontSize: "25.3px",
+                    color: "#FCFAF3",
+                  }}
+                >
+                  Clarifying what’s actually driving decisions.
+                </h3>
+                <p
+                  className="tracking-tight text-left leading-[1.3]"
+                  style={{
+                    fontFamily: "Lato",
+                    fontStyle: "italic",
+                    fontWeight: 300,
+                    fontSize: "16px",
+                    color: "#FCFAF3",
+                    opacity: 0.8,
+                  }}
+                >
+                  Where the value resonates most, and what makes choosing you obvious.
+                </p>
+              </div>
+            </div>
+          </ScrollRevealItem>
 
-        {/* 13. Final (Step 17) */}
-        <StoryStage
-          step={17}
-          color="#FCFAF3"
-          sectionRef={(el) => {
+          {/* Item 2 */}
+          <ScrollRevealItem>
+            <div className="w-full flex flex-col gap-4">
+              <img src={icon2} alt="Icon 2" className="w-10.5 h-10.5 object-contain" style={{ opacity: 0.2 }} />
+              <div className="flex flex-col gap-2">
+                <h3
+                  className="tracking-tight text-left leading-[1.2]"
+                  style={{
+                    fontFamily: "Fustat",
+                    fontWeight: 500,
+                    fontSize: "25.3px",
+                    color: "#FCFAF3",
+                  }}
+                >
+                  Aligning teams and execution around it.
+                </h3>
+                <p
+                  className="tracking-tight text-left leading-[1.3]"
+                  style={{
+                    fontFamily: "Lato",
+                    fontStyle: "italic",
+                    fontWeight: 300,
+                    fontSize: "16px",
+                    color: "#FCFAF3",
+                    opacity: 0.8,
+                  }}
+                >
+                  Every action builds on the same decision logic.
+                </p>
+              </div>
+            </div>
+          </ScrollRevealItem>
+
+          {/* Item 3 */}
+          <ScrollRevealItem>
+            <div className="w-full flex flex-col gap-4">
+              <img src={icon3} alt="Icon 3" className="w-10.5 h-10.5 object-contain" style={{ opacity: 0.3 }} />
+              <div className="flex flex-col gap-2">
+                <h3
+                  className="tracking-tight text-left leading-[1.2]"
+                  style={{
+                    fontFamily: "Fustat",
+                    fontWeight: 500,
+                    fontSize: "25.3px",
+                    color: "#FCFAF3",
+                  }}
+                >
+                  Expanding what proves itself.
+                </h3>
+                <p
+                  className="tracking-tight text-left leading-[1.3]"
+                  style={{
+                    fontFamily: "Lato",
+                    fontStyle: "italic",
+                    fontWeight: 300,
+                    fontSize: "16px",
+                    color: "#FCFAF3",
+                    opacity: 0.8,
+                  }}
+                >
+                  What works becomes the standard across the entire experience.
+                </p>
+              </div>
+            </div>
+          </ScrollRevealItem>
+        </section>
+
+        {/* Scale behavior section */}
+        <section
+          id="scale-behavior"
+          data-step="17"
+          data-color="#626472"
+          ref={(el) => {
             sectionRefs.current[17] = el;
           }}
-          stageClassName="full-height"
-          stickyClassName="w-full flex flex-col justify-center px-5 overflow-hidden"
+          className="w-full flex flex-col px-5 pt-[10vh] pb-[20vh] gap-[12vh]"
+          style={{ background: "linear-gradient(to bottom, #626472, #FCFAF3)" }}
         >
-          <div className="flex flex-col">
-            <span
-              className="text-brand-dark font-light"
-              style={{
-                fontSize: "var(--text-services-label)",
-                ...getStepStyle(17, 0),
-              }}
-            >
-              And, finally,
-            </span>
-            <h2
-              className="text-brand-dark font-medium leading-[1.05] tracking-tight mt-[1px]"
-              style={{
-                fontSize: "var(--text-services-large)",
-                ...getStepStyle(17, 100),
-              }}
-            >
-              Lead your company
-            </h2>
-          </div>
-        </StoryStage>
+          {/* Header */}
+          <ScrollRevealItem>
+            <div className="w-full flex flex-col items-start gap-1">
+              <span
+                style={{
+                  fontFamily: "Lato",
+                  fontWeight: 100,
+                  fontSize: "23px",
+                  color: "#FFFFFF",
+                  fontStyle: "italic",
+                }}
+              >
+                because
+              </span>
+              <h2
+                className="tracking-tight text-left leading-[1.1]"
+                style={{
+                  fontFamily: "Fustat",
+                  fontWeight: 400,
+                  fontSize: "35px",
+                  color: "#FFFFFF",
+                }}
+              >
+                When growth is built <br />
+                around real buyer <br />
+                behavior,
+              </h2>
+            </div>
+          </ScrollRevealItem>
 
-        {/* 14. Carry (Step 18) */}
-        <StoryStage
-          step={18}
-          color="#312E3C"
-          sectionRef={(el) => {
-            sectionRefs.current[18] = el;
-          }}
-          stageClassName="full-height"
-          stickyClassName="w-full flex flex-col justify-center items-center px-5 overflow-hidden"
-        >
-          <div className="w-full text-center">
-            <h2
-              className="font-light tracking-tight"
-              style={{
-                fontSize: "var(--text-services-emphasis)",
-                color: "#FCFAF3",
-                ...getStepStyle(18, 0),
-              }}
-            >
-              not "carry" it.
-            </h2>
-          </div>
-        </StoryStage>
+          {/* Scale stops... */}
+          <ScrollRevealItem>
+            <div className="w-full flex justify-end pr-2">
+              <h2
+                className="tracking-tight text-right leading-[1.05]"
+                style={{
+                  fontFamily: "Fustat",
+                  fontWeight: 400,
+                  fontSize: "54.59px",
+                  color: "#010101",
+                  maxWidth: "90%",
+                }}
+              >
+                Scale stops <br />
+                depending <br />
+                on effort.
+              </h2>
+            </div>
+          </ScrollRevealItem>
 
-        {/* 15. How? (Step 19) */}
-        <StoryStage
-          id="how-does-this-happen"
-          step={19}
-          color="rgba(21, 19, 36, 0.97)"
-          sectionRef={(el) => {
-            sectionRefs.current[19] = el;
-          }}
-          stageClassName="full-height"
-          stickyClassName="w-full flex flex-col justify-center items-end pr-9.25 overflow-hidden"
-        >
-          <button
-            onClick={() => {
-              sessionStorage.setItem("storyAnchorJumpTs", "1");
-              window.setTimeout(
-                () => sessionStorage.removeItem("storyAnchorJumpTs"),
-                1400,
-              );
-              const main = document.querySelector("main") as HTMLElement | null;
-              const strategy = document.querySelector(
-                "#strategy",
-              ) as HTMLElement | null;
-              if (!strategy) return;
+          {/* Sometimes direction */}
+          <ScrollRevealItem>
+            <div className="w-full flex justify-start pl-2">
+              <p
+                className="tracking-tight text-left leading-[1.2]"
+                style={{
+                  fontFamily: "Fustat",
+                  fontWeight: 300,
+                  fontSize: "25px",
+                  color: "#000000",
+                  maxWidth: "75%",
+                }}
+              >
+                Sometimes that means <br />
+                sharpening direction.
+              </p>
+            </div>
+          </ScrollRevealItem>
 
-              if (main) {
-                main.scrollTo({
-                  top: strategy.offsetTop,
-                  behavior: "auto",
-                });
-                return;
-              }
+          {/* Sometimes surfaces */}
+          <ScrollRevealItem>
+            <div className="w-full flex justify-end pr-2">
+              <p
+                className="tracking-tight text-right leading-[1.2]"
+                style={{
+                  fontFamily: "Fustat",
+                  fontWeight: 300,
+                  fontSize: "25px",
+                  color: "#000000",
+                  maxWidth: "80%",
+                }}
+              >
+                Sometimes it means <br />
+                extending what already <br />
+                works across key surfaces.
+              </p>
+            </div>
+          </ScrollRevealItem>
 
-              strategy.scrollIntoView({ behavior: "auto", block: "start" });
-            }}
-            style={{
-              ...getStepStyle(19, 0),
-              textDecoration: "none",
-              textAlign: "right",
-              fontFamily: "Fustat",
-              fontWeight: 200,
-              fontSize: "var(--text-services-cta)",
-              color: "#FCFAF3",
-              lineHeight: 1.12,
-              background: "none",
-              border: "none",
-              padding: 0,
-              cursor: "pointer",
-            }}
-          >
-            So how does this
-            <br />
-            <span className="underline">happen? {"->"}</span>
-          </button>
-        </StoryStage>
+          {/* Work adapts */}
+          <ScrollRevealItem>
+            <div className="w-full flex justify-center text-center mt-4">
+              <h2
+                className="tracking-tight leading-[1.1]"
+                style={{
+                  fontFamily: "Fustat",
+                  fontWeight: 300,
+                  fontSize: "36.85px",
+                  color: "#000000",
+                }}
+              >
+                The work adapts to <br />
+                where scale needs <br />
+                support.
+              </h2>
+            </div>
+          </ScrollRevealItem>
+        </section>
       </>
     </div>
   );

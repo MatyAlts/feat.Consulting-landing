@@ -4,6 +4,7 @@ import { useViewport } from './hooks/useViewport'
 import { useViewportHeight } from './hooks/useViewportHeight'
 import MobileLayout from './layouts/MobileLayout'
 import DesktopLayout from './layouts/DesktopLayout'
+import DesktopContactPage from './components/desktop/Contact'
 import Loading from './components/shared/Loading'
 
 export default function App() {
@@ -25,7 +26,7 @@ export default function App() {
         />
         <Route 
           path="/contact" 
-          element={isDesktop ? <DesktopLayout key="contact" showForm /> : <MobileLayout key={`contact-${isLoading}`} showForm />} 
+          element={isDesktop ? <DesktopContactPage /> : <MobileLayout key={`contact-${isLoading}`} showForm />} 
         />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>

@@ -10,7 +10,7 @@ export default function MobileHero({ animateEntry = true }: MobileHeroProps) {
       className="bg-[#FCFAF3] flex flex-col justify-start px-5 overflow-hidden"
       style={{
         minHeight: "100dvh",
-        paddingTop: "clamp(80px, 16dvh, 136px)",
+        paddingTop: "clamp(80px, 8dvh, 136px)",
         paddingBottom: "clamp(40px, 8dvh, 64px)",
       }}
     >

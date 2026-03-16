@@ -1,15 +1,16 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import MobileNavbar from '../components/mobile/Navbar'
 import MobileHero from '../components/mobile/Hero'
 import MobileServices from '../components/mobile/Services'
 import MobileDecisionStage from '../components/mobile/DecisionStage'
+import TractionReveal from '../components/mobile/TractionReveal'
 import MobileApproach from '../components/mobile/Approach'
+import DecisionStages from '../components/mobile/DecisionStages'
 import MobileFAQs from '../components/mobile/FAQs'
 import StickyFooter from '../components/mobile/StickyFooter'
 import { useDragScroll } from '../hooks/useDragScroll'
-import { useRef } from 'react'
-
 import ContactForm from '../components/mobile/ContactForm'
+import { getScrollAnchor, clearScrollAnchor } from '../utils/scrollRestore'
 
 interface MobileLayoutProps {
   isDesktopContainer?: boolean;
@@ -66,15 +67,20 @@ export default function MobileLayout({
           }
         }, 150);
       } else {
-        const savedPos = sessionStorage.getItem(scrollKey);
-        if (savedPos) {
+        // Prioritize manual scroll anchor from utilities
+        const manualSavedPos = getScrollAnchor();
+        const autoSavedPos = sessionStorage.getItem(scrollKey);
+        const finalSavedPos = manualSavedPos !== null ? manualSavedPos : (autoSavedPos ? parseInt(autoSavedPos, 10) : null);
+
+        if (finalSavedPos !== null) {
           // Wait for components (DecisionStage/Services) to have rendered fully
           setTimeout(() => {
             if (mainRef.current) {
-              mainRef.current.scrollTo(0, parseInt(savedPos, 10));
+              mainRef.current.scrollTo(0, finalSavedPos);
               sessionStorage.removeItem(scrollKey);
+              clearScrollAnchor();
             }
-          }, 100);
+          }, 150); // Increased timeout slightly for safer restoration
         } else {
           // First enter (no saved pos), start at top
           mainElement.scrollTo(0, 0);
@@ -117,7 +123,7 @@ export default function MobileLayout({
       }
 
       const firstStorySection = document.querySelector('#direction') as HTMLElement | null
-      const ctaBoundarySection = document.querySelector('#how-does-this-happen') as HTMLElement | null
+      const ctaBoundarySection = document.querySelector('#feat-comes-in') as HTMLElement | null
       const normalScrollStartSection = document.querySelector('#strategy') as HTMLElement | null
       if (!firstStorySection || !ctaBoundarySection || !normalScrollStartSection) return
 
@@ -200,6 +206,8 @@ export default function MobileLayout({
             <MobileHero animateEntry={enableHeroEntryAnimation} />
             <MobileServices onStepChange={setActiveStep} />
             <MobileDecisionStage onStepChange={setActiveStep} />
+            <TractionReveal />
+            <DecisionStages />
             <MobileApproach onStepChange={setActiveStep} />
             <MobileFAQs />
           </>

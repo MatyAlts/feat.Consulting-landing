@@ -2,7 +2,37 @@
   "permissions": {
     "allow": [
       "Skill(mobile-design)",
-      "Skill(mobile-design:*)"
+      "Skill(mobile-design:*)",
+      "Skill(scroll-experience)",
+      "Skill(3d-web-experience)",
+      "Skill(canvas-design)",
+      "Skill(threejs-skills)",
+      "Skill(algorithmic-art)",
+      "Skill(tailwind-design-system)",
+      "Skill(tailwind-patterns)",
+      "Skill(react-ui-patterns)",
+      "Skill(core-components)",
+      "Skill(ui-ux-pro-max)",
+      "Skill(stitch-ui-design)",
+      "Skill(page-cro)",
+      "Skill(form-cro)",
+      "Skill(marketing-psychology)",
+      "Skill(onboarding-cro)",
+      "Skill(popup-cro)",
+      "Skill(signup-flow-cro)",
+      "Skill(web-performance-optimization)",
+      "Skill(performance-engineer)",
+      "Skill(frontend-auditor)",
+      "Skill(ui-visual-validator)",
+      "Skill(find-bugs)",
+      "Skill(typescript-pro)",
+      "Skill(typescript-expert)",
+      "Skill(react-patterns)",
+      "Skill(react-modernization)",
+      "Skill(lint-and-validate)",
+      "Skill(debugging-strategies)",
+      "Skill(error-detective)",
+      "Bash(grep -r \"marquee\\\\|Marquee\" /e/Proyectos/feat.Consulting-landing/src --include=\"*.tsx\" --include=\"*.ts\" 2>/dev/null | head -20)"
     ]
   }
 }

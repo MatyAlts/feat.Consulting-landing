@@ -30,3 +30,8 @@ dist-ssr
 .claude/
 
 AGENTS.md
+/agents 
+
+/skills
+
+prompt_nbk.md

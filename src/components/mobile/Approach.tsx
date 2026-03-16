@@ -1,7 +1,8 @@
 import { useRef, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { StaggerReveal } from "../shared/StaggerReveal";
-import chevronIcon from "../../assets/icons/si_chevron-right-circle-line.png";
+import { saveScrollAnchor } from "../../utils/scrollRestore";
+import { motion } from "framer-motion";
+
 
 function FadeInBlock({
   children,
@@ -48,891 +49,58 @@ function FadeInBlock({
 }
 
 export default function MobileApproach({
-  onStepChange,
+  onStepChange: _onStepChange,
 }: {
   onStepChange?: (step: number) => void;
 }) {
   const navigate = useNavigate();
-  const wrapperRef = useRef<HTMLDivElement>(null);
-  const stickyRef = useRef<HTMLDivElement>(null);
-  const textRef = useRef<HTMLDivElement>(null);
-  const containerRef = useRef<HTMLDivElement>(null);
-  const [translateX, setTranslateX] = useState(0);
-  const textOverflowRef = useRef(0);
 
-  const horizontalScrollRef = useRef<HTMLDivElement>(null);
-  const cardsRowRef = useRef<HTMLDivElement>(null);
-  const [activeCardIdx, setActiveCardIdx] = useState(0);
 
-  /* ── Services Carousel (Vertical-to-Horizontal) Logic ── */
+  const triggerRef = useRef<HTMLDivElement>(null);
+
   useEffect(() => {
-    let rafId: number | null = null;
-
-    const updatePosition = () => {
-      rafId = null;
-      if (!horizontalScrollRef.current || !cardsRowRef.current) return;
-
-      const container = horizontalScrollRef.current;
-      const row = cardsRowRef.current;
-
-      const rect = container.getBoundingClientRect();
-      const windowHeight = window.innerHeight;
-
-      // Calculate progress (0 to 1) based on container presence in viewport
-      const totalScrollableHeight = rect.height - windowHeight;
-      const currentScrollPos = -rect.top;
-
-      let progress = currentScrollPos / totalScrollableHeight;
-      progress = Math.max(0, Math.min(1, progress));
-
-      const viewportWidth = window.innerWidth;
-      const scrollWidth = row.scrollWidth;
-
-      // Calculate travel: we want to move from 0 to negative (total width - viewport + right margin)
-      const maxTranslate = scrollWidth - viewportWidth + 21;
-
-      // Sync active dot: simple mapping of progress to index (0-4)
-      const numCards = 5;
-      const calculatedIdx = Math.min(
-        numCards - 1,
-        Math.floor(progress * (numCards - 0.1)),
-      );
-      setActiveCardIdx(calculatedIdx);
-
-      // Apply transform directly without transition for maximum smoothness
-      row.style.transform = `translate3d(${-progress * maxTranslate}px, 0, 0)`;
-    };
-
-    const handleScroll = () => {
-      if (!rafId) rafId = requestAnimationFrame(updatePosition);
-    };
-
-    const main = document.querySelector("main");
-    main?.addEventListener("scroll", handleScroll, { passive: true });
-    // Run once for initial state
-    updatePosition();
-
-    return () => {
-      main?.removeEventListener("scroll", handleScroll);
-      if (rafId) cancelAnimationFrame(rafId);
-    };
-  }, []);
-
-  /* ── Step Tracker ── */
-  useEffect(() => {
-    if (!onStepChange) return;
-
     const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            const stepAttr = entry.target.getAttribute("data-step");
-            if (stepAttr) {
-              onStepChange(parseInt(stepAttr));
-            }
-          }
-        });
+      ([entry]) => {
+        const isReached = entry.isIntersecting || entry.boundingClientRect.top < 0;
+        window.dispatchEvent(
+          new CustomEvent("sticky-footer-variant", {
+            detail: { variant: isReached ? "cta" : "default" },
+          })
+        );
       },
       {
-        rootMargin: "-30% 0px -30% 0px",
         threshold: 0,
-      },
+        rootMargin: "0px 0px -20% 0px",
+      }
     );
 
-    // Observar todos los elementos con data-step que pertenecen a esta lógica
-    const steps = containerRef.current?.parentElement?.querySelectorAll(
-      "[data-approach-block]",
-    );
-    steps?.forEach((s) => observer.observe(s));
+    if (triggerRef.current) {
+      observer.observe(triggerRef.current);
+    }
 
-    return () => observer.disconnect();
-  }, [onStepChange]);
-
-  /* ── Measure: wrapper height = sticky natural height + pan travel ── */
-  useEffect(() => {
-    const measure = () => {
-      const text = textRef.current;
-      const wrapper = wrapperRef.current;
-      const sticky = stickyRef.current;
-      if (!text || !wrapper || !sticky) return;
-
-      const containerWidth =
-        document.querySelector("main")?.clientWidth || window.innerWidth;
-      // Base amount the text is wider than container
-      const baseOverflow = Math.max(0, text.scrollWidth - containerWidth + 145);
-
-      // Total travel: distance to enter from right (containerWidth) + baseOverflow
-      const totalTravel = containerWidth + baseOverflow;
-      textOverflowRef.current = totalTravel;
-
-      // wrapper height = sticky content height + panning distance
-      wrapper.style.height = `${sticky.offsetHeight + totalTravel}px`;
-    };
-
-    const t = setTimeout(measure, 50);
-    window.addEventListener("resize", measure);
     return () => {
-      clearTimeout(t);
-      window.removeEventListener("resize", measure);
+      observer.disconnect();
+      // Reset back to default when unmounting
+      window.dispatchEvent(
+        new CustomEvent("sticky-footer-variant", {
+          detail: { variant: "default" },
+        })
+      );
     };
   }, []);
-
-  /* ── Scroll → translateX ── */
-  useEffect(() => {
-    const main = document.querySelector("main");
-    if (!main) return;
-
-    const handleScroll = () => {
-      const wrapper = wrapperRef.current;
-      const text = textRef.current;
-      if (!wrapper || !text) return;
-
-      const wrapperTop = wrapper.offsetTop;
-      const scrollTop = main.scrollTop;
-      const scrollRange = textOverflowRef.current;
-      if (scrollRange <= 0) return;
-
-      const containerWidth = main.clientWidth || window.innerWidth;
-      const raw = (scrollTop - wrapperTop) / scrollRange;
-      const p = Math.max(0, Math.min(1, raw));
-
-      // Calculate the base translation (how much it would be if started at 0)
-      const baseOverflow = Math.max(0, text.scrollWidth - containerWidth + 145);
-
-      // Start at screen width (right), end at negative baseOverflow (left)
-      const startX = containerWidth;
-      const endX = -baseOverflow;
-
-      const currentX = startX + (endX - startX) * p;
-      setTranslateX(currentX);
-    };
-
-    main.addEventListener("scroll", handleScroll, { passive: true });
-    handleScroll();
-    return () => main.removeEventListener("scroll", handleScroll);
-  }, []);
-
-  /* ── Accordion State ── */
-  const [isWeCreateOpen, setIsWeCreateOpen] = useState(false);
 
   return (
     <>
-      {/* ── Scroll-scrub wrapper (Release Step 48) ────────────────────── */}
-      <div
-        ref={wrapperRef}
-        data-step="48"
-        data-approach-block
-        className="bg-[#151324] relative w-full"
-      >
-        {/* Sticky phrase */}
-        <div
-          ref={stickyRef}
-          className="sticky top-0 z-10 bg-[#151324] overflow-hidden px-7.5 pt-40 pb-0"
-        >
-          <div className="text-slate-200 text-base font-normal font-['Fustat'] mb-3 leading-6">
-            You might have guessed...
-          </div>
-          <div
-            ref={textRef}
-            className="whitespace-nowrap text-white text-5xl font-medium font-['Fustat'] leading-[1.16] will-change-transform"
-            style={{ transform: `translateX(${translateX}px)` }}
-          >
-            feat's not your run-of-the-mill consultancy.
-          </div>
-        </div>
-      </div>
-
-      {/* ── Dark body Narrative (Release Step 49) ── */}
-      <div
-        data-step="49"
-        data-approach-block
-        className="bg-[#151324] pt-40 pb-20 w-full overflow-hidden flex flex-col gap-40"
-        ref={containerRef}
-      >
-        {/* First Narrative Block */}
-        <div className="px-7.5 text-left my-24.5">
-          <StaggerReveal staggerDelay={80} baseDelay={100} rootMargin="0px">
-            <h2
-              className="text-white font-light font-['Fustat'] leading-[1.1]"
-              style={{ fontSize: "clamp(32px, 10vw, 42px)" }}
-            >
-              We don’t hand <br />
-              you a strategy <br />
-              and disappear.
-            </h2>
-          </StaggerReveal>
-        </div>
-
-        {/* Second Narrative Block */}
-        <div className="w-full flex justify-start px-7.5 mb-24.5">
-          <div className="text-left">
-            <StaggerReveal staggerDelay={80} baseDelay={100} rootMargin="0px">
-              <h2
-                className="text-white font-light font-['Fustat'] leading-[1.1]"
-                style={{ fontSize: "clamp(32px, 10vw, 42px)" }}
-              >
-                And we don’t <br />
-                execute blindly <br />
-                either.
-              </h2>
-            </StaggerReveal>
-          </div>
-        </div>
-
-        {/* Third Narrative Block */}
-        <div className="w-full flex justify-start px-7.5 mb-24.5">
-          <div className="text-left">
-            <StaggerReveal staggerDelay={80} baseDelay={100} rootMargin="0px">
-              <h2
-                className="text-white font-light font-['Fustat'] leading-[1.1]"
-                style={{ fontSize: "clamp(32px, 10vw, 42px)" }}
-              >
-                <span className="whitespace-nowrap">We build what your</span>{" "}
-                <br />
-                reality demands <br />
-                <span className="opacity-100">
-                  — and see it <br /> through.
-                </span>
-              </h2>
-            </StaggerReveal>
-          </div>
-        </div>
-      </div>
-
-      {/* How this actually works - START OF SNAP SCROLL SECTIONS */}
-      <div
-        data-step="50"
-        data-approach-block
-        className="full-height w-full flex flex-col justify-center items-center px-7.5 relative bg-[#151324]"
-      >
-        <FadeInBlock delay={150}>
-          <div className="w-full text-center text-zinc-300 text-xl font-light font-['Fustat']">
-            How this actually works:
-          </div>
-        </FadeInBlock>
-      </div>
-
-      <div
-        data-step="51"
-        data-approach-block
-        className="full-height py-20 w-full flex flex-col justify-center items-start px-7.5 relative bg-[#151324]"
-      >
-        <FadeInBlock>
-          <div className="w-full justify-start">
-            <span className="text-stone-50 text-xl font-extralight font-['Fustat'] leading-7">
-              1. We start by identifying your
-            </span>
-            <span className="text-stone-50 text-xl font-normal font-['Fustat'] leading-7">
-              {" "}
-              real buying cohort <br />
-            </span>
-            <span className="text-stone-50 text-xl font-extralight font-['Fustat'] leading-7">
-              not demographically, but{" "}
-            </span>
-            <span className="text-stone-50 text-xl font-normal font-['Fustat'] leading-7">
-              behaviorally
-            </span>
-            <span className="text-stone-50 text-xl font-extralight font-['Fustat'] leading-7">
-              .
-            </span>
-          </div>
-        </FadeInBlock>
-      </div>
-
-      <div
-        data-step="52"
-        data-approach-block
-        className="full-height py-20 w-full flex flex-col justify-center items-start px-7.5 relative bg-[#151324]"
-      >
-        <FadeInBlock delay={150}>
-          <div className="w-full justify-start">
-            <span className="text-stone-50 text-xl font-extralight font-['Fustat'] leading-7">
-              2. We reshape
-            </span>
-            <span className="text-stone-50 text-xl font-normal font-['Fustat'] leading-7">
-              {" "}
-              narrative + structure{" "}
-            </span>
-            <span className="text-stone-50 text-xl font-extralight font-['Fustat'] leading-7">
-              to
-            </span>
-            <span className="text-stone-50 text-xl font-normal font-['Fustat'] leading-7">
-              {" "}
-              match{" "}
-            </span>
-            <span className="text-stone-50 text-xl font-extralight font-['Fustat'] leading-7">
-              that logic.
-            </span>
-          </div>
-        </FadeInBlock>
-      </div>
-
-      <div
-        data-step="53"
-        data-approach-block
-        className="min-h-dvh py-20 w-full flex flex-col justify-center items-start px-7.5 relative bg-[#151324]"
-      >
-        <div className="w-full flex flex-col items-start">
-          <button
-            onClick={() => setIsWeCreateOpen(!isWeCreateOpen)}
-            className="w-full flex justify-between items-center py-2 active:opacity-70 transition-opacity"
-          >
-            <h3
-              className="text-stone-50 font-['Fustat'] leading-tight"
-              style={{ fontSize: "21.05px" }}
-            >
-              <span className="font-extralight">3. We </span>
-              <span className="font-normal">create:</span>
-            </h3>
-            <img
-              src={chevronIcon}
-              alt="Toggle details"
-              className={`w-8 h-8 object-contain shrink-0 transition-transform duration-300 ${isWeCreateOpen ? "rotate-180" : "rotate-0"}`}
-            />
-          </button>
-
-          <div
-            className={`overflow-hidden transition-all duration-500 ease-in-out w-full ${isWeCreateOpen ? "mt-8 max-h-[500px] opacity-100" : "max-h-0 opacity-0"}`}
-          >
-            <ul className="flex flex-col gap-6 mb-10 pl-2">
-              {[
-                "Landing journeys matched to awareness depth",
-                "Messaging architecture tied to decision stage",
-                "Acquisition flows aligned with entry logic",
-                "Conversion systems built around intent",
-              ].map((item, i) => (
-                <li key={i} className="flex items-start gap-4">
-                  <div className="w-1.5 h-1.5 rounded-full bg-[#FCFAF3] mt-2.5 shrink-0" />
-                  <span
-                    className="text-[#FCFAF3] font-['Fustat'] font-extralight"
-                    style={{ fontSize: "18.05px" }}
-                  >
-                    {item}
-                  </span>
-                </li>
-              ))}
-            </ul>
-
-            <p
-              className="text-[#FCFAF3] font-['Fustat'] font-light leading-snug"
-              style={{ fontSize: "18.05px" }}
-            >
-              Everything speaks to where the buyer actually is.
-            </p>
-          </div>
-        </div>
-      </div>
-
-      <div
-        data-step="54"
-        data-approach-block
-        className="full-height py-20 w-full flex flex-col justify-center items-start px-7.5 relative bg-[#151324]"
-      >
-        <FadeInBlock delay={150}>
-          <div className="w-full justify-start">
-            <span className="text-stone-50 text-xl font-extralight font-['Fustat'] leading-7">
-              4. We{" "}
-            </span>
-            <span className="text-stone-50 text-xl font-normal font-['Fustat'] leading-7">
-              launch
-            </span>
-            <span className="text-stone-50 text-xl font-extralight font-['Fustat'] leading-7">
-              {" "}
-              under{" "}
-            </span>
-            <span className="text-stone-50 text-xl font-normal font-['Fustat'] leading-7">
-              real conditions
-            </span>
-            <span className="text-stone-50 text-xl font-extralight font-['Fustat'] leading-7">
-              .
-            </span>
-            <br />
-            <span className="text-stone-50 text-xl font-extralight font-['Fustat'] leading-7">
-              Let the{" "}
-            </span>
-            <span className="text-stone-50 text-xl font-normal font-['Fustat'] leading-7">
-              market
-            </span>
-            <span className="text-stone-50 text-xl font-extralight font-['Fustat'] leading-7">
-              {" "}
-            </span>
-            <span className="text-stone-50 text-xl font-normal font-['Fustat'] leading-7">
-              respond
-            </span>
-            <span className="text-stone-50 text-xl font-extralight font-['Fustat'] leading-7">
-              ...
-            </span>
-          </div>
-        </FadeInBlock>
-      </div>
-
-      <div
-        data-step="55"
-        data-approach-block
-        className="full-height py-20 w-full flex flex-col justify-center items-start px-7.5 relative bg-[#151324]"
-      >
-        <FadeInBlock delay={300}>
-          <div className="w-full justify-start">
-            <span className="text-stone-50 text-xl font-extralight font-['Fustat'] leading-7">
-              5. And{" "}
-            </span>
-            <span className="text-stone-50 text-xl font-normal font-['Fustat'] leading-7">
-              align the system
-            </span>
-            <span className="text-stone-50 text-xl font-extralight font-['Fustat'] leading-7">
-              {" "}
-              around{" "}
-            </span>
-            <span className="text-stone-50 text-xl font-medium font-['Fustat'] leading-7">
-              what
-            </span>
-            <span className="text-stone-50 text-xl font-extralight font-['Fustat'] leading-7">
-              {" "}
-            </span>
-            <span className="text-stone-50 text-xl font-normal font-['Fustat'] leading-7">
-              proved{" "}
-            </span>
-            <span className="text-stone-50 text-xl font-medium font-['Fustat'] leading-7">
-              itself
-            </span>
-            <span className="text-stone-50 text-xl font-normal font-['Fustat'] leading-7">
-              .
-            </span>
-            <br />
-            <span className="text-stone-50 text-xl font-light font-['Fustat'] leading-7">
-              Across Marketing. Product. And Sales.
-            </span>
-          </div>
-        </FadeInBlock>
-      </div>
-
-      <div
-        data-step="56"
-        data-approach-block
-        className="full-height py-20 w-full flex flex-col justify-center items-start px-7.5 relative bg-[#151324]"
-      >
-        <FadeInBlock delay={150}>
-          <div className="w-full justify-start">
-            <span className="text-stone-50 text-4xl font-normal font-['Fustat'] leading-tight">
-              So you can stop pushing growth
-              <br />
-            </span>
-            <span className="text-stone-50 text-3xl font-extralight font-['Fustat'] leading-tight">
-              and start directing it.
-            </span>
-          </div>
-        </FadeInBlock>
-      </div>
-
-      {/* ── Light Part: Entry Point (Release Step 61) ── */}
-      <div
-        id="entry-points"
-        data-step="61"
-        data-approach-block
-        className="px-3 py-40"
-        style={{ background: "linear-gradient(to bottom, #DBE9EE, #FFFFFF)" }}
-      >
-        <div className="w-full flex flex-col justify-start items-start gap-8">
-          <div className="self-stretch flex flex-col justify-start items-start gap-4">
-            <div
-              className="self-stretch justify-start font-light font-['Fustat'] leading-[1.2]"
-              style={{ color: "#516066", fontSize: "var(--text-hero-body)" }}
-            >
-              Scaling isn’t a template.
-            </div>
-            <div
-              className="self-stretch justify-start font-medium font-['Fustat'] leading-[1.1]"
-              style={{
-                color: "#171425",
-                fontSize: "var(--text-narrative-title)",
-              }}
-            >
-              Growth Depends on Where You’re Constrained
-            </div>
-          </div>
-          <div
-            className="self-stretch justify-start font-light font-['Fustat'] leading-[1.3] mb-[37px]"
-            style={{ color: "#1E262D", fontSize: "var(--text-hero-body)" }}
-          >
-            Some companies need clarity before momentum. Others need the system
-            to scale what’s already working.
-            <br />
-            <br />
-            We start where friction actually lives.
-          </div>
-        </div>
-
-        {/* ── Direction Sprint Card ── */}
-        <div
-          className="rounded-[30px] px-6 py-10 flex flex-col items-start relative box-border w-full"
-          style={{
-            backgroundColor: "#C6D7F9",
-            minHeight: "760px",
-            boxShadow: "inset 0 0 0 0.5px #191432",
-          }}
-        >
-          <div className="w-full flex-1 flex flex-col">
-            <h2
-              className="font-['Fustat'] font-semibold leading-none mb-1"
-              style={{ color: "#171425", fontSize: "29.98px" }}
-            >
-              Direction Sprint
-            </h2>
-
-            <p
-              className="font-['Lato'] italic leading-tight mb-2.5"
-              style={{ color: "#1A1A2E", fontSize: "17px" }}
-            >
-              When scaling feels busy, but not unified.
-            </p>
-
-            <p
-              className="font-['Lato'] font-light leading-tight"
-              style={{ color: "#171425", fontSize: "15px" }}
-            >
-              You’ve tested angles, launched campaigns, optimized metrics, but
-              growth still feels scattered.
-            </p>
-            <p
-              className="font-['Lato'] font-normal leading-tight mb-[18px]"
-              style={{ color: "#171425", fontSize: "15px" }}
-            >
-              More activity isn’t the answer. Direction is.
-            </p>
-
-            <div
-              className="w-full h-px mb-2.5"
-              style={{ backgroundColor: "#1B1B2F" }}
-            />
-
-            <h3
-              className="font-['Lato'] font-semibold leading-none mb-[3.85px]"
-              style={{ color: "#171425", fontSize: "18.84px" }}
-            >
-              We’ll be calibrating:
-            </h3>
-            <ul className="flex flex-col gap-1 mb-[13px]">
-              {[
-                "The exact cohort worth prioritizing, based on behavior and awareness stage",
-                "The entry point that matches their specific intent",
-                "The specific narrative structured around how your offer is processed",
-                "A custom experience built to surface signal and reduce friction",
-              ].map((item, i) => (
-                <li key={i} className="flex items-start gap-1">
-                  <span
-                    className="shrink-0"
-                    style={{ color: "#171425", fontSize: "15px" }}
-                  >
-                    •
-                  </span>
-                  <span
-                    className="font-['Lato'] font-light leading-tight"
-                    style={{ color: "#171425", fontSize: "15px" }}
-                  >
-                    {item}
-                  </span>
-                </li>
-              ))}
-            </ul>
-
-            <h3
-              className="font-['Lato'] font-semibold leading-none mb-[3.85px]"
-              style={{ color: "#171425", fontSize: "18.84px" }}
-            >
-              What you’ll leave with:
-            </h3>
-            <ul className="flex flex-col gap-1 mb-[19.7px]">
-              {[
-                "Clarity on what’s truly moving the needle",
-                "A validated approach worth scaling",
-                "Dedicated journeys (ads, landing pages, email flows) engineered to convert",
-                "A unified decision logic across teams",
-                "A practical roadmap, grounded in proof and ready for expansion",
-              ].map((item, i) => (
-                <li key={i} className="flex items-start gap-1">
-                  <span
-                    className="shrink-0"
-                    style={{ color: "#171425", fontSize: "15px" }}
-                  >
-                    •
-                  </span>
-                  <span
-                    className="font-['Lato'] font-light leading-tight"
-                    style={{ color: "#171425", fontSize: "15px" }}
-                  >
-                    {item}
-                  </span>
-                </li>
-              ))}
-            </ul>
-
-            <p
-              className="font-['Lato'] font-normal leading-tight mb-[19px]"
-              style={{ color: "#171425", fontSize: "15px" }}
-            >
-              This is not consulting. It’s validated direction, built and
-              pressure-tested in-market.
-            </p>
-          </div>
-
-          <div className="w-full mt-auto">
-            <button
-              onClick={() => navigate("/contact")}
-              className="w-full flex items-center justify-center rounded-full active:scale-[0.98] transition-transform mb-2.5 shadow-sm"
-              style={{ backgroundColor: "#1A1A2E", height: "60px" }}
-            >
-              <span
-                className="text-white font-['Fustat'] font-medium"
-                style={{ fontSize: "18.75px" }}
-              >
-                Calibrate your Growth →
-              </span>
-            </button>
-
-            <p
-              className="w-full text-center font-['Lato'] font-light"
-              style={{ color: "#3C3C3C", fontSize: "14.56px" }}
-            >
-              Build once. Scale deliberately.
-            </p>
-          </div>
-        </div>
-
-        <div className="mt-5" />
-
-        {/* ── Expansion System Card ── */}
-        <div
-          className="rounded-[30px] px-6 py-10 flex flex-col items-start relative box-border w-full mx-auto"
-          style={{
-            backgroundColor: "#171425",
-            minHeight: "980px",
-            boxShadow: "inset 0 0 0 0.5px #191432",
-          }}
-        >
-          <div className="w-full flex-1 flex flex-col">
-            <h2
-              className="font-['Fustat'] font-semibold leading-none mb-1 text-white"
-              style={{ fontSize: "29.98px" }}
-            >
-              Expansion System
-            </h2>
-
-            <p
-              className="font-['Lato'] italic font-light leading-tight mb-2.5"
-              style={{ color: "#D2D2FF", fontSize: "17px" }}
-            >
-              When the approach is evident, but scale demands deeper execution.
-            </p>
-
-            <div className="flex flex-col gap-0 mb-6">
-              <p
-                className="font-['Lato'] font-light leading-tight text-white"
-                style={{ fontSize: "15px" }}
-              >
-                You’ve validated the direction.
-              </p>
-              <p
-                className="font-['Lato'] font-normal leading-tight text-white"
-                style={{ fontSize: "15px" }}
-              >
-                Now we extend it across your highest-leverage surfaces.
-              </p>
-            </div>
-
-            <div
-              className="w-full h-px mb-6 opacity-20"
-              style={{ backgroundColor: "#FFFFFF" }}
-            />
-
-            <h3
-              className="font-['Lato'] font-semibold leading-none mb-[3.85px] text-white"
-              style={{ fontSize: "18.84px" }}
-            >
-              We operationalize it through:
-            </h3>
-            <ul className="flex flex-col gap-1 mb-6">
-              {[
-                "Upgrading your key growth assets for scale (site, funnels, decks)",
-                "Optimizing acquisition around proven signals",
-                "Reinforcing conversion systems for expansion and efficiency",
-                "Embedding narrative cohesion across Product, Marketing, and Sales",
-              ].map((item, i) => (
-                <li key={i} className="flex items-start gap-1">
-                  <span
-                    className="shrink-0 text-white"
-                    style={{ fontSize: "15px" }}
-                  >
-                    •
-                  </span>
-                  <span
-                    className="font-['Lato'] font-light leading-tight text-white"
-                    style={{ fontSize: "15px" }}
-                  >
-                    {item}
-                  </span>
-                </li>
-              ))}
-            </ul>
-
-            <h3
-              className="font-['Lato'] font-semibold leading-none mb-[3.85px] text-white"
-              style={{ fontSize: "18.84px" }}
-            >
-              Depending on where scale is bottlenecked, this can extend to:
-            </h3>
-            <ul className="flex flex-col gap-0.5 mb-6 pl-2">
-              {[
-                "Website restructuring",
-                "Landing ecosystems",
-                "Campaign systems",
-                "Sales enablement",
-                "Product narrative alignment",
-              ].map((item, i) => (
-                <li
-                  key={i}
-                  className="font-['Lato'] font-light leading-tight text-white"
-                  style={{ fontSize: "15px" }}
-                >
-                  – {item}
-                </li>
-              ))}
-            </ul>
-
-            <h3
-              className="font-['Lato'] font-semibold leading-none mb-[3.85px] text-white"
-              style={{ fontSize: "18.84px" }}
-            >
-              What you’ll leave with:
-            </h3>
-            <ul className="flex flex-col gap-1 mb-6">
-              {[
-                "Structural alignment across critical channels and surfaces",
-                "Systems designed to convert and installed to scale, not strain",
-                "Cohesive execution across teams",
-                "Structural capacity to expand what works",
-                "Growth that compounds instead of resets",
-              ].map((item, i) => (
-                <li key={i} className="flex items-start gap-1">
-                  <span
-                    className="shrink-0 text-white"
-                    style={{ fontSize: "15px" }}
-                  >
-                    •
-                  </span>
-                  <span
-                    className="font-['Lato'] font-light leading-tight text-white"
-                    style={{ fontSize: "15px" }}
-                  >
-                    {item}
-                  </span>
-                </li>
-              ))}
-            </ul>
-
-            <div className="flex flex-col gap-0 mt-auto mb-4">
-              <p
-                className="font-['Lato'] font-normal leading-tight text-white"
-                style={{ fontSize: "15px" }}
-              >
-                This is not more activity.
-              </p>
-              <p
-                className="font-['Lato'] font-normal leading-tight text-white"
-                style={{ fontSize: "15px" }}
-              >
-                It’s structural expansion built on proof.
-              </p>
-            </div>
-          </div>
-
-          <div className="w-full mt-auto">
-            <button
-              onClick={() => navigate("/contact")}
-              className="w-full flex items-center justify-center rounded-full active:scale-[0.98] transition-transform mb-2.5 shadow-sm"
-              style={{ backgroundColor: "#8B8CFB", height: "60px" }}
-            >
-              <span
-                className="font-['Fustat'] font-semibold"
-                style={{ color: "#171425", fontSize: "18.75px" }}
-              >
-                Scale What Works →
-              </span>
-            </button>
-            <p
-              className="w-full text-center font-['Lato'] font-light"
-              style={{ color: "#9FAECB", fontSize: "14.56px" }}
-            >
-              Build the system that scales.
-            </p>
-          </div>
-        </div>
-
-        {/* ── Final Call to Action Section ── */}
-        <div className="mt-20 flex flex-col items-center text-center">
-          <h2
-            className="font-['Fustat'] font-medium mb-1.5"
-            style={{
-              color: "#191432",
-              fontSize: "clamp(32px, 10.2vw, 43px)",
-              lineHeight: "1.1",
-            }}
-          >
-            Not sure where <br />
-            you stand?
-          </h2>
-
-          <p
-            className="font-['Fustat'] font-extralight mb-[23px]"
-            style={{ color: "#191432", fontSize: "20.05px" }}
-          >
-            We’ll identify it in one focused session.
-          </p>
-
-          <p
-            className="font-['Fustat'] font-light mb-[23px]"
-            style={{ color: "#191432", fontSize: "22.05px", lineHeight: "1.3" }}
-          >
-            Direction or expansion,
-            <br />
-            you’ll leave knowing exactly <br />
-            where to start.
-          </p>
-
-          <div className="w-full max-w-[325px] mx-auto">
-            <button
-              onClick={() => navigate("/contact")}
-              className="w-full flex items-center justify-center rounded-full active:scale-[0.98] transition-transform mb-2.5 shadow-md"
-              style={{
-                backgroundColor: "#191432",
-                height: "60px",
-                border: "0.5px solid #1A1A2E",
-              }}
-            >
-              <span
-                className="text-white font-['Fustat'] font-medium"
-                style={{ fontSize: "18.75px" }}
-              >
-                Fix your Growth →
-              </span>
-            </button>
-          </div>
-
-          <p
-            className="font-['Lato'] font-light"
-            style={{ color: "#191627", fontSize: "14.56px" }}
-          >
-            No obligation. Just alignment.
-          </p>
-        </div>
-      </div>
-
       {/* ── New Section: Direction Clear ── */}
       <div
         id="impact"
-        className="w-full pb-40 px-0 mt-[-1px]"
-        style={{ background: "linear-gradient(to bottom, #171425, #FCFAF3)" }}
+        className="w-full pb-[50.02px] px-0 -mt-0.5 relative z-0"
+        style={{
+          background:
+            "linear-gradient(to bottom, #1A1A2E 0%, #171425 23%, #FCFAF3 65%, #FCFAF3 100%)",
+        }}
       >
-        <div style={{ paddingTop: "127.1px" }} className="flex flex-col">
+        <div style={{ paddingTop: "80px" }} className="flex flex-col">
           <div className="mb-[60vh] px-7.5">
             <FadeInBlock delay={100}>
               <h2
@@ -948,7 +116,7 @@ export default function MobileApproach({
           <div className="w-full flex justify-end pr-[19.5px] mb-[60vh]">
             <FadeInBlock delay={100}>
               <h2
-                className="text-white font-normal font-['Fustat'] leading-[1.1] text-left"
+                className="text-white font-normal font-['Fustat'] leading-[1.1] text-right"
                 style={{ fontSize: "37.18px" }}
               >
                 growth stops <br />
@@ -958,14 +126,14 @@ export default function MobileApproach({
             </FadeInBlock>
           </div>
 
-          <div className="mt-40 px-0">
+          <div className="mt-40 px-0" ref={triggerRef}>
             <div className="mb-[80vh] pl-[21.5px]">
               <FadeInBlock delay={100}>
                 <h3
                   className="font-medium font-['Fustat'] leading-[1.1] mb-[13px]"
                   style={{ color: "#FFFFFF", fontSize: "50.18px" }}
                 >
-                  Start Moving <br />
+                  Finally Moving <br />
                   Forward
                 </h3>
                 <p
@@ -1046,7 +214,7 @@ export default function MobileApproach({
                     style={{ backgroundColor: "rgba(25, 20, 50, 0.05)" }}
                   >
                     <div className="absolute inset-0 pt-4 overflow-hidden pointer-events-none">
-                      <div className="flex flex-col gap-3 pl-[26px] animate-marquee-vertical">
+                      <div className="flex flex-col gap-4.25 pl-[26px] animate-marquee-vertical">
                         {[
                           "Landing ecosystems",
                           "Positioned homepage",
@@ -1108,9 +276,12 @@ export default function MobileApproach({
               </FadeInBlock>
 
               <FadeInBlock delay={150}>
-                <div className="w-full mt-[36px] pl-[21px] text-left">
+                <div className="w-full mt-[36px] text-right pr-[21px]">
                   <button
-                    onClick={() => navigate("/contact")}
+                    onClick={() => {
+                      saveScrollAnchor();
+                      navigate("/contact");
+                    }}
                     className="underline font-['Fustat'] font-light text-[22.05px] border-none bg-transparent p-0 cursor-pointer outline-none active:opacity-70 transition-opacity"
                     style={{ color: "#191432" }}
                   >
@@ -1124,11 +295,11 @@ export default function MobileApproach({
       </div>
 
       {/* ── New Section: Strategy meets Execution ── */}
-      <div
+      <motion.div
         className="w-full mt-0"
         style={{
           background:
-            "linear-gradient(to bottom, #191432 0%, #0C1831 16%, #021B30 56%, #021B30 100%)",
+            "linear-gradient(to bottom, #191432 0%, #0C1831 16%, #021B30 42%, #5D6D87 75%, #D5DAFA 93%, #D5DAFA 100%)",
         }}
       >
         <div
@@ -1153,224 +324,206 @@ export default function MobileApproach({
           </FadeInBlock>
         </div>
 
-        {/* ── Services Cards Carousel (Vertical-to-Horizontal Scroll) ── */}
-        <div
-          ref={horizontalScrollRef}
-          className="relative w-full h-[400vh] mt-[52px]"
-        >
-          <div className="sticky top-0 h-screen w-full overflow-hidden flex flex-col justify-center">
-            <div
-              ref={cardsRowRef}
-              className="flex px-[21px] gap-[21px] items-start will-change-transform"
-            >
-              {[
-                {
-                  supra: "Context-Aware Strategy",
-                  title: "Built Around \nYour Reality",
-                  text: (
-                    <>
-                      Some teams need clarity at the narrative layer. Others at
-                      the funnel, product, or sales motion.
-                      {"\n"}But the starting point is always the same:
-                      {"\n"}
-                      <span className="font-['Lato']">
-                        how buyers actually decide.
-                      </span>
-                      {"\n"}We intervene where leverage actually lives.
-                    </>
-                  ),
-                },
-                {
-                  supra: "Focused Calibration",
-                  title: "Decisive by \nDesign",
-                  text: (
-                    <>
-                      We focus on{" "}
-                      <span className="font-['Lato']">
-                        the decisions that unlock leverage first.
-                      </span>
-                      {"\n"}In{" "}
-                      <span className="font-['Lato']">
-                        a focused two-week sprint,
-                      </span>{" "}
-                      we cut through what’s blocking scale, so you can redirect
-                      with confidence and move without losing ground.
-                    </>
-                  ),
-                },
-                {
-                  supra: "Clear Direction",
-                  title: "Shared \nConviction.",
-                  text: (
-                    <>
-                      Whether you come in with a clear perspective or we shape
-                      the path forward together, all{" "}
-                      <span className="font-['Lato']">
-                        strategic calls are made deliberately
-                      </span>{" "}
-                      — and{" "}
-                      <span className="font-['Lato']">
-                        carried through to execution.
-                      </span>
-                      {"\n"}So teams can move with total focus, and traction
-                      continues to build.
-                    </>
-                  ),
-                },
-                {
-                  supra: "Coordinated Execution",
-                  title: "One Team. \nAll Surfaces.",
-                  text: (
-                    <>
-                      Strategy, design, UX, media, and development{" "}
-                      <span className="font-['Lato']">move in sync,</span>{" "}
-                      whether inside your team, ours, or both.
-                      {"\n"}
-                      <span className="font-['Lato']">
-                        No fragmentation. Just coordinated execution.
-                      </span>
-                    </>
-                  ),
-                },
-                {
-                  supra: "Embedded Capability",
-                  title: "Transferable \nSystems.",
-                  text: (
-                    <>
-                      What we build{" "}
-                      <span className="font-['Lato']">
-                        becomes part of your company as part of how your team
-                        operates,
-                      </span>{" "}
-                      long after our collaboration ends.
-                    </>
-                  ),
-                },
-              ].map((card, idx) => (
-                <div
-                  key={idx}
-                  className="shrink-0 border-[0.4px] border-[#E8E7E3]"
-                  style={{
-                    width: "327.03px",
-                    borderRadius: "6.84px",
-                    background:
-                      "linear-gradient(to right, #182431 0%, #08141F 100%)",
-                    padding: "36.14px 29.3px",
-                  }}
-                >
+        {/* ── Services Cards Accordion (Stacked) ── */}
+        <div className="w-full mt-[52px] px-5 flex flex-col gap-4.25">
+          {[
+            {
+              supra: "Context-Aware Strategy",
+              title: "Built Around Your \nReality.",
+              text: (
+                <>
+                  Some teams need clarity at the narrative layer. Others at
+                  the funnel, product, or sales motion.
+                  {"\n"}But the starting point is always the same:
+                  {"\n"}
+                  <span className="font-['Lato'] font-bold">
+                    how buyers actually decide.
+                  </span>
+                  {"\n"}We intervene where leverage actually lives.
+                </>
+              ),
+            },
+            {
+              supra: "Focused Calibration",
+              title: "Decisive by Design.",
+              text: (
+                <>
+                  We focus on{" "}
+                  <span className="font-['Lato'] font-bold">
+                    the decisions that unlock leverage first.
+                  </span>
+                  {"\n"}In{" "}
+                  <span className="font-['Lato'] font-bold">
+                    a focused two-week sprint,
+                  </span>{" "}
+                  we cut through what’s blocking scale, so you can redirect
+                  with confidence and move without losing ground.
+                </>
+              ),
+            },
+            {
+              supra: "Clear Direction",
+              title: "Shared Conviction.",
+              text: (
+                <>
+                  Whether you come in with a clear perspective or we shape
+                  the path forward together, all{" "}
+                  <span className="font-['Lato'] font-bold">
+                    strategic calls are made deliberately
+                  </span>{" "}
+                  — and{" "}
+                  <span className="font-['Lato'] font-bold">
+                    carried through to execution.
+                  </span>
+                  {"\n"}So teams can move with total focus, and traction
+                  continues to build.
+                </>
+              ),
+            },
+            {
+              supra: "Coordinated Execution",
+              title: "One Team. \nAll Surfaces.",
+              text: (
+                <>
+                  Strategy, design, UX, media, and development{" "}
+                  <span className="font-['Lato'] font-bold">move in sync,</span>{" "}
+                  whether inside your team, ours, or both.
+                  {"\n"}
+                  <span className="font-['Lato'] font-bold">
+                    No fragmentation. Just coordinated execution.
+                  </span>
+                </>
+              ),
+            },
+            {
+              supra: "Embedded Capability",
+              title: "Transferable \nSystems.",
+              text: (
+                <>
+                  What we build{" "}
+                  <span className="font-['Lato'] font-bold">
+                    becomes part of your company as part of how your team
+                    operates,
+                  </span>{" "}
+                  long after our collaboration ends.
+                </>
+              ),
+            },
+          ].map((card, idx) => {
+            const [isExpanded, setIsExpanded] = useState(idx === 0);
+
+            return (
+              <div
+                key={idx}
+                className="shrink-0 border-[0.7px] border-[#E8E7E3]/30 relative overflow-hidden transition-all duration-300 cursor-pointer"
+                style={{
+                  borderRadius: "10px",
+                  background:
+                    "linear-gradient(to right, #182431 0%, #08141F 100%)",
+                  padding: "0 22.5px", // Side padding
+                }}
+                onClick={() => setIsExpanded(!isExpanded)}
+              >
+                <div className="flex flex-col pr-6 relative pt-[15.33px]">
                   <p
-                    className="font-['LatoExtraLight'] text-[20px] leading-tight mb-4"
-                    style={{ color: "#D6D6F0" }}
+                    className="font-['Lato'] font-normal text-[15.5px] leading-tight mb-2 opacity-40 mix-blend-screen"
+                    style={{ color: "#E8E7E3" }}
                   >
                     {card.supra}
                   </p>
-                  <h3 className="font-['Fustat'] font-medium text-[31.21px] text-white leading-[1.1] mb-6 whitespace-pre-line">
+                  <h3 className="font-['Fustat'] font-light text-[32.5px] text-white leading-[1.1] whitespace-pre-line mb-2">
                     {card.title}
                   </h3>
-                  <p className="font-['LatoExtraLight'] text-[20px] text-white leading-relaxed whitespace-pre-line">
-                    {card.text}
-                  </p>
-                </div>
-              ))}
-            </div>
 
-            {/* Pagination Dots */}
-            <div
-              className="flex items-center justify-center gap-[11.53px] w-full"
-              style={{ marginTop: "41.83px" }}
-            >
-              {[0, 1, 2, 3, 4].map((i) => {
-                const isActive = activeCardIdx === i;
-                return (
-                  <div
-                    key={i}
-                    className="rounded-full transition-all duration-300 ease-out"
-                    style={{
-                      width: isActive ? "10.56px" : "8.34px",
-                      height: isActive ? "10.56px" : "8.34px",
-                      backgroundColor: isActive ? "#5B5CA9" : "#2D344E",
+                  {/* Toggle Icon aligned to Title - MOVED to bottom right below */}
+                  
+                  <motion.div
+                    initial={false}
+                    animate={{ 
+                      height: isExpanded ? "auto" : 0,
+                      opacity: isExpanded ? 1 : 0,
+                      marginTop: isExpanded ? 8 : 0
                     }}
-                  />
-                );
-              })}
-            </div>
-          </div>
+                    transition={{ duration: 0.3, ease: "easeInOut" }}
+                    style={{ overflow: "hidden" }}
+                  >
+                    <p className="font-['Lato'] font-light text-[17.5px] text-[#E8E7E3]/60 leading-[1.11] whitespace-pre-line pb-[16.33px]">
+                      {card.text}
+                    </p>
+                  </motion.div>
+
+                  {/* Toggle Icon in bottom right */}
+                  <div className="absolute bottom-[16.33px] right-0 translate-x-1.5">
+                    <motion.div
+                      className="text-[#E8E7E3] opacity-40 text-[20px] font-light leading-none"
+                    >
+                      {isExpanded ? "—" : "+"}
+                    </motion.div>
+                  </div>
+                </div>
+              </div>
+            );
+          })}
         </div>
 
-        {/* ── CTA Container with Split Background ── */}
-        <div
-          className="w-full relative pt-[121.11px] pb-24"
-          style={{
-            background:
-              "linear-gradient(to bottom, #021B30 300.29px, #FCFAF3 300.29px)",
-          }}
-        >
-          {/* The CTA Card */}
-          <div className="relative z-10 px-4">
-            <div
-              className="w-full rounded-[30.34px] relative overflow-hidden flex flex-col items-center text-center"
-              style={{
-                height: "358.35px",
-                background: "linear-gradient(225deg, #D2D3FF 0%, #DBE9EE 100%)",
-                border: "0.2px solid #000000",
-              }}
+        {/* ── CTA Redesign ── */}
+        <div className="w-full relative py-24 px-4 flex flex-col items-center text-center">
+          <p
+            className="font-['Fustat'] font-light"
+            style={{
+              fontSize: "21.3px",
+              color: "#171425",
+              lineHeight: "1",
+              marginBottom: "1px",
+            }}
+          >
+            When direction gets serious,
+          </p>
+          <h2
+            className="font-['Fustat'] font-medium"
+            style={{
+              fontSize: "39.69px",
+              color: "#171425",
+              lineHeight: "1.05",
+              marginBottom: "15.98px",
+            }}
+          >
+            Scaling becomes <br /> obvious.
+          </h2>
+
+          <button
+            onClick={() => {
+              saveScrollAnchor();
+              navigate("/contact");
+            }}
+            className="rounded-full flex items-center justify-center transition-transform active:scale-95 shadow-sm"
+            style={{
+              width: "320px",
+              height: "67.43px",
+              backgroundColor: "#191432",
+              marginBottom: "10px",
+            }}
+          >
+            <span
+              className="text-white font-['Fustat'] font-normal"
+              style={{ fontSize: "18.75px" }}
             >
-              <p
-                className="font-['Fustat'] font-light"
-                style={{
-                  fontSize: "21.3px",
-                  color: "#171425",
-                  marginTop: "67.91px",
-                  lineHeight: "1",
-                }}
-              >
-                When direction gets serious,
-              </p>
-              <h2
-                className="font-['Fustat'] font-medium"
-                style={{
-                  fontSize: "39.69px",
-                  color: "#171425",
-                  marginTop: "1px",
-                  lineHeight: "1.05",
-                }}
-              >
-                Scaling becomes <br /> obvious.
-              </h2>
+              Start the conversation →
+            </span>
+          </button>
 
-              <button
-                onClick={() => navigate("/contact")}
-                className="rounded-full flex items-center justify-center transition-transform active:scale-95 shadow-sm"
-                style={{
-                  marginTop: "15.98px",
-                  width: "320px",
-                  height: "67.43px",
-                  backgroundColor: "#191432",
-                }}
-              >
-                <span
-                  className="text-white font-['Fustat'] font-normal"
-                  style={{ fontSize: "18.75px" }}
-                >
-                  Start the conversation →
-                </span>
-              </button>
-
-              <p
-                className="font-['Lato'] font-light"
-                style={{
-                  marginTop: "10px",
-                  fontSize: "14.56px",
-                  color: "#191432",
-                  opacity: 0.8,
-                }}
-              >
-                No commitment required.
-              </p>
-            </div>
-          </div>
+          <p
+            className="font-['Lato'] font-light"
+            style={{
+              fontSize: "14.56px",
+              color: "#191432",
+              opacity: 0.6,
+            }}
+          >
+            No obligation. Just clarity
+          </p>
         </div>
-      </div>
+      </motion.div>
     </>
   );
 }

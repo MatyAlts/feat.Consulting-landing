@@ -1,6 +1,6 @@
 import { useRef, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { StaggerReveal } from "../shared/StaggerReveal";
+import { saveScrollAnchor } from "../../utils/scrollRestore";
 
 // Map all assets in /src/assets for dynamic lookup
 const assetModules = import.meta.glob("/src/assets/**/*.{png,jpg,jpeg,svg}", {
@@ -32,16 +32,6 @@ export default function MobileDecisionStage({
   // No longer resetting scroll to 0 here to allow MobileLayout to restore the position
   // when returning from the contact form.
 
-  const chips = [
-    "Awareness depth",
-    "Problem clarity",
-    "Solution familiarity",
-    "Channel context",
-    "Evaluation mode",
-    "Risk sensitivity",
-    "Intent strength",
-    "Acquisition source",
-  ];
 
   // 1. Data Definitions
   const projects = [
@@ -306,167 +296,64 @@ export default function MobileDecisionStage({
 
   return (
     <>
-      {/* 16. Final Narrative Sequence (Previously Step 20) */}
-      <section
-        id="strategy"
-        className="w-full flex flex-col justify-start px-7.5 overflow-hidden py-24 bg-[#0D111F]"
-      >
-        <div className="self-stretch flex flex-col justify-start items-start relative z-10 w-full pt-8 text-left">
-          <StaggerReveal
-            staggerDelay={80}
-            baseDelay={100}
-            rootMargin="0px"
-            className="w-full"
-          >
-            <div className="text-[#A5B4FC] text-2xl font-light font-['Fustat'] leading-6">
-              After years building journeys,
-            </div>
-          </StaggerReveal>
 
-          <StaggerReveal
-            staggerDelay={80}
-            baseDelay={500}
-            rootMargin="0px"
-            className="w-full mb-4"
-          >
-            <div className="text-[#A5B4FC] text-2xl font-light font-['Fustat'] leading-6">
-              one pattern became clear:
-            </div>
-          </StaggerReveal>
-
-          <StaggerReveal
-            staggerDelay={80}
-            baseDelay={900}
-            rootMargin="0px"
-            className="w-full"
-          >
-            <p className="text-white text-4xl font-normal font-['Fustat'] leading-[1.11]">
-              When growth
-            </p>
-          </StaggerReveal>
-
-          <StaggerReveal
-            staggerDelay={80}
-            baseDelay={1200}
-            rootMargin="0px"
-            className="w-full"
-          >
-            <p className="text-white text-4xl font-normal font-['Fustat'] leading-[1.11]">
-              reflects how buyers
-            </p>
-          </StaggerReveal>
-
-          <StaggerReveal
-            staggerDelay={80}
-            baseDelay={1500}
-            rootMargin="0px"
-            className="w-full mb-3"
-          >
-            <p className="text-white text-4xl font-normal font-['Fustat'] leading-[1.11]">
-              <span
-                className="italic-lato-word"
-                style={{
-                  fontFamily: "Lato, sans-serif",
-                  fontStyle: "italic",
-                  fontWeight: 400,
-                }}
-              >
-                actually
-              </span>{" "}
-              decide,
-            </p>
-          </StaggerReveal>
-
-          <StaggerReveal
-            staggerDelay={80}
-            baseDelay={2000}
-            rootMargin="0px"
-            className="w-full mb-10"
-          >
-            <div className="w-full text-[#C7D2FE] text-[56px] font-normal font-['Fustat'] leading-[54.59px]">
-              Scale stops depending on effort.
-            </div>
-          </StaggerReveal>
-
-          <StaggerReveal
-            staggerDelay={80}
-            baseDelay={2500}
-            rootMargin="0px"
-            className="w-full flex flex-col"
-          >
-            <p className="text-[#FCFAF3] text-[33.5px] font-light font-['Fustat'] leading-tight mb-12">
-              That's where leverage replaces grind.
-            </p>
-            <div className="w-full border-t border-[#FCFAF3]/10" />
-          </StaggerReveal>
-        </div>
-      </section>
 
       <section ref={sectionRef} className="bg-[#FCFAF3] py-20 overflow-hidden">
         <div className="self-stretch inline-flex flex-col justify-start items-start gap-2.5 w-full">
-          {/* Header Block */}
-          <div className="self-stretch flex flex-col justify-center items-center px-5">
-            <div className="flex flex-col justify-center items-center gap-4">
-              <div className="self-stretch flex flex-col justify-start items-start gap-1">
-                <StaggerReveal
-                  staggerDelay={120}
-                  className="w-80 text-center justify-start leading-9"
-                >
-                  <span className="text-gray-900 text-4xl font-semibold font-['Fustat']">
-                    Match the Build to the{" "}
-                  </span>
-                  <span className="text-indigo-400 text-4xl font-semibold font-['Fustat']">
-                    Decision Stage
-                    <span className="text-gray-900 font-normal">.</span>
-                  </span>
-                </StaggerReveal>
-                <StaggerReveal
-                  staggerDelay={80}
-                  baseDelay={600}
-                  className="self-stretch text-center justify-start text-slate-900 text-base font-light font-['Fustat']"
-                >
-                  Growth isn’t static. Execution must adapt.
-                </StaggerReveal>
-              </div>
-            </div>
-          </div>
 
-          {/* Chips Infinite Carousel */}
-          <div className="w-full relative overflow-hidden mt-[10px]">
-            <div className="flex w-fit animate-marquee gap-[5px]">
-              {chips.map((text, idx) => (
-                <div
-                  key={`orig-${idx}`}
-                  className="px-7 py-4 bg-violet-100/70 rounded-[10px] outline-[0.43px] outline-stone-50 backdrop-blur-md flex justify-center items-center gap-1 whitespace-nowrap flex-shrink-0"
-                >
-                  <div className="opacity-80 text-center text-slate-900 text-lg font-extralight font-['Fustat'] leading-5">
-                    {text}
-                  </div>
-                </div>
-              ))}
-              {chips.map((text, idx) => (
-                <div
-                  key={`dup-${idx}`}
-                  className="px-7 py-4 bg-violet-100/70 rounded-[10px] outline-[0.43px] outline-stone-50 backdrop-blur-md flex justify-center items-center gap-1 whitespace-nowrap flex-shrink-0"
-                >
-                  <div className="opacity-80 text-center text-slate-900 text-lg font-extralight font-['Fustat'] leading-5">
-                    {text}
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          {/* System Takes Shape Section */}
+          {/* System Takes Shape Section (Redesigned) */}
           <div
             id="in-practice"
-            className="mt-[51px] self-stretch flex flex-col justify-start items-center gap-8 w-full"
+            className="w-full flex flex-col items-center"
           >
-            <div className="self-stretch text-center text-zinc-600 text-xl font-normal font-['Fustat']">
-              This is how the system takes shape:
+            {/* Logo Grid at Top */}
+            <div className="w-full flex justify-center gap-11.25 mb-1.5">
+              {/* Column 1: ISCP & doinGlobal */}
+              <div className="flex flex-col items-center gap-[-8px]">
+                {[0, 2].map((idx) => (
+                  <button
+                    key={projects[idx].id}
+                    onClick={() => handleProjectChange(idx)}
+                    style={{ width: "96.34px", height: "60.2px" }}
+                    className={`flex items-center justify-center transition-all duration-500 transform ${
+                      activeProjectIdx === idx
+                        ? "grayscale-0 scale-105 opacity-100"
+                        : "grayscale opacity-40 hover:opacity-70"
+                    }`}
+                  >
+                    <img
+                      src={resolveAsset(projects[idx].logo)}
+                      alt={projects[idx].name}
+                      className="max-h-full w-auto object-contain"
+                    />
+                  </button>
+                ))}
+              </div>
+
+              {/* Column 2: MobyBots & Obras de Mar */}
+              <div className="flex flex-col items-center gap-[-8px]">
+                {[1, 3].map((idx) => (
+                  <button
+                    key={projects[idx].id}
+                    onClick={() => handleProjectChange(idx)}
+                    style={{ width: "128.73px", height: "59.59px" }}
+                    className={`flex items-center justify-center transition-all duration-500 transform ${
+                      activeProjectIdx === idx
+                        ? "grayscale-0 scale-105 opacity-100"
+                        : "grayscale opacity-40 hover:opacity-70"
+                    }`}
+                  >
+                    <img
+                      src={resolveAsset(projects[idx].logo)}
+                      alt={projects[idx].name}
+                      className="max-h-full w-auto object-contain"
+                    />
+                  </button>
+                ))}
+              </div>
             </div>
 
-            <div className="flex flex-col items-center gap-6 w-full px-5">
+            <div className="flex flex-col items-center w-full px-5">
               {/* Main Card Container with Fixed Background Image */}
               <div
                 className="w-full max-w-95 h-129.25 rounded-[40px] transition-colors duration-500 relative overflow-hidden shadow-2xl"
@@ -480,21 +367,11 @@ export default function MobileDecisionStage({
                     style={{ opacity: activeSlideIdx === idx ? 1 : 0 }}
                   >
                     {slide.image && (
-                      <>
-                        <img
-                          src={resolveAsset(slide.image)}
-                          alt=""
-                          className="w-full h-full object-cover opacity-60 mix-blend-overlay"
-                        />
-                        <div
-                          className="absolute inset-0"
-                          style={{
-                            background:
-                              "linear-gradient(to bottom, #000000, #8B8CFB)",
-                            opacity: 0.6,
-                          }}
-                        />
-                      </>
+                      <img
+                        src={resolveAsset(slide.image)}
+                        alt=""
+                        className="w-full h-full object-cover opacity-60 mix-blend-overlay"
+                      />
                     )}
                   </div>
                 ))}
@@ -610,7 +487,11 @@ export default function MobileDecisionStage({
 
                           {/* CTA Button */}
                           <button
-                            onClick={() => navigate("/contact")}
+                            onClick={() => {
+                              saveScrollAnchor();
+                              localStorage.removeItem("selectedTier");
+                              navigate("/contact");
+                            }}
                             className="absolute w-72 h-15 bg-white rounded-[50px] shadow-lg flex items-center justify-center active:scale-95 transition-transform"
                             style={{
                               top:
@@ -665,7 +546,7 @@ export default function MobileDecisionStage({
               </div>
 
               {/* Pagination Dots */}
-              <div className="flex items-center gap-6">
+              <div className="flex items-center gap-6 mt-2.75 mb-10">
                 <button
                   onClick={prevSlide}
                   className="w-8 h-8 flex items-center justify-center text-black/40 hover:text-black transition-colors"
@@ -681,15 +562,15 @@ export default function MobileDecisionStage({
                   </svg>
                 </button>
 
-                <div className="flex gap-2">
+                <div className="flex gap-2 items-center">
                   {activeProject.slides.map((_, i) => (
                     <button
                       key={i}
                       onClick={() => goToSlide(i)}
-                      className={`w-2.5 h-2.5 rounded-full transition-all duration-300 ${
+                      className={`rounded-full transition-all duration-300 ${
                         activeSlideIdx === i
-                          ? "bg-indigo-400 w-3 h-3"
-                          : "bg-zinc-300"
+                          ? "bg-indigo-400 w-[11.75px] h-[11.75px]"
+                          : "bg-zinc-300 w-[9.14px] h-[9.14px]"
                       }`}
                     />
                   ))}
@@ -711,26 +592,7 @@ export default function MobileDecisionStage({
                 </button>
               </div>
 
-              {/* Logo Grid */}
-              <div className="grid grid-cols-2 gap-x-12 gap-y-8 mt-4">
-                {projects.map((proj, idx) => (
-                  <button
-                    key={proj.id}
-                    onClick={() => handleProjectChange(idx)}
-                    className={`flex items-center justify-center transition-all duration-500 transform ${
-                      activeProjectIdx === idx
-                        ? "grayscale-0 scale-105"
-                        : "grayscale opacity-40 hover:opacity-70"
-                    }`}
-                  >
-                    <img
-                      src={resolveAsset(proj.logo)}
-                      alt={proj.name}
-                      className="max-h-8 w-auto object-contain"
-                    />
-                  </button>
-                ))}
-              </div>
+
             </div>
           </div>
         </div>
