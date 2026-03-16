@@ -1,10 +1,16 @@
 import { useState, useRef, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import logoImg from "../../assets/icons/loading ft.png";
-import doinGlobal from "../../assets/logos/doinGlobal.png";
-import ISCP from "../../assets/logos/ISCP.png";
-import MobyBots from "../../assets/logos/MobyBots.png";
-import ObrasDeMar from "../../assets/logos/ObrasDeMar.png";
+import { motion } from "framer-motion";
+
+// Import all logos except vertical one
+const logoFiles = import.meta.glob("../../assets/logos/*.png", {
+  eager: true,
+  import: "default",
+});
+const logos = Object.entries(logoFiles)
+  .filter(([path]) => !path.includes("logo vertical.png"))
+  .map(([_, value]) => value as string);
 
 const frictionOptions = [
   "We're testing a lot, but not sure what to double down on.",
@@ -465,76 +471,42 @@ export default function DesktopContactPage() {
                 Trusted by post-traction teams scaling across global markets.
               </p>
 
-              <div
-                style={{ width: "483px", height: "35px", overflow: "hidden" }}
-              >
-                <div
-                  className="flex items-center gap-8"
-                  style={{
-                    animation: "marquee 80s linear infinite",
-                    width: "max-content",
+              <div className="mt-6 overflow-hidden relative w-full">
+                <motion.div
+                  className="flex w-max"
+                  animate={{
+                    x: ["0%", "-50%"],
+                  }}
+                  transition={{
+                    x: {
+                      repeat: Infinity,
+                      repeatType: "loop",
+                      duration: 50,
+                      ease: "linear",
+                    },
                   }}
                 >
-                  {[
-                    ...([
-                      { type: "img", src: doinGlobal, alt: "doinGlobal" },
-                      { type: "img", src: ISCP, alt: "ISCP" },
-                      { type: "img", src: MobyBots, alt: "MobyBots" },
-                      { type: "img", src: ObrasDeMar, alt: "ObrasDeMar" },
-                      { type: "text", label: "Empresa A" },
-                      { type: "text", label: "Empresa B" },
-                      { type: "text", label: "Empresa C" },
-                      { type: "text", label: "Empresa D" },
-                      { type: "text", label: "Empresa E" },
-                      { type: "text", label: "Empresa F" },
-                      { type: "text", label: "Empresa G" },
-                      { type: "text", label: "Empresa H" },
-                      { type: "text", label: "Empresa I" },
-                      { type: "text", label: "Empresa J" },
-                      { type: "text", label: "Empresa K" },
-                      { type: "text", label: "Empresa L" },
-                    ] as const),
-                    ...([
-                      { type: "img", src: doinGlobal, alt: "doinGlobal" },
-                      { type: "img", src: ISCP, alt: "ISCP" },
-                      { type: "img", src: MobyBots, alt: "MobyBots" },
-                      { type: "img", src: ObrasDeMar, alt: "ObrasDeMar" },
-                      { type: "text", label: "Empresa A" },
-                      { type: "text", label: "Empresa B" },
-                      { type: "text", label: "Empresa C" },
-                      { type: "text", label: "Empresa D" },
-                      { type: "text", label: "Empresa E" },
-                      { type: "text", label: "Empresa F" },
-                      { type: "text", label: "Empresa G" },
-                      { type: "text", label: "Empresa H" },
-                      { type: "text", label: "Empresa I" },
-                      { type: "text", label: "Empresa J" },
-                      { type: "text", label: "Empresa K" },
-                      { type: "text", label: "Empresa L" },
-                    ] as const),
-                  ].map((item, i) =>
-                    item.type === "img" ? (
-                      <img
-                        key={i}
-                        src={item.src}
-                        alt={item.alt}
-                        style={{
-                          height: "28px",
-                          filter: "grayscale(100%)",
-                          opacity: 0.55,
-                        }}
-                        className="object-contain shrink-0"
-                      />
-                    ) : (
-                      <span
-                        key={i}
-                        className="font-['Lato'] font-light text-[13px] text-[#171425]/40 whitespace-nowrap shrink-0"
-                      >
-                        {item.label}
-                      </span>
-                    ),
-                  )}
-                </div>
+                  {/* Two identical sets for a seamless loop */}
+                  {[0, 1].map((setIdx) => (
+                    <div
+                      key={setIdx}
+                      className="flex gap-10 items-center mr-10"
+                    >
+                      {logos.map((logo, idx) => (
+                        <img
+                          key={idx}
+                          src={logo}
+                          alt="Trusted Team Logo"
+                          style={{
+                            height: "28px",
+                            opacity: 0.55,
+                          }}
+                          className="w-auto object-contain shrink-0 hover:scale-105 transition-all"
+                        />
+                      ))}
+                    </div>
+                  ))}
+                </motion.div>
               </div>
             </div>
           </div>

@@ -143,7 +143,14 @@ export default function DesktopLayout({
                 <img
                   src={qrCode}
                   alt="Escanea el QR para continuar en movil"
-                  style={{ width: "150px", height: "150px", flexShrink: 0 }}
+                  style={{
+                    width: "150px",
+                    height: "150px",
+                    flexShrink: 0,
+                    borderRadius: "14.26px",
+                    border: "5.18px solid #505C80",
+                    boxSizing: "border-box",
+                  }}
                 />
                 <p
                   style={{
