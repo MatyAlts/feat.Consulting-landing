@@ -1,7 +1,10 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { motion, AnimatePresence } from "framer-motion";
 import loadingFt from "../../assets/icons/loading ft.png";
 import flechaIcon from "../../assets/icons/flecha.svg";
+
+const words = ["Positioning", "Funnel", "UX", "Narrative", "Growth"];
 
 const faqs = [
   {
@@ -40,39 +43,47 @@ const faqs = [
 export default function MobileFAQs() {
   const navigate = useNavigate();
   const [openIdx, setOpenIdx] = useState<number | null>(null);
+  const [wordIdx, setWordIdx] = useState(0);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setWordIdx((prev) => (prev + 1) % words.length);
+    }, 2800); // 2.8s for a smooth rotation feel
+    return () => clearInterval(interval);
+  }, []);
 
   return (
     <section id="faqs" className="w-full">
       <div className="bg-[#FCFAF3]">
         <div className="pl-[21px] pr-5">
+          <p
+            className="font-['Fustat'] font-normal text-[#48435D]"
+            style={{
+              fontSize: "16.21px",
+              paddingTop: "127.98px",
+              marginBottom: "1px",
+            }}
+          >
+            The practical details.
+          </p>
+
           <h2
             className="font-['Fustat'] font-medium leading-[1.05] text-[#171425]"
             style={{
               fontSize: "clamp(36px, 11.5vw, 48px)",
-              paddingTop: "clamp(56px, 10dvh, 90px)",
             }}
           >
             Frequently <br /> Asked Questions
           </h2>
 
           <p
-            className="font-['Fustat'] font-normal text-[#48435D]"
-            style={{ fontSize: "16.21px", marginTop: "1px" }}
-          >
-            The practical details.
-          </p>
-
-          <p
             className="font-['Fustat'] font-light text-[#191432] leading-[1.3]"
             style={{ fontSize: "var(--text-hero-body)", marginTop: "13px" }}
           >
-            This isn’t a traditional consulting engagement. 
-            <br />
-            It’s a structural growth intervention.
+            This isn’t a traditional consulting engagement; it’s a structural growth intervention.
             <br />
             <br />
-            Here’s what most teams want <br />
-            clarified before moving forward.
+            Here’s what most teams want clarified before moving forward.
           </p>
         </div>
         <div className="mt-[19.12px] flex flex-col gap-4 px-[15px]">
@@ -197,7 +208,7 @@ export default function MobileFAQs() {
           <img
             src={loadingFt}
             alt="feat. logo"
-            className="w-[66px] object-contain"
+            className="w-[82px] object-contain"
             style={{ marginTop: "clamp(80px, 14dvh, 120px)" }}
           />
 
@@ -207,9 +218,21 @@ export default function MobileFAQs() {
           >
             It’s time to <br />
             optimize your <br />
-            <span className="font-normal" style={{ color: "#A3A8F7" }}>
-              Positioning
-            </span>
+            <div className="relative h-[1.2em] overflow-hidden">
+              <AnimatePresence mode="wait">
+                <motion.span
+                  key={words[wordIdx]}
+                  initial={{ y: "100%", opacity: 0 }}
+                  animate={{ y: "0%", opacity: 1 }}
+                  exit={{ y: "-100%", opacity: 0 }}
+                  transition={{ duration: 0.5, ease: "circOut" }}
+                  className="font-normal block"
+                  style={{ color: "#A3A8F7" }}
+                >
+                  {words[wordIdx]}
+                </motion.span>
+              </AnimatePresence>
+            </div>
           </h2>
 
           <div style={{ marginTop: "29px" }}>
