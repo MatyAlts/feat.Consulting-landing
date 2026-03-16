@@ -56,6 +56,39 @@ export default function MobileApproach({
   const navigate = useNavigate();
 
 
+  const triggerRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        const isReached = entry.isIntersecting || entry.boundingClientRect.top < 0;
+        window.dispatchEvent(
+          new CustomEvent("sticky-footer-variant", {
+            detail: { variant: isReached ? "cta" : "default" },
+          })
+        );
+      },
+      {
+        threshold: 0,
+        rootMargin: "0px 0px -20% 0px",
+      }
+    );
+
+    if (triggerRef.current) {
+      observer.observe(triggerRef.current);
+    }
+
+    return () => {
+      observer.disconnect();
+      // Reset back to default when unmounting
+      window.dispatchEvent(
+        new CustomEvent("sticky-footer-variant", {
+          detail: { variant: "default" },
+        })
+      );
+    };
+  }, []);
+
   return (
     <>
       {/* ── New Section: Direction Clear ── */}
@@ -93,7 +126,7 @@ export default function MobileApproach({
             </FadeInBlock>
           </div>
 
-          <div className="mt-40 px-0">
+          <div className="mt-40 px-0" ref={triggerRef}>
             <div className="mb-[80vh] pl-[21.5px]">
               <FadeInBlock delay={100}>
                 <h3
@@ -181,7 +214,7 @@ export default function MobileApproach({
                     style={{ backgroundColor: "rgba(25, 20, 50, 0.05)" }}
                   >
                     <div className="absolute inset-0 pt-4 overflow-hidden pointer-events-none">
-                      <div className="flex flex-col gap-3 pl-[26px] animate-marquee-vertical">
+                      <div className="flex flex-col gap-4.25 pl-[26px] animate-marquee-vertical">
                         {[
                           "Landing ecosystems",
                           "Positioned homepage",
@@ -292,7 +325,7 @@ export default function MobileApproach({
         </div>
 
         {/* ── Services Cards Accordion (Stacked) ── */}
-        <div className="w-full mt-[52px] px-5 flex flex-col gap-[17px]">
+        <div className="w-full mt-[52px] px-5 flex flex-col gap-4.25">
           {[
             {
               supra: "Context-Aware Strategy",
