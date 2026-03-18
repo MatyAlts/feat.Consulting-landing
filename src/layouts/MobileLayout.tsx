@@ -123,18 +123,19 @@ export default function MobileLayout({
       }
 
       const firstStorySection = document.querySelector('#direction') as HTMLElement | null
-      const ctaBoundarySection = document.querySelector('#feat-comes-in') as HTMLElement | null
+      const snapEndTrigger = document.querySelector('#snap-end-trigger') as HTMLElement | null
       const normalScrollStartSection = document.querySelector('#strategy') as HTMLElement | null
-      if (!firstStorySection || !ctaBoundarySection || !normalScrollStartSection) return
+      if (!firstStorySection || !snapEndTrigger || !normalScrollStartSection) return
 
       const snapStartTop = Math.max(0, firstStorySection.offsetTop)
-      const ctaBoundaryTop = Math.max(0, ctaBoundarySection.offsetTop)
+      const snapEndTop = Math.max(0, snapEndTrigger.offsetTop)
       const normalScrollStartTop = Math.max(0, normalScrollStartSection.offsetTop)
 
       const enterSnapThreshold = Math.max(0, snapStartTop - 12)
       const exitToHeroThreshold = Math.max(0, snapStartTop - 84)
       const disableSnapAtNormalThreshold = Math.max(0, normalScrollStartTop - 12)
       const reenableSnapFromNormalThreshold = Math.max(0, normalScrollStartTop - 96)
+      
       const currentTop = main.scrollTop
       const scrollDelta = currentTop - previousTop
       previousTop = currentTop
@@ -143,13 +144,13 @@ export default function MobileLayout({
         ctaBoundaryReleasedRef.current = false
       }
 
-      // Re-entry reset: when user comes back up to CTA boundary, arm snap zone again.
-      if (ctaBoundaryReleasedRef.current && scrollDelta < 0 && currentTop <= ctaBoundaryTop + 12) {
+      // Re-entry reset: when user comes back up to snap end, arm snap zone again.
+      if (ctaBoundaryReleasedRef.current && scrollDelta < 0 && currentTop <= snapEndTop + 12) {
         ctaBoundaryReleasedRef.current = false
       }
 
-      // Downward release: once user pushes down from CTA, keep snap disabled until reset above.
-      if (!ctaBoundaryReleasedRef.current && currentTop >= ctaBoundaryTop - 10 && scrollDelta > 0) {
+      // Downward release: once user pushes down from snap end, keep snap disabled.
+      if (!ctaBoundaryReleasedRef.current && currentTop >= snapEndTop - 10 && scrollDelta > 0) {
         ctaBoundaryReleasedRef.current = true
       }
 
@@ -162,7 +163,7 @@ export default function MobileLayout({
         if (prev) {
           if (currentTop <= exitToHeroThreshold) return false
           // Final snap stage can settle, but must release when user keeps pushing down.
-          if (currentTop >= ctaBoundaryTop - 10 && scrollDelta > 0) return false
+          if (currentTop >= snapEndTop - 10 && scrollDelta > 0) return false
           if (currentTop >= disableSnapAtNormalThreshold) return false
           return true
         }
