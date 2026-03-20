@@ -2,13 +2,22 @@ import { useState, useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { saveScrollAnchor } from "../../utils/scrollRestore";
+import { useScrollDirection } from "../../hooks/useScrollDirection";
 
-export default function StickyFooter() {
+interface StickyFooterProps {
+  onContactClick?: () => void;
+  activeStep?: number;
+  forceHide?: boolean;
+}
+
+export default function StickyFooter({ onContactClick, activeStep = 0, forceHide = false }: StickyFooterProps) {
   const [variant, setVariant] = useState<"default" | "cta">("default");
   const [isVisible, setIsVisible] = useState(false);
   const [progress, setProgress] = useState(0);
   const lastScrollTop = useRef(0);
   const ticking = useRef(false);
+  
+  const isForcedHidden = activeStep === 30 || activeStep === 31 || forceHide;
 
   useEffect(() => {
     const handleVariantChange = (e: Event) => {
@@ -91,14 +100,17 @@ export default function StickyFooter() {
       initial={false}
       animate={{
         height: variant === "cta" ? 104 : 53,
-        y: isVisible ? 0 : "100%",
+        y: isVisible && !isForcedHidden ? 0 : "100%",
         backgroundColor: variant === "cta" ? "#D2D3FF" : "#FCFAF3",
         borderTopLeftRadius: variant === "cta" ? "19.97px" : "0px",
         borderTopRightRadius: variant === "cta" ? "19.97px" : "0px",
+        opacity: isForcedHidden ? 0 : 1,
+        pointerEvents: isForcedHidden ? "none" : "auto" as any,
       }}
       transition={{
         height: { duration: 0.5, ease: [0.32, 0.72, 0, 1] },
-        y: { duration: 0.4, ease: "easeInOut" },
+        y: isForcedHidden ? { duration: 0 } : { duration: 0.4, ease: "easeInOut" },
+        opacity: isForcedHidden ? { duration: 0 } : { duration: 0.3 },
         backgroundColor: { duration: 0.5 },
         borderRadius: { duration: 0.5 },
       }}

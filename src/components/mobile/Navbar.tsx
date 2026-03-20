@@ -44,8 +44,7 @@ export default function MobileNavbar({ forceHide = false }: MobileNavbarProps) {
 
   const isHidden =
     !isMenuOpen &&
-    scrollDir === "down" &&
-    (forceHide || (!isAtTop && !isInHero));
+    (forceHide || (scrollDir === "down" && !isAtTop && !isInHero));
 
   // Bloquea el scroll del body cuando el menu esta abierto
   useEffect(() => {
@@ -137,10 +136,14 @@ export default function MobileNavbar({ forceHide = false }: MobileNavbarProps) {
           "fixed top-0 left-0 right-0 z-40",
           "flex items-center justify-between",
           "px-5 bg-[#FCFAF3] border-b border-brand-dark/10",
-          "transition-transform duration-300 ease-in-out",
-          isHidden ? "-translate-y-full" : "translate-y-0",
+          forceHide ? "transition-none" : "transition-all duration-300 ease-in-out",
+          isHidden ? "-translate-y-full opacity-0" : "translate-y-0 opacity-100",
         ].join(" ")}
-        style={{ height: "var(--mobile-nav-header-height)" }}
+        style={{
+          height: "var(--mobile-nav-header-height)",
+          pointerEvents: isHidden ? "none" : "auto",
+          transitionDuration: forceHide ? "0ms" : undefined,
+        }}
       >
         <button
           onClick={() => {

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { ChevronDown } from "lucide-react";
 import { Link } from "react-router-dom";
@@ -16,7 +16,27 @@ const STAGES = [
   "Acquisition source",
 ];
 
-export default function DecisionStages() {
+export default function DecisionStages({ onStepChange }: { onStepChange?: (step: number) => void }) {
+  useEffect(() => {
+    const scrollContainer = document.querySelector('.story-snap-main');
+    if (!scrollContainer || !onStepChange) return;
+
+    const observer = new IntersectionObserver((entries) => {
+      const [entry] = entries;
+      if (entry.isIntersecting) {
+        onStepChange(30);
+      }
+    }, {
+      root: scrollContainer,
+      threshold: 0.1
+    });
+
+    const currentRef = document.getElementById('stages');
+    if (currentRef) observer.observe(currentRef);
+
+    return () => observer.disconnect();
+  }, [onStepChange]);
+
   return (
     <section 
       id="stages" 

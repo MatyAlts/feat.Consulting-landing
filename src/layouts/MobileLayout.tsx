@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from 'react'
+import { useInView } from 'framer-motion'
 import MobileNavbar from '../components/mobile/Navbar'
 import MobileHero from '../components/mobile/Hero'
 import MobileServices from '../components/mobile/Services'
@@ -185,36 +186,66 @@ export default function MobileLayout({
     }
   }, [showForm])
 
+  const handleStepChange = (step: number) => {
+    setActiveStep(step);
+  };
+
+  const decisionRef = useRef<HTMLDivElement>(null);
+  const isInDecisionSection = useInView(decisionRef, { margin: "-20% 0px -20% 0px" });
+
+  const isStorySnap = activeStep >= 1 && activeStep <= 4;
+  const isDecisionSnap = activeStep >= 30 && activeStep <= 31;
+  const shouldHideChrome = isDecisionSnap || isInDecisionSection;
+
+  // Reset activeStep when near top to avoid stuck states from lower sections
+  useEffect(() => {
+    const main = mainRef.current;
+    if (!main) return;
+
+    const handleScroll = () => {
+      if (main.scrollTop < 100 && activeStep > 0) {
+        setActiveStep(-1);
+      }
+    };
+
+    main.addEventListener('scroll', handleScroll, { passive: true });
+    return () => main.removeEventListener('scroll', handleScroll);
+  }, [activeStep]);
+
   return (
     <div
       className={`flex flex-col overflow-hidden bg-[#FCFAF3] ${isDesktopContainer ? 'h-full w-full' : ''}`}
       style={{ height: isDesktopContainer ? '100%' : '100dvh' }}
     >
-      {!isDesktopContainer && !showForm && <MobileNavbar forceHide={activeStep >= 1 && activeStep <= 20} />}
+      {!isDesktopContainer && !showForm && (
+        <MobileNavbar forceHide={shouldHideChrome} />
+      )}
       <main 
         ref={mainRef}
         className={[
-        'flex-1 overflow-y-auto hide-scrollbar',
-        isDesktopContainer ? 'emulator-container' : 'scroll-smooth',
-        !showForm ? 'story-snap-main' : '',
-        !showForm && isStorySnapEnabled ? 'story-snap-enabled' : '',
-      ].filter(Boolean).join(' ')}
+          'flex-1 overflow-y-auto hide-scrollbar',
+          isDesktopContainer ? 'emulator-container' : 'scroll-smooth',
+          !showForm ? 'story-snap-main' : '',
+          !showForm && isStorySnapEnabled ? 'story-snap-enabled' : '',
+        ].filter(Boolean).join(' ')}
       >
         {showForm ? (
           <ContactForm />
         ) : (
           <>
             <MobileHero animateEntry={enableHeroEntryAnimation} />
-            <MobileServices onStepChange={setActiveStep} />
-            <MobileDecisionStage onStepChange={setActiveStep} />
-            <TractionReveal />
-            <DecisionStages />
-            <MobileApproach onStepChange={setActiveStep} />
+            <MobileServices onStepChange={handleStepChange} />
+            <div ref={decisionRef} className="contents-wrapper">
+              <MobileDecisionStage onStepChange={handleStepChange} />
+              <TractionReveal />
+              <DecisionStages onStepChange={handleStepChange} />
+            </div>
+            <MobileApproach onStepChange={handleStepChange} />
             <MobileFAQs />
           </>
         )}
       </main>
-      {!isDesktopContainer && !showForm && <StickyFooter />}
+      {!isDesktopContainer && !showForm && <StickyFooter activeStep={activeStep} forceHide={shouldHideChrome} />}
     </div>
   )
 }

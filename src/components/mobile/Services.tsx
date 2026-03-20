@@ -41,7 +41,7 @@ function StoryStage({
       ref={sectionRef}
       className={`relative story-snap-step ${stageClassName}`}
     >
-      <div className={`full-height ${stickyClassName}`}>{children}</div>
+      <div className={`h-full ${stickyClassName}`}>{children}</div>
     </section>
   );
 }
@@ -52,7 +52,7 @@ export default function MobileServices({ onStepChange }: MobileServicesProps) {
   const [revealedSecondSteps, setRevealedSecondSteps] = useState<
     Record<number, boolean>
   >({});
-  const sectionRefs = useRef<(HTMLElement | null)[]>([]);
+  const sectionRefs = useRef<(HTMLElement | null)[]>(new Array(20).fill(null));
 
   // Refs para medir la posición exacta de los textos
 
@@ -213,7 +213,7 @@ export default function MobileServices({ onStepChange }: MobileServicesProps) {
         backgroundSize: "cover",
       }}
     >
-      {/* Sections 1-19 */}
+      {/* Sections 1-18 */}
       <>
         {/* 1. Frase Inicial (Step 0) */}
         <StoryStage
@@ -829,253 +829,35 @@ export default function MobileServices({ onStepChange }: MobileServicesProps) {
             </motion.p>
           </motion.div>
         </StoryStage>
-
-        {/* Progressive reveal + visual hierarchy (Normal scroll section) */}
-        <section
-          id="strategy"
-          data-step="19"
-          data-color="#020A30"
-          ref={(el) => {
+        
+        {/* Paso 19: Transición a Practice */}
+        <StoryStage
+          step={19}
+          color="#fcfaf3"
+          sectionRef={(el) => {
             sectionRefs.current[19] = el;
           }}
-          className="w-full flex flex-col px-5 pt-[5vh] pb-[20vh] gap-[15vh]"
-          style={{ background: "#020A30" }}
+          stageClassName="h-[40vh]"
+          stickyClassName="w-full flex items-center px-4 justify-center"
         >
-          {/* Item 1 */}
-          <ScrollRevealItem>
-            <div className="w-full flex flex-col gap-4">
-              <img
-                src={icon1}
-                alt="Icon 1"
-                className="w-10.5 h-10.5 object-contain"
-                style={{ opacity: 0.09 }}
-              />
-              <div className="flex flex-col gap-2">
-                <h3
-                  className="tracking-tight text-left leading-[1.2]"
-                  style={{
+          <div className="w-full max-w-[340px]">
+            <StaggeredCharacterText
+              segments={[
+                {
+                  text: "Here’s how that looks\nin practice:",
+                  style: {
                     fontFamily: "Fustat",
-                    fontWeight: 500,
-                    fontSize: "25.3px",
-                    color: "#FCFAF3",
-                  }}
-                >
-                  Clarifying what’s actually driving decisions.
-                </h3>
-                <p
-                  className="tracking-tight text-left leading-[1.3]"
-                  style={{
-                    fontFamily: "Lato",
-                    fontStyle: "italic",
-                    fontWeight: 300,
-                    fontSize: "16px",
-                    color: "#FCFAF3",
-                    opacity: 0.8,
-                  }}
-                >
-                  Where the value resonates most, and what makes choosing you
-                  obvious.
-                </p>
-              </div>
-            </div>
-          </ScrollRevealItem>
-
-          {/* Item 2 */}
-          <ScrollRevealItem>
-            <div className="w-full flex flex-col gap-4">
-              <img
-                src={icon2}
-                alt="Icon 2"
-                className="w-10.5 h-10.5 object-contain"
-                style={{ opacity: 0.2 }}
-              />
-              <div className="flex flex-col gap-2">
-                <h3
-                  className="tracking-tight text-left leading-[1.2]"
-                  style={{
-                    fontFamily: "Fustat",
-                    fontWeight: 500,
-                    fontSize: "25.3px",
-                    color: "#FCFAF3",
-                  }}
-                >
-                  Aligning teams and execution around it.
-                </h3>
-                <p
-                  className="tracking-tight text-left leading-[1.3]"
-                  style={{
-                    fontFamily: "Lato",
-                    fontStyle: "italic",
-                    fontWeight: 300,
-                    fontSize: "16px",
-                    color: "#FCFAF3",
-                    opacity: 0.8,
-                  }}
-                >
-                  Every action builds on the same decision logic.
-                </p>
-              </div>
-            </div>
-          </ScrollRevealItem>
-
-          {/* Item 3 */}
-          <ScrollRevealItem>
-            <div className="w-full flex flex-col gap-4">
-              <img
-                src={icon3}
-                alt="Icon 3"
-                className="w-10.5 h-10.5 object-contain"
-                style={{ opacity: 0.3 }}
-              />
-              <div className="flex flex-col gap-2">
-                <h3
-                  className="tracking-tight text-left leading-[1.2]"
-                  style={{
-                    fontFamily: "Fustat",
-                    fontWeight: 500,
-                    fontSize: "25.3px",
-                    color: "#FCFAF3",
-                  }}
-                >
-                  Expanding what proves itself.
-                </h3>
-                <p
-                  className="tracking-tight text-left leading-[1.3]"
-                  style={{
-                    fontFamily: "Lato",
-                    fontStyle: "italic",
-                    fontWeight: 300,
-                    fontSize: "16px",
-                    color: "#FCFAF3",
-                    opacity: 0.8,
-                  }}
-                >
-                  What works becomes the standard across the entire experience.
-                </p>
-              </div>
-            </div>
-          </ScrollRevealItem>
-        </section>
-
-        {/* Scale behavior section */}
-        <section
-          id="scale-behavior"
-          data-step="20"
-          data-color="#626472"
-          ref={(el) => {
-            sectionRefs.current[20] = el;
-          }}
-          className="w-full flex flex-col px-5 pt-[10vh] pb-[20vh] gap-[12vh]"
-          style={{ background: "linear-gradient(to bottom, #626472, #FCFAF3)" }}
-        >
-          {/* Header */}
-          <ScrollRevealItem>
-            <div className="w-full flex flex-col items-start gap-1">
-              <span
-                style={{
-                  fontFamily: "Lato",
-                  fontWeight: 100,
-                  fontSize: "23px",
-                  color: "#FFFFFF",
-                  fontStyle: "italic",
-                }}
-              >
-                because
-              </span>
-              <h2
-                className="tracking-tight text-left leading-[1.1]"
-                style={{
-                  fontFamily: "Fustat",
-                  fontWeight: 400,
-                  fontSize: "35px",
-                  color: "#FFFFFF",
-                }}
-              >
-                When growth is built <br />
-                around real buyer <br />
-                behavior,
-              </h2>
-            </div>
-          </ScrollRevealItem>
-
-          {/* Scale stops... */}
-          <ScrollRevealItem>
-            <div className="w-full flex justify-end pr-2">
-              <h2
-                className="tracking-tight text-right leading-[1.05]"
-                style={{
-                  fontFamily: "Fustat",
-                  fontWeight: 400,
-                  fontSize: "54.59px",
-                  color: "#010101",
-                  maxWidth: "90%",
-                }}
-              >
-                Scale stops <br />
-                depending <br />
-                on effort.
-              </h2>
-            </div>
-          </ScrollRevealItem>
-
-          {/* Sometimes direction */}
-          <ScrollRevealItem>
-            <div className="w-full flex justify-start pl-2">
-              <p
-                className="tracking-tight text-left leading-[1.2]"
-                style={{
-                  fontFamily: "Fustat",
-                  fontWeight: 300,
-                  fontSize: "25px",
-                  color: "#000000",
-                  maxWidth: "75%",
-                }}
-              >
-                Sometimes that means <br />
-                sharpening direction.
-              </p>
-            </div>
-          </ScrollRevealItem>
-
-          {/* Sometimes surfaces */}
-          <ScrollRevealItem>
-            <div className="w-full flex justify-end pr-2">
-              <p
-                className="tracking-tight text-right leading-[1.2]"
-                style={{
-                  fontFamily: "Fustat",
-                  fontWeight: 300,
-                  fontSize: "25px",
-                  color: "#000000",
-                  maxWidth: "80%",
-                }}
-              >
-                Sometimes it means <br />
-                extending what already <br />
-                works across key surfaces.
-              </p>
-            </div>
-          </ScrollRevealItem>
-
-          {/* Work adapts */}
-          <ScrollRevealItem>
-            <div className="w-full flex justify-center text-center mt-4">
-              <h2
-                className="tracking-tight leading-[1.1]"
-                style={{
-                  fontFamily: "Fustat",
-                  fontWeight: 300,
-                  fontSize: "36.85px",
-                  color: "#000000",
-                }}
-              >
-                The work adapts to <br />
-                where scale needs <br />
-                support.
-              </h2>
-            </div>
-          </ScrollRevealItem>
-        </section>
+                    fontWeight: 600,
+                    fontSize: "24px",
+                    color: "#1A1A2E",
+                  },
+                },
+              ]}
+              align="center"
+              style={{ lineHeight: 1.3 }}
+            />
+          </div>
+        </StoryStage>
       </>
     </div>
   );
