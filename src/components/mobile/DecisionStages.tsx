@@ -130,84 +130,108 @@ export default function DecisionStages({ onStepChange }: { onStepChange?: (step:
       {/* Stage 1 Container */}
       <div className="w-full px-[17.5px] pb-0 flex flex-col pt-24 bg-[#FCFAF3]">
         {/* Stage Header */}
-        <div className="flex flex-col gap-2 mb-0.75">
+        <div className="flex flex-col gap-2 mb-[19px]">
           <span
             style={{
               fontFamily: "Lato",
               fontStyle: "italic",
               fontWeight: 400,
-              fontSize: "17.07px",
-              color: "#7A71A5",
+              fontSize: "22.3px",
+              color: "#8B8CFB",
+              lineHeight: "1.1",
             }}
           >
-            Stage 1 — Calibration Sprint
+            Step 1 — The Direction
           </span>
           <h3
             style={{
               fontFamily: "Fustat",
               fontWeight: 600,
-              fontSize: "25px",
-              color: "#000000",
-              lineHeight: "1.15",
+              fontSize: "31px",
+              color: "#1A1A2E",
+              lineHeight: "1.2",
             }}
           >
-            When growth is moving, but <br />
-            it still feels scattered.
+            First we identify the decision that will unlock growth.
           </h3>
         </div>
 
-        {/* Narrative */}
-        <div className="flex flex-col gap-0 mb-4.5">
+        {/* Narrative & Lists Wrapper */}
+        <div className="flex flex-col gap-[20px]">
           <p
             style={{
               fontFamily: "Lato",
-              fontWeight: 300,
-              fontSize: "17.07px",
-              color: "#171425",
-              lineHeight: "1.21",
+              fontStyle: "italic",
+              fontWeight: 400,
+              fontSize: "18px",
+              color: "#06203C",
+              lineHeight: "1.1",
             }}
           >
-            You’ve tested angles, launched campaigns, <br />
-            optimized metrics.
+            Where should growth actually focus?
           </p>
-          <p
+          
+          <div 
             style={{
-              fontFamily: "Lato",
-              fontWeight: 500,
-              fontSize: "17.07px",
-              color: "#171425",
-              lineHeight: "1.21",
+              fontFamily: "Fustat",
+              fontSize: "18px",
+              color: "#191432",
+              lineHeight: "1.1",
             }}
           >
-            But the repeatable logic hasn’t fully <br />
-            surfaced yet.
-          </p>
-        </div>
+            <p style={{ fontWeight: 300 }} className="mb-0">Teams often come asking for a website, campaigns, or better UX.</p>
+            <p style={{ fontWeight: 700 }}>But those are symptoms.</p>
+          </div>
 
-        {/* Lists Wrapper */}
-        <div className="flex flex-col gap-4.5">
-          <CollapsibleList
-            title="What we clarify:"
-            type="bullet"
-            items={[
-              "The cohort worth prioritizing",
-              "The entry point that matches their intent",
-              "The narrative that makes your offer click",
-              "The journey that reveals signal and removes friction.",
-            ]}
-          />
+          <div className="bg-[#171425] flex flex-col justify-center px-[23px] py-[15px] rounded-[10px]">
+            <div className="flex flex-col gap-[5px] leading-[1.1]">
+              <p 
+                style={{
+                  fontFamily: "Fustat",
+                  fontWeight: 300,
+                  fontSize: "15.5px",
+                  color: "#FFFFFF",
+                }}
+              >
+                The real question is:
+              </p>
+              <p 
+                style={{
+                  fontFamily: "Lato",
+                  fontStyle: "italic",
+                  fontWeight: 600,
+                  fontSize: "18px",
+                  color: "#D2D2FF",
+                }}
+              >
+                What decision should the business help its audience make?
+              </p>
+            </div>
+          </div>
 
-          <CollapsibleList
-            title="What this enables:"
-            type="check"
-            items={[
-              "Market-backed clarity on what's actually moving the needle",
-              "A validated direction the team can confidently scale",
-              "Conversion journeys engineered around real buyer behavior",
-              "A unified decision logic to leverage across teams",
-            ]}
-            initialCount={1}
-          />
+          <div 
+            style={{
+              fontFamily: "Fustat",
+              fontSize: "18px",
+              color: "#191432",
+            }}
+          >
+            <p style={{ fontWeight: 700, lineHeight: "1.1", marginBottom: "7px" }}>Output</p>
+            <div className="flex flex-col gap-[7px]">
+              <div className="flex gap-2">
+                <span style={{ fontWeight: 300, lineHeight: "1.1" }}>✓</span>
+                <span style={{ lineHeight: "1.1" }}>The growth decision the company needs to make</span>
+              </div>
+              <div className="flex gap-2">
+                <span style={{ fontWeight: 300, lineHeight: "1.1" }}>✓</span>
+                <span style={{ lineHeight: "1.1" }}>The audience and moment where the decision forms</span>
+              </div>
+              <div className="flex gap-2">
+                <span style={{ fontWeight: 300, lineHeight: "1.1" }}>✓</span>
+                <span style={{ lineHeight: "1.1" }}>The narrative worth building around</span>
+              </div>
+            </div>
+          </div>
         </div>
 
         {/* CTA Button */}
