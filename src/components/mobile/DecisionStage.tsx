@@ -325,7 +325,7 @@ export default function MobileDecisionStage({
     <>
 
 
-      <section ref={sectionRef} className="bg-[#FCFAF3] pt-10 pb-20 overflow-hidden">
+      <section ref={sectionRef} className="bg-[#FCFAF3] pt-[52px] pb-20 overflow-hidden">
         <div className="self-stretch inline-flex flex-col justify-start items-start gap-2.5 w-full">
 
           {/* System Takes Shape Section (Redesigned) */}

@@ -208,9 +208,7 @@ export default function MobileServices({ onStepChange }: MobileServicesProps) {
       data-services-container
       className="transition-colors duration-500 ease-in-out"
       style={{
-        background: activeColor,
-        backgroundAttachment: "fixed",
-        backgroundSize: "cover",
+        backgroundColor: activeColor,
       }}
     >
       {/* Sections 1-18 */}
@@ -838,7 +836,7 @@ export default function MobileServices({ onStepChange }: MobileServicesProps) {
             sectionRefs.current[19] = el;
           }}
           stageClassName="h-[40vh]"
-          stickyClassName="w-full flex items-center px-4 justify-center"
+          stickyClassName="w-full flex items-end px-4 justify-center pb-0"
         >
           <div className="w-full max-w-[340px]">
             <StaggeredCharacterText

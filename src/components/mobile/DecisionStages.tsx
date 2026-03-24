@@ -6,14 +6,14 @@ import { saveScrollAnchor } from "../../utils/scrollRestore";
 import { StaggerReveal } from "../shared/StaggerReveal";
 
 const STAGES = [
-  "Awareness depth",
-  "Problem clarity",
-  "Solution familiarity",
-  "Channel context",
-  "Evaluation mode",
-  "Risk sensitivity",
-  "Intent strength",
-  "Acquisition source",
+  "Where awareness is forming",
+  "What problem is actually top-of-mind",
+  "What alternatives buyers consider",
+  "Where evaluation happens",
+  "What proof buyers need",
+  "Where trust builds",
+  "What removes hesitation",
+  "What triggers the decision",
 ];
 
 export default function DecisionStages({ onStepChange }: { onStepChange?: (step: number) => void }) {
@@ -45,41 +45,16 @@ export default function DecisionStages({ onStepChange }: { onStepChange?: (step:
       {/* Title */}
       <div className="w-full px-5 mb-[8px] text-center">
         <StaggerReveal staggerDelay={80}>
-          <h2 className="tracking-tight leading-[1.05]">
-            <span
-              style={{
-                fontFamily: "Fustat",
-                fontWeight: 600,
-                fontSize: "38.91px",
-                color: "#1A1A2E",
-              }}
-            >
-              Direct your focus <br />
-              to where buyers
-            </span>
-            <br />
-            <span
-              style={{
-                fontFamily: "Lato",
-                fontWeight: 600,
-                fontStyle: "italic",
-                fontSize: "38.91px",
-                color: "#8B8CFB",
-              }}
-            >
-              actually
-            </span>
-            <span
-              style={{
-                fontFamily: "Fustat",
-                fontWeight: 600,
-                fontSize: "38.91px",
-                color: "#1A1A2E",
-              }}
-            >
-              {" "}
-              decide.
-            </span>
+          <h2
+            style={{
+              fontFamily: "Fustat",
+              fontWeight: 600,
+              fontSize: "38.91px",
+              color: "#1A1A2E",
+              lineHeight: "1",
+            }}
+          >
+            Focus depends on where growth is getting stuck
           </h2>
         </StaggerReveal>
       </div>
@@ -97,13 +72,16 @@ export default function DecisionStages({ onStepChange }: { onStepChange?: (step:
               key={i}
               className="shrink-0 flex items-center justify-center rounded-[12px] border-[#1A1A2E]"
               style={{
-                width: "190.94px",
+                width: "max-content",
                 height: "52px",
+                paddingLeft: "18px",
+                paddingRight: "18px",
                 backgroundColor: "rgba(235, 234, 248, 0.7)",
                 backdropFilter: "blur(14.7px)",
                 WebkitBackdropFilter: "blur(14.7px)",
                 borderWidth: "0.2px",
                 borderStyle: "solid",
+                whiteSpace: "nowrap",
               }}
             >
               <span
@@ -133,18 +111,18 @@ export default function DecisionStages({ onStepChange }: { onStepChange?: (step:
               lineHeight: "1.2",
             }}
           >
-            Every market has its own decision logic.
+            Once we see where decisions are forming,
           </p>
           <p
-            style={{
+          style={{
               fontFamily: "Fustat",
-              fontWeight: 600,
+              fontWeight: 300,
               fontSize: "18px",
               color: "#191432",
               lineHeight: "1.2",
             }}
           >
-            Where we start depends on where growth is getting stuck.
+            the work becomes straightforward.
           </p>
         </StaggerReveal>
       </div>

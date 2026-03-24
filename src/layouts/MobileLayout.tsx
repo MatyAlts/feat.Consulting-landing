@@ -4,7 +4,6 @@ import MobileNavbar from '../components/mobile/Navbar'
 import MobileHero from '../components/mobile/Hero'
 import MobileServices from '../components/mobile/Services'
 import MobileDecisionStage from '../components/mobile/DecisionStage'
-import TractionReveal from '../components/mobile/TractionReveal'
 import MobileApproach from '../components/mobile/Approach'
 import DecisionStages from '../components/mobile/DecisionStages'
 import MobileFAQs from '../components/mobile/FAQs'
@@ -237,7 +236,6 @@ export default function MobileLayout({
             <MobileServices onStepChange={handleStepChange} />
             <div ref={decisionRef} className="contents-wrapper">
               <MobileDecisionStage onStepChange={handleStepChange} />
-              <TractionReveal />
               <DecisionStages onStepChange={handleStepChange} />
             </div>
             <MobileApproach onStepChange={handleStepChange} />
