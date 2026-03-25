@@ -330,7 +330,6 @@ export default function MobileDecisionStage({
 
           {/* System Takes Shape Section (Redesigned) */}
           <div
-            id="in-practice"
             className="w-full flex flex-col items-center"
           >
             {/* Horizontal Logo Buttons Selection */}

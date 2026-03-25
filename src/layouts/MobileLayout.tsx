@@ -1,5 +1,4 @@
 import { useState, useEffect, useRef } from 'react'
-import { useInView } from 'framer-motion'
 import Lenis from 'lenis'
 import MobileNavbar from '../components/mobile/Navbar'
 import MobileHero from '../components/mobile/Hero'
@@ -190,11 +189,8 @@ export default function MobileLayout({
     setActiveStep(step);
   };
 
-  const decisionRef = useRef<HTMLDivElement>(null);
-  const isInDecisionSection = useInView(decisionRef, { margin: "-20% 0px -20% 0px" });
-
-  const isDecisionSnap = activeStep >= 30 && activeStep <= 31;
-  const shouldHideChrome = isDecisionSnap || isInDecisionSection;
+  const isDecisionCardsActive = activeStep === 31;
+  const shouldHideChrome = isDecisionCardsActive;
 
   // Reset activeStep when near top to avoid stuck states from lower sections
   useEffect(() => {
@@ -264,7 +260,7 @@ export default function MobileLayout({
           <div className="lenis-content-wrapper w-full flex flex-col relative h-max">
             <MobileHero animateEntry={enableHeroEntryAnimation} />
             <MobileServices onStepChange={handleStepChange} />
-            <div ref={decisionRef} className="contents-wrapper w-full flex flex-col relative">
+            <div className="contents-wrapper w-full flex flex-col relative">
               <MobileDecisionStage onStepChange={handleStepChange} />
               <DecisionStages onStepChange={handleStepChange} />
             </div>

@@ -826,6 +826,7 @@ export default function MobileServices({ onStepChange }: MobileServicesProps) {
         
         {/* Paso 19: Transición a Practice */}
         <StoryStage
+          id="in-practice"
           step={19}
           color="#fcfaf3"
           sectionRef={(el) => {

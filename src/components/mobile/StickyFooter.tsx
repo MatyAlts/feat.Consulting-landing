@@ -2,22 +2,20 @@ import { useState, useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { saveScrollAnchor } from "../../utils/scrollRestore";
-import { useScrollDirection } from "../../hooks/useScrollDirection";
 
 interface StickyFooterProps {
-  onContactClick?: () => void;
   activeStep?: number;
   forceHide?: boolean;
 }
 
-export default function StickyFooter({ onContactClick, activeStep = 0, forceHide = false }: StickyFooterProps) {
+export default function StickyFooter({ activeStep = 0, forceHide = false }: StickyFooterProps) {
   const [variant, setVariant] = useState<"default" | "cta">("default");
   const [isVisible, setIsVisible] = useState(false);
   const [progress, setProgress] = useState(0);
   const lastScrollTop = useRef(0);
   const ticking = useRef(false);
   
-  const isForcedHidden = activeStep === 30 || activeStep === 31 || forceHide;
+  const isForcedHidden = activeStep === 31 || forceHide;
 
   useEffect(() => {
     const handleVariantChange = (e: Event) => {

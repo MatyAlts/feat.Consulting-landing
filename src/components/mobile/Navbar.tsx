@@ -24,10 +24,6 @@ const MENU_ITEMS = [
     desc: "Different ways to engage, depending on where you are.",
   },
   {
-    title: "Impact",
-    desc: "What shifts inside your company when alignment is real.",
-  },
-  {
     title: "FAQs",
     desc: "Clarity around scope, timelines, and a little more about how we work.",
   },
@@ -60,7 +56,7 @@ export default function MobileNavbar({ forceHide = false }: MobileNavbarProps) {
   ) => {
     const main = document.querySelector("main") as HTMLElement | null;
     const el = document.querySelector(hash) as HTMLElement | null;
-    if (!el) return;
+    if (!el || !main) return;
 
     sessionStorage.setItem(ANCHOR_JUMP_BYPASS_KEY, "1");
     window.setTimeout(
@@ -68,12 +64,15 @@ export default function MobileNavbar({ forceHide = false }: MobileNavbarProps) {
       1400,
     );
 
-    if (main) {
-      main.scrollTo({ top: el.offsetTop, behavior });
-      return;
-    }
+    // Calculate header height to offset (usually 60-70px)
+    const headerHeight = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--mobile-nav-header-height')) || 60;
+    
+    // Calculate accurate offset relative to the scroll container (main)
+    const containerRect = main.getBoundingClientRect();
+    const elRect = el.getBoundingClientRect();
+    const scrollTarget = main.scrollTop + (elRect.top - containerRect.top) - headerHeight - 12; // Extra buffer
 
-    el.scrollIntoView({ behavior, block: "start" });
+    main.scrollTo({ top: scrollTarget, behavior });
   };
 
   const handleNavClick = (title: string) => {
@@ -81,10 +80,9 @@ export default function MobileNavbar({ forceHide = false }: MobileNavbarProps) {
 
     const navMap: Record<string, { path: string; hash: string }> = {
       Direction: { path: "/", hash: "#direction" },
-      System: { path: "/", hash: "#strategy" },
+      System: { path: "/", hash: "#intro-questions" },
       "In Practice": { path: "/", hash: "#in-practice" },
       "Entry Points": { path: "/", hash: "#stages" },
-      Impact: { path: "/", hash: "#impact" },
       FAQs: { path: "/", hash: "#faqs" },
     };
 

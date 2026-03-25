@@ -62,6 +62,7 @@ export default function MobileApproach({
 
       {/* ── New Section: Strategy meets Execution ── */}
       <motion.div
+        id="strategy"
         className="w-full mt-0"
         style={{
           background:
