@@ -9,36 +9,169 @@ const words = ["Positioning", "Funnel", "UX", "Narrative", "Growth"];
 
 const faqs = [
   {
-    question: "How long does this take?",
-    answer:
-      "Calibration is measured in weeks, not quarters.\n\nThe goal isn’t to “study” your business — it’s to isolate the leverage point quickly and align on a clear path forward. The majority of teams leave the first few weeks with directional clarity and a concrete plan of action. From there, we either implement or integrate with your team to move.\n\nOur work is designed to accelerate decisions, not delay them.",
+    question: "How is this different from hiring an agency or an internal team?",
+    answer: (
+      <>
+        Agencies are brought in to deliver specific outputs.
+        {"\n"}Internal hires are responsible for specific roles.
+        {"\n\n"}feat’s work focuses on clarifying the growth decision the company should organize around in order to scale.
+        {"\n\n"}Then product, messaging, acquisition, and sales are aligned to reinforce that direction.
+        {"\n\n"}So instead of disconnected improvements, the company builds a{" "}
+        <span className="font-semibold">coordinated system for growth</span>.
+      </>
+    ),
   },
   {
-    question: "Who is this for (and not for)?",
-    answer:
-      "This is built for post-traction teams.\n\nIf you have signal, revenue, or a working engine but growth feels scattered, stalled, or inefficient, this is for you.\n\nIt is not for pre-offer startups, and it’s not for teams looking for surface-level campaign support. This work assumes you’re serious about structural scale.",
+    question: "Is this strategy work or execution?",
+    answer: (
+      <>
+        Both.
+        {"\n\n"}Our work begins by clarifying the decision that should guide growth.
+        {"\n"}But that decision only matters if it is{" "}
+        <span className="font-semibold">tested and applied in the real experience</span>.
+        {"\n\n"}That’s why our process moves quickly from direction to market signal, and from signal to coordinated execution.
+        {"\n\n"}Strategy and execution move together, so what is learned{" "}
+        <span className="font-semibold">immediately informs what gets built next</span>.
+      </>
+    ),
   },
   {
-    question: "What if we already have a direction?",
-    answer:
-      "That’s ideal.\n\nIf you come in with a strong point of view, we pressure-test and refine it, not replace it. Calibration often sharpens what’s already working and removes the noise around it.\n\nIf conviction is there, we build from it. If it’s still forming, we shape it together.\n\nEither way, nothing resets unnecessarily.",
+    question: "How long does the process typically take?",
+    answer: (
+      <>
+        The initial calibration sprint takes two weeks.
+        {"\n\n"}From there, the timeline depends on <span className="font-semibold">what the company is trying to unlock</span> and how much of the next stage needs to be activated across product, messaging, acquisition, or sales.
+        {"\n\n"}What changes from one engagement to another is the scope of activation.
+        {"\n"}What stays constant is that the work moves faster once the direction is clear.
+      </>
+    ),
   },
   {
-    question: "How do you work with our internal team?",
-    answer:
-      "We integrate.\n\nSome clients rely on us for full cross-surface execution. Others have internal teams we collaborate with directly. In both cases, direction and decisions are shared, and execution is coordinated.",
+    question: "Do we need to pause current initiatives to work with you?",
+    answer: (
+      <>
+        On the contrary.
+        {"\n\n"}In most cases, the work builds directly on what the team is already doing: campaigns, product improvements, sales conversations, or new initiatives.
+        {"\n\n"}<span className="font-semibold">Those efforts already generate valuable signal.</span>
+        {"\n\n"}We help interpret that signal, clarify the decision behind growth, and structure the next steps around it.
+        {"\n\n"}Our process doesn’t interrupt momentum. It further directs it.
+      </>
+    ),
   },
   {
-    question: "What happens after calibration?",
-    answer:
-      "You have options.\n\nSome teams implement internally with our guidance.\nOthers continue with us to extend the system across surfaces (site, funnels, product, acquisition, sales enablement).\n\nCalibration defines the path. What comes next depends on where scale is constrained.",
+    question: "How do you decide where to focus the work?",
+    answer: (
+      <>
+        Growth can slow down in different places.
+        {"\n\n"}Sometimes the constraint sits in <span className="font-semibold">acquisition</span>: attracting the right audience.
+        {"\n"}Sometimes in <span className="font-semibold">consideration</span>: helping people understand the value.
+        {"\n"}Other times in <span className="font-semibold">conversion</span> or <span className="font-semibold">sales alignment</span>: helping them commit.
+        {"\n\n"}Our first step is identifying <span className="font-semibold">where the decision path is breaking.</span>
+        {"\n"}We do that by combining signal from campaigns, product usage, sales conversations, and analytics with targeted experiments.
+        {"\n\n"}From there, the work adapts to that stage: whether that means refining sources of interest, restructuring the experience, clarifying the narrative, or aligning sales teams.
+        {"\n\n"}The goal stays the same:
+        {"\n"}<span className="font-semibold">make the right decision visible.</span>
+      </>
+    ),
   },
   {
-    question:
-      "How is this different from hiring internally or a typical agency?",
-    answer:
-      "Agencies execute tasks.\nInternal hires specialize in lanes.\n\nWe work at the structural layer: aligning Product, Marketing, and Sales around the same growth logic.\n\nThe outcome isn’t more campaigns.\nIt’s a unified system where what works carries across surfaces and compounds over time.",
+    question: "What if we already have a strong hypothesis about what should work?",
+    answer: (
+      <>
+        That’s exactly where the work becomes most valuable.
+        {"\n\n"}Founders and teams often arrive with strong instincts about what should work.
+        {"\n"}Instead of debating opinions, we pressure-test the strongest ideas in the market.
+        {"\n\n"}Your hypotheses are part of the process. Our aim is to turn conviction into scalable proof.
+      </>
+    ),
   },
+  {
+    question: "What happens after the two-week sprint?",
+    answer: (
+      <>
+        The sprint clarifies where growth should focus and what direction deserves investment.
+        {"\n\n"}From there, teams usually either:
+        {"\n\n"}• continue working with us to activate the strategy across key touchpoints, or
+        {"\n"}• implement the direction internally with their own team.
+        {"\n\n"}Either way, the company moves forward with a <span className="font-semibold">validated decision and a clear plan for execution</span>.
+      </>
+    ),
+  },
+  {
+    question: "What happens after the engagement ends?",
+    answer: (
+      <>
+        The goal is to cultivate independence.
+        {"\n\n"}The thinking and systems we install become part of how your team operates, so they can continue applying them across new initiatives and opportunities.
+        {"\n\n"}Many teams keep building on the same logic long after the project ends.
+      </>
+    ),
+  },
+  {
+    question: "What types of companies benefit most from this approach?",
+    answer: (
+      <>
+        This work tends to be most useful for companies that are already seeing traction but feel that growth is becoming harder to scale.
+        {"\n\n"}Often the team is already running campaigns, improving the product, or investing in marketing and sales, but the signals are fragmented and the next direction isn’t obvious.
+        {"\n\n"}That’s where our process helps.
+        {"\n\n"}By clarifying the decision that should guide growth, the company can focus its efforts and extend what is already working.
+      </>
+    ),
+  },
+  {
+    question: "What layer of growth does feat specialize on?",
+    answer: (
+      <>
+        This work we do sits in a category sometimes described as <span className="font-semibold">Decision Design</span> or <span className="font-semibold">Decision Architecture</span>.
+        {"\n\n"}The focus is on <span className="font-semibold">the decision layer behind growth</span>: the direction that product, messaging, acquisition, conversion, and sales should reinforce.
+        {"\n\n"}Once that decision is clear, teams can move from <span className="font-semibold">signal → decision → coordinated execution.</span>
+        {"\n\n"}So instead of optimizing isolated initiatives, the company builds <span className="font-semibold">a system where what works carries across the experience.</span>
+      </>
+    ),
+  },
+  {
+    question: "Why does the approach adapt so well to different growth challenges?",
+    answer: (
+      <>
+        Because the work always starts with the same objective:
+        {"\n"}<span className="font-semibold">designing the decision path around how people actually decide.</span>
+        {"\n\n"}From there, the intervention adapts to the situation.
+        {"\n"}Sometimes the obstacle sits in <span className="font-semibold">awareness</span>.
+        {"\n"}Sometimes in <span className="font-semibold">how the value is understood</span>.
+        {"\n"}Sometimes in <span className="font-semibold">acquisition, conversion,</span> or <span className="font-semibold">sales</span>.
+        {"\n\n"}The approach combines <span className="font-semibold">UX thinking with market validation</span>, so strategy moves directly into execution, iteration, and expansion.
+        {"\n\n"}What stays constant is the goal:
+        {"\n"}<span className="font-semibold underline">make the right decision obvious, then extend what proves itself.</span>
+      </>
+    ),
+  },
+  {
+    question: "How does this approach unlock scale?",
+    answer: (
+      <>
+        As companies grow, they expand into new channels, campaigns, and initiatives.
+        {"\n\n"}Activity increases.
+        {"\n"}Data increases.
+        {"\n"}Teams increase.
+        {"\n\n"}But this is often when <span className="font-semibold">what originally worked starts to become blurry.</span>
+        {"\n"}Signal gets scattered across product, marketing, and sales.
+        {"\n\n"}feat’s role is to translate that signal into a clear decision the company can organize around:
+        {"\n"}<span className="font-semibold">signal → decision → coordinated execution.</span>
+        {"\n\n"}That’s when growth becomes scalable again.
+      </>
+    ),
+  },
+  {
+    question: "What do teams actually gain from this?",
+    answer: (
+      <>
+        Teams walk away with more than assets or campaigns.
+        {"\n\n"}They gain a clear growth logic that aligns product, marketing, and sales around the same direction.
+        {"\n\n"}That logic becomes something the team can continue applying across new initiatives, surfaces, and opportunities.
+        {"\n\n"}Execution becomes a consequence of clarity — not the other way around.
+      </>
+    ),
+  }
 ];
 
 export default function MobileFAQs() {

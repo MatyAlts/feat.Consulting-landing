@@ -1,5 +1,7 @@
 import { useEffect } from "react";
 import { motion } from "framer-motion";
+import { useNavigate } from "react-router-dom";
+import { saveScrollAnchor } from "../../utils/scrollRestore";
 
 function FadeInRow({ children, className = "" }: { children: React.ReactNode, className?: string }) {
   return (
@@ -36,6 +38,7 @@ const STAGES = [
 ];
 
 export default function DecisionStages({ onStepChange }: { onStepChange?: (step: number) => void }) {
+  const navigate = useNavigate();
   useEffect(() => {
     const scrollContainer = document.querySelector('.story-snap-main');
     if (!scrollContainer || !onStepChange) return;
@@ -514,6 +517,48 @@ export default function DecisionStages({ onStepChange }: { onStepChange?: (step:
             <img src={stage2Img} alt="Stage 3 Diagram" className="w-full h-auto object-contain rounded-[12px]" />
           </div></FadeInRow>
         </div>
+      </div>
+
+      {/* Scroll Reveal Summary Section */}
+      <div className="w-full px-5 py-[120px] flex flex-col items-center justify-center bg-[#FCFAF3]">
+        <motion.div
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, amount: 0.4 }}
+          variants={{
+            visible: { transition: { staggerChildren: 0.4 } },
+            hidden: {},
+          }}
+          className="flex flex-col text-center font-['Fustat'] font-semibold text-[24px] leading-[1.11] text-[#1A1A2E] max-w-[313px]"
+        >
+          <motion.p variants={{ visible: { opacity: 1 }, hidden: { opacity: 0.1 } }} transition={{ duration: 0.8 }}>
+            Direction identifies<br/>what decision matters.
+          </motion.p>
+          <motion.p variants={{ visible: { opacity: 1 }, hidden: { opacity: 0.1 } }} transition={{ duration: 0.8 }}>
+            Proof validates it in the<br/>market.
+          </motion.p>
+          <motion.p variants={{ visible: { opacity: 1 }, hidden: { opacity: 0.1 } }} transition={{ duration: 0.8 }}>
+            System scales it across<br/>the company.
+          </motion.p>
+
+          <motion.div
+            variants={{ visible: { opacity: 1 }, hidden: { opacity: 0.1 } }} transition={{ duration: 0.8 }}
+            className="flex flex-col items-center gap-[10px] mt-[16px]"
+          >
+            <button
+              onClick={() => {
+                saveScrollAnchor();
+                navigate("/contact");
+              }}
+              className="w-full max-w-[263px] py-[16.28px] rounded-full border-[0.5px] border-[#1A1A2E] bg-[#191432] text-white font-['Fustat'] font-medium text-[18.75px] transition-transform active:scale-95 shadow-sm"
+            >
+              Start with Clarity
+            </button>
+            <p className="font-['Lato'] font-light text-[14.56px] text-[#191627] text-center mt-6">
+              No obligation. Just alignment.
+            </p>
+          </motion.div>
+        </motion.div>
       </div>
 
       <style>{`
