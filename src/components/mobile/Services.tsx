@@ -823,6 +823,15 @@ export default function MobileServices({ onStepChange }: MobileServicesProps) {
             </motion.p>
           </motion.div>
         </StoryStage>
+
+        {/* Spacer stage to prolong dark background before transition to practice */}
+        <StoryStage
+          step={18.5}
+          color="#020A30"
+          stageClassName="h-[40vh]"
+        >
+          <div className="w-full h-full" />
+        </StoryStage>
         
         {/* Paso 19: Transición a Practice */}
         <StoryStage
