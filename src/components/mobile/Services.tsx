@@ -1,9 +1,5 @@
 import { useRef, useEffect, useState, type ReactNode } from "react";
-import { ScrollRevealItem } from "../shared/ScrollRevealItem";
 import { StaggeredCharacterText } from "../shared/StaggeredCharacterText";
-import icon1 from "../../assets/icons/icon_1.png";
-import icon2 from "../../assets/icons/icon_2.png";
-import icon3 from "../../assets/icons/icon_3.png";
 import logoBlanco from "../../assets/icons/LOGO BLANCO.svg";
 import { motion } from "framer-motion";
 
