@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from 'react'
 import { useInView } from 'framer-motion'
+import Lenis from 'lenis'
 import MobileNavbar from '../components/mobile/Navbar'
 import MobileHero from '../components/mobile/Hero'
 import MobileServices from '../components/mobile/Services'
@@ -192,7 +193,6 @@ export default function MobileLayout({
   const decisionRef = useRef<HTMLDivElement>(null);
   const isInDecisionSection = useInView(decisionRef, { margin: "-20% 0px -20% 0px" });
 
-  const isStorySnap = activeStep >= 1 && activeStep <= 4;
   const isDecisionSnap = activeStep >= 30 && activeStep <= 31;
   const shouldHideChrome = isDecisionSnap || isInDecisionSection;
 
@@ -211,6 +211,34 @@ export default function MobileLayout({
     return () => main.removeEventListener('scroll', handleScroll);
   }, [activeStep]);
 
+  // Lenis Smooth Scrolling Setup para mobile version
+  useEffect(() => {
+    const main = mainRef.current;
+    if (!main) return;
+
+    const contentWrapper = main.querySelector('.lenis-content-wrapper') as HTMLElement;
+    if (!contentWrapper) return;
+
+    const lenis = new Lenis({
+      wrapper: main,
+      content: contentWrapper,
+      duration: 1.5,
+      easing: (t) => 1 - Math.pow(1 - t, 4),
+      wheelMultiplier: 1,
+    });
+
+    function raf(time: number) {
+      lenis.raf(time);
+      requestAnimationFrame(raf);
+    }
+    const rafId = requestAnimationFrame(raf);
+
+    return () => {
+      cancelAnimationFrame(rafId);
+      lenis.destroy();
+    };
+  }, [showForm]);
+
   return (
     <div
       className={`flex flex-col overflow-hidden bg-[#FCFAF3] ${isDesktopContainer ? 'h-full w-full' : ''}`}
@@ -223,24 +251,26 @@ export default function MobileLayout({
         ref={mainRef}
         className={[
           'flex-1 overflow-y-auto hide-scrollbar',
-          isDesktopContainer ? 'emulator-container' : 'scroll-smooth',
+          isDesktopContainer ? 'emulator-container' : '',
           !showForm ? 'story-snap-main' : '',
           !showForm && isStorySnapEnabled ? 'story-snap-enabled' : '',
         ].filter(Boolean).join(' ')}
       >
         {showForm ? (
-          <ContactForm />
+          <div className="lenis-content-wrapper w-full flex flex-col">
+            <ContactForm />
+          </div>
         ) : (
-          <>
+          <div className="lenis-content-wrapper w-full flex flex-col relative h-max">
             <MobileHero animateEntry={enableHeroEntryAnimation} />
             <MobileServices onStepChange={handleStepChange} />
-            <div ref={decisionRef} className="contents-wrapper">
+            <div ref={decisionRef} className="contents-wrapper w-full flex flex-col relative">
               <MobileDecisionStage onStepChange={handleStepChange} />
               <DecisionStages onStepChange={handleStepChange} />
             </div>
             <MobileApproach onStepChange={handleStepChange} />
             <MobileFAQs />
-          </>
+          </div>
         )}
       </main>
       {!isDesktopContainer && !showForm && <StickyFooter activeStep={activeStep} forceHide={shouldHideChrome} />}

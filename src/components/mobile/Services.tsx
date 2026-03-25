@@ -747,7 +747,7 @@ export default function MobileServices({ onStepChange }: MobileServicesProps) {
           id="effect-18"
           step={18}
           color="#020A30"
-          stageClassName="h-[120vh]"
+          stageClassName="h-[90vh]"
           sectionRef={(el) => {
             sectionRefs.current[18] = el;
           }}
@@ -831,8 +831,8 @@ export default function MobileServices({ onStepChange }: MobileServicesProps) {
           sectionRef={(el) => {
             sectionRefs.current[19] = el;
           }}
-          stageClassName="h-[40vh]"
-          stickyClassName="w-full flex items-end px-4 justify-center pb-0"
+          stageClassName="min-h-[25vh] py-12"
+          stickyClassName="w-full flex items-center px-4 justify-center tracking-tight"
         >
           <div className="w-full max-w-[340px]">
             <StaggeredCharacterText
