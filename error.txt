@@ -1,0 +1,7 @@
+src/components/mobile/Services.tsx(2,1): error TS6133: 'ScrollRevealItem' is declared but its value is never read.
+src/components/mobile/Services.tsx(4,1): error TS6133: 'icon1' is declared but its value is never read.
+src/components/mobile/Services.tsx(5,1): error TS6133: 'icon2' is declared but its value is never read.
+src/components/mobile/Services.tsx(6,1): error TS6133: 'icon3' is declared but its value is never read.
+src/components/mobile/StickyFooter.tsx(5,1): error TS6133: 'useScrollDirection' is declared but its value is never read.
+src/components/mobile/StickyFooter.tsx(13,40): error TS6133: 'onContactClick' is declared but its value is never read.
+src/layouts/MobileLayout.tsx(195,9): error TS6133: 'isStorySnap' is declared but its value is never read.

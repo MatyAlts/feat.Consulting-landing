@@ -40,6 +40,7 @@ export default function MobileDecisionStage({
       name: "ISCP",
       logo: "/src/assets/logos/ISCP.png",
       bgColor: "#3B070B",
+      logoDimensions: { width: 53.61, height: 12.51 },
       slides: [
         {
           type: "title-context",
@@ -84,6 +85,7 @@ export default function MobileDecisionStage({
       name: "MobyBots",
       logo: "/src/assets/logos/MobyBots.png",
       bgColor: "#1E293B",
+      logoDimensions: { width: 56.43, height: 14.14 },
       slides: [
         {
           type: "title-context",
@@ -130,6 +132,7 @@ export default function MobileDecisionStage({
       name: "doinGlobal",
       logo: "/src/assets/logos/doinGlobal.png",
       bgColor: "#0F172A",
+      logoDimensions: { width: 53.47, height: 10.36 },
       slides: [
         {
           type: "title-context",
@@ -177,6 +180,7 @@ export default function MobileDecisionStage({
       name: "Obras de Mar",
       logo: "/src/assets/logos/ObrasDeMar.png",
       bgColor: "#134E4A",
+      logoDimensions: { width: 56.28, height: 6.45 },
       slides: [
         {
           type: "title-context",
@@ -280,73 +284,84 @@ export default function MobileDecisionStage({
   }, [activeProjectIdx]);
 
   const sectionRef = useRef<HTMLElement>(null);
+  const cardsContainerRef = useRef<HTMLDivElement>(null);
+
   useEffect(() => {
-    if (!onStepChange || !sectionRef.current) return;
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          onStepChange(30); // Step 30 is outside snap ranges
-        }
-      },
-      { threshold: 0.1 },
-    );
-    observer.observe(sectionRef.current);
-    return () => observer.disconnect();
-  }, [onStepChange]);
+    const scrollContainer = document.querySelector('.story-snap-main');
+    if (!scrollContainer) return;
+
+    // Header observer (Step 30) - Navbar/Footer VISIBLE
+    const headerObserver = new IntersectionObserver((entries) => {
+      const [entry] = entries;
+      if (entry.isIntersecting) {
+        onStepChange?.(30);
+      }
+    }, {
+      root: scrollContainer,
+      threshold: 0.1
+    });
+
+    // Cards observer (Step 31) - Navbar/Footer HIDDEN
+    const cardsObserver = new IntersectionObserver((entries) => {
+      const [entry] = entries;
+      if (entry.isIntersecting) {
+        onStepChange?.(31);
+      }
+    }, {
+      root: scrollContainer,
+      threshold: 0.05 // Trigger as soon as cards start appearing
+    });
+
+    if (sectionRef.current) headerObserver.observe(sectionRef.current);
+    if (cardsContainerRef.current) cardsObserver.observe(cardsContainerRef.current);
+
+    return () => {
+      headerObserver.disconnect();
+      cardsObserver.disconnect();
+    };
+  }, [onStepChange, sectionRef]);
 
   return (
     <>
 
 
-      <section ref={sectionRef} className="bg-[#FCFAF3] py-20 overflow-hidden">
+      <section ref={sectionRef} className="bg-[#FCFAF3] pt-[52px] pb-20 overflow-hidden">
         <div className="self-stretch inline-flex flex-col justify-start items-start gap-2.5 w-full">
 
           {/* System Takes Shape Section (Redesigned) */}
           <div
-            id="in-practice"
             className="w-full flex flex-col items-center"
           >
-            {/* Logo Grid at Top */}
-            <div className="w-full flex justify-center gap-11.25 mb-1.5">
-              {/* Column 1: ISCP & doinGlobal */}
-              <div className="flex flex-col items-center gap-[-8px]">
-                {[0, 2].map((idx) => (
+            {/* Horizontal Logo Buttons Selection */}
+            <div className="w-full overflow-hidden mb-6">
+              <div
+                className="flex flex-nowrap items-center min-w-full px-2 gap-0 mt-4 pb-2"
+                style={{
+                  justifyContent: "flex-start", // Better for scrolling if content > screen
+                }}
+              >
+                {projects.map((proj, idx) => (
                   <button
-                    key={projects[idx].id}
+                    key={proj.id}
                     onClick={() => handleProjectChange(idx)}
-                    style={{ width: "96.34px", height: "60.2px" }}
-                    className={`flex items-center justify-center transition-all duration-500 transform ${
+                    style={{ 
+                      width: "calc((100vw - 16px) / 4)", 
+                      height: "calc(((100vw - 16px) / 4) * (35 / 96))" 
+                    }}
+                    className={`bg-white rounded-[10px] flex items-center justify-center transition-all duration-300 border border-transparent ${
                       activeProjectIdx === idx
-                        ? "grayscale-0 scale-105 opacity-100"
-                        : "grayscale opacity-40 hover:opacity-70"
+                        ? "shadow-[0_2px_7.7px_0_rgba(0,0,0,0.1)] opacity-100"
+                        : "opacity-40"
                     }`}
                   >
                     <img
-                      src={resolveAsset(projects[idx].logo)}
-                      alt={projects[idx].name}
-                      className="max-h-full w-auto object-contain"
-                    />
-                  </button>
-                ))}
-              </div>
-
-              {/* Column 2: MobyBots & Obras de Mar */}
-              <div className="flex flex-col items-center gap-[-8px]">
-                {[1, 3].map((idx) => (
-                  <button
-                    key={projects[idx].id}
-                    onClick={() => handleProjectChange(idx)}
-                    style={{ width: "128.73px", height: "59.59px" }}
-                    className={`flex items-center justify-center transition-all duration-500 transform ${
-                      activeProjectIdx === idx
-                        ? "grayscale-0 scale-105 opacity-100"
-                        : "grayscale opacity-40 hover:opacity-70"
-                    }`}
-                  >
-                    <img
-                      src={resolveAsset(projects[idx].logo)}
-                      alt={projects[idx].name}
-                      className="max-h-full w-auto object-contain"
+                      src={resolveAsset(proj.logo)}
+                      alt={proj.name}
+                      style={{
+                        width: `calc((${proj.logoDimensions.width} / 96) * ((100vw - 16px) / 4))`,
+                        height: `calc((${proj.logoDimensions.height} / 96) * ((100vw - 16px) / 4))`,
+                      }}
+                      className="object-contain"
                     />
                   </button>
                 ))}
@@ -356,6 +371,7 @@ export default function MobileDecisionStage({
             <div className="flex flex-col items-center w-full px-5">
               {/* Main Card Container with Fixed Background Image */}
               <div
+                ref={cardsContainerRef}
                 className="w-full max-w-95 h-129.25 rounded-[40px] transition-colors duration-500 relative overflow-hidden shadow-2xl"
                 style={{ backgroundColor: `${activeProject.bgColor}F2` }} // F2 for 95% opacity
               >

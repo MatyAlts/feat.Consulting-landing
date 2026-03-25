@@ -183,6 +183,10 @@ export function useDragScroll(
 
     // ── Otros Helpers ──
 
+    let isSmoothWheel = false
+    let smoothWheelRaf: number | null = null
+    let smoothWheelVelocity = 0
+
     const stopMomentum = () => {
       if (momentumRaf !== null) {
         cancelAnimationFrame(momentumRaf)
@@ -190,6 +194,12 @@ export function useDragScroll(
       }
       velX = 0
       velY = 0
+
+      isSmoothWheel = false
+      if (smoothWheelRaf !== null) {
+        cancelAnimationFrame(smoothWheelRaf)
+        smoothWheelRaf = null
+      }
     }
 
     const computeVelocity = (): { vx: number; vy: number } => {
@@ -260,9 +270,49 @@ export function useDragScroll(
     let wheelAccumulator = 0
 
     const onWheel = (e: WheelEvent) => {
-      // Solo interceptar si hay snap activo
       const snapType = getComputedStyle(el).scrollSnapType
-      if (!snapType || snapType === 'none') return
+      const isSnapActive = !!(snapType && snapType !== 'none')
+
+      if (!isSnapActive) {
+        if (e.deltaY === 0) return
+        e.preventDefault()
+
+        if (!isSmoothWheel) {
+          isSmoothWheel = true
+        }
+
+        // Amortiguación tipo inercia física (momentum): Sumar velocidad con cada tick
+        // 0.11 = Avance inicial ajustado (apenas más rápido)
+        smoothWheelVelocity += e.deltaY * 0.11
+
+        if (smoothWheelRaf === null) {
+          const tick = () => {
+            if (!isSmoothWheel) {
+              smoothWheelRaf = null
+              return
+            }
+
+            el.scrollTop += smoothWheelVelocity
+            // 0.94 = Máxima suavidad, decae muy lento como flotando en el espacio
+            smoothWheelVelocity *= 0.94
+
+            const maxScroll = el.scrollHeight - el.clientHeight
+            if (el.scrollTop <= 0 || el.scrollTop >= maxScroll) {
+              smoothWheelVelocity = 0
+            }
+
+            if (Math.abs(smoothWheelVelocity) < 0.2) {
+              smoothWheelVelocity = 0
+              isSmoothWheel = false
+              smoothWheelRaf = null
+            } else {
+              smoothWheelRaf = requestAnimationFrame(tick)
+            }
+          }
+          smoothWheelRaf = requestAnimationFrame(tick)
+        }
+        return
+      }
 
       e.preventDefault()
 

@@ -41,27 +41,18 @@ export default function MobileHero({ animateEntry = true }: MobileHeroProps) {
 
         {/* Body */}
         <div
-          className="flex flex-col gap-6"
+          className="flex flex-col"
           style={{ marginTop: "clamp(64px, 13dvh, 108px)" }}
         >
           <div className="overflow-hidden will-change-transform">
             <p
-              className={`text-hero-body text-brand-hero-body leading-[1.3] ${revealClass} ${animateEntry ? "[animation-delay:1900ms]" : ""}`}
+              className={`text-hero-body text-brand-hero-body leading-[1.2] ${revealClass} ${animateEntry ? "[animation-delay:1900ms]" : ""}`}
             >
-              <span className="font-light">feat. designs </span>
-              <span className="font-normal">custom journeys </span>
-              <br />
-              <span className="font-light">around </span>
+              <span className="font-light">feat. turns </span>
               <span className="font-normal">real buyer behavior</span>
-              <div className="overflow-hidden will-change-transform">
-                <p
-                  className={`text-hero-body text-brand-hero-body leading-[1.3] ${revealClass} ${animateEntry ? "[animation-delay:2600ms]" : ""}`}
-                >
-                  <span className="font-light">and turns them into </span>
-                  <br />
-                  <span className="font-normal">repeatable growth.</span>
-                </p>
-              </div>
+              <br />
+              <span className="font-light">into </span>
+              <span className="font-normal">repeatable growth.</span>
             </p>
           </div>
         </div>

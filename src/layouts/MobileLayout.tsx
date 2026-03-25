@@ -1,9 +1,9 @@
 import { useState, useEffect, useRef } from 'react'
+import Lenis from 'lenis'
 import MobileNavbar from '../components/mobile/Navbar'
 import MobileHero from '../components/mobile/Hero'
 import MobileServices from '../components/mobile/Services'
 import MobileDecisionStage from '../components/mobile/DecisionStage'
-import TractionReveal from '../components/mobile/TractionReveal'
 import MobileApproach from '../components/mobile/Approach'
 import DecisionStages from '../components/mobile/DecisionStages'
 import MobileFAQs from '../components/mobile/FAQs'
@@ -123,18 +123,19 @@ export default function MobileLayout({
       }
 
       const firstStorySection = document.querySelector('#direction') as HTMLElement | null
-      const ctaBoundarySection = document.querySelector('#feat-comes-in') as HTMLElement | null
+      const snapEndTrigger = document.querySelector('#snap-end-trigger') as HTMLElement | null
       const normalScrollStartSection = document.querySelector('#strategy') as HTMLElement | null
-      if (!firstStorySection || !ctaBoundarySection || !normalScrollStartSection) return
+      if (!firstStorySection || !snapEndTrigger || !normalScrollStartSection) return
 
       const snapStartTop = Math.max(0, firstStorySection.offsetTop)
-      const ctaBoundaryTop = Math.max(0, ctaBoundarySection.offsetTop)
+      const snapEndTop = Math.max(0, snapEndTrigger.offsetTop)
       const normalScrollStartTop = Math.max(0, normalScrollStartSection.offsetTop)
 
       const enterSnapThreshold = Math.max(0, snapStartTop - 12)
       const exitToHeroThreshold = Math.max(0, snapStartTop - 84)
       const disableSnapAtNormalThreshold = Math.max(0, normalScrollStartTop - 12)
       const reenableSnapFromNormalThreshold = Math.max(0, normalScrollStartTop - 96)
+      
       const currentTop = main.scrollTop
       const scrollDelta = currentTop - previousTop
       previousTop = currentTop
@@ -143,13 +144,13 @@ export default function MobileLayout({
         ctaBoundaryReleasedRef.current = false
       }
 
-      // Re-entry reset: when user comes back up to CTA boundary, arm snap zone again.
-      if (ctaBoundaryReleasedRef.current && scrollDelta < 0 && currentTop <= ctaBoundaryTop + 12) {
+      // Re-entry reset: when user comes back up to snap end, arm snap zone again.
+      if (ctaBoundaryReleasedRef.current && scrollDelta < 0 && currentTop <= snapEndTop + 12) {
         ctaBoundaryReleasedRef.current = false
       }
 
-      // Downward release: once user pushes down from CTA, keep snap disabled until reset above.
-      if (!ctaBoundaryReleasedRef.current && currentTop >= ctaBoundaryTop - 10 && scrollDelta > 0) {
+      // Downward release: once user pushes down from snap end, keep snap disabled.
+      if (!ctaBoundaryReleasedRef.current && currentTop >= snapEndTop - 10 && scrollDelta > 0) {
         ctaBoundaryReleasedRef.current = true
       }
 
@@ -162,7 +163,7 @@ export default function MobileLayout({
         if (prev) {
           if (currentTop <= exitToHeroThreshold) return false
           // Final snap stage can settle, but must release when user keeps pushing down.
-          if (currentTop >= ctaBoundaryTop - 10 && scrollDelta > 0) return false
+          if (currentTop >= snapEndTop - 10 && scrollDelta > 0) return false
           if (currentTop >= disableSnapAtNormalThreshold) return false
           return true
         }
@@ -184,36 +185,91 @@ export default function MobileLayout({
     }
   }, [showForm])
 
+  const handleStepChange = (step: number) => {
+    setActiveStep(step);
+  };
+
+  const isDecisionCardsActive = activeStep === 31;
+  const shouldHideChrome = isDecisionCardsActive;
+
+  // Reset activeStep when near top to avoid stuck states from lower sections
+  useEffect(() => {
+    const main = mainRef.current;
+    if (!main) return;
+
+    const handleScroll = () => {
+      if (main.scrollTop < 100 && activeStep > 0) {
+        setActiveStep(-1);
+      }
+    };
+
+    main.addEventListener('scroll', handleScroll, { passive: true });
+    return () => main.removeEventListener('scroll', handleScroll);
+  }, [activeStep]);
+
+  // Lenis Smooth Scrolling Setup para mobile version
+  useEffect(() => {
+    const main = mainRef.current;
+    if (!main) return;
+
+    const contentWrapper = main.querySelector('.lenis-content-wrapper') as HTMLElement;
+    if (!contentWrapper) return;
+
+    const lenis = new Lenis({
+      wrapper: main,
+      content: contentWrapper,
+      duration: 1.5,
+      easing: (t) => 1 - Math.pow(1 - t, 4),
+      wheelMultiplier: 1,
+    });
+
+    function raf(time: number) {
+      lenis.raf(time);
+      requestAnimationFrame(raf);
+    }
+    const rafId = requestAnimationFrame(raf);
+
+    return () => {
+      cancelAnimationFrame(rafId);
+      lenis.destroy();
+    };
+  }, [showForm]);
+
   return (
     <div
       className={`flex flex-col overflow-hidden bg-[#FCFAF3] ${isDesktopContainer ? 'h-full w-full' : ''}`}
       style={{ height: isDesktopContainer ? '100%' : '100dvh' }}
     >
-      {!isDesktopContainer && !showForm && <MobileNavbar forceHide={activeStep >= 1 && activeStep <= 20} />}
+      {!isDesktopContainer && !showForm && (
+        <MobileNavbar forceHide={shouldHideChrome} />
+      )}
       <main 
         ref={mainRef}
         className={[
-        'flex-1 overflow-y-auto hide-scrollbar',
-        isDesktopContainer ? 'emulator-container' : 'scroll-smooth',
-        !showForm ? 'story-snap-main' : '',
-        !showForm && isStorySnapEnabled ? 'story-snap-enabled' : '',
-      ].filter(Boolean).join(' ')}
+          'flex-1 overflow-y-auto hide-scrollbar',
+          isDesktopContainer ? 'emulator-container' : '',
+          !showForm ? 'story-snap-main' : '',
+          !showForm && isStorySnapEnabled ? 'story-snap-enabled' : '',
+        ].filter(Boolean).join(' ')}
       >
         {showForm ? (
-          <ContactForm />
+          <div className="lenis-content-wrapper w-full flex flex-col">
+            <ContactForm />
+          </div>
         ) : (
-          <>
+          <div className="lenis-content-wrapper w-full flex flex-col relative h-max">
             <MobileHero animateEntry={enableHeroEntryAnimation} />
-            <MobileServices onStepChange={setActiveStep} />
-            <MobileDecisionStage onStepChange={setActiveStep} />
-            <TractionReveal />
-            <DecisionStages />
-            <MobileApproach onStepChange={setActiveStep} />
+            <MobileServices onStepChange={handleStepChange} />
+            <div className="contents-wrapper w-full flex flex-col relative">
+              <MobileDecisionStage onStepChange={handleStepChange} />
+              <DecisionStages onStepChange={handleStepChange} />
+            </div>
+            <MobileApproach onStepChange={handleStepChange} />
             <MobileFAQs />
-          </>
+          </div>
         )}
       </main>
-      {!isDesktopContainer && !showForm && <StickyFooter />}
+      {!isDesktopContainer && !showForm && <StickyFooter activeStep={activeStep} forceHide={shouldHideChrome} />}
     </div>
   )
 }

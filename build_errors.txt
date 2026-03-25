@@ -1,0 +1,6 @@
+
+> feat-consulting-landing@0.0.0 build
+> tsc -b && vite build
+
+src/components/mobile/StickyFooter.tsx(5,1): error TS6133: 'useScrollDirection' is declared but its value is never read.
+src/components/mobile/StickyFooter.tsx(13,40): error TS6133: 'onContactClick' is declared but its value is never read.

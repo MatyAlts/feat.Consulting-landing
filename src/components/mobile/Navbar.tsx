@@ -24,10 +24,6 @@ const MENU_ITEMS = [
     desc: "Different ways to engage, depending on where you are.",
   },
   {
-    title: "Impact",
-    desc: "What shifts inside your company when alignment is real.",
-  },
-  {
     title: "FAQs",
     desc: "Clarity around scope, timelines, and a little more about how we work.",
   },
@@ -44,8 +40,7 @@ export default function MobileNavbar({ forceHide = false }: MobileNavbarProps) {
 
   const isHidden =
     !isMenuOpen &&
-    scrollDir === "down" &&
-    (forceHide || (!isAtTop && !isInHero));
+    (forceHide || (scrollDir === "down" && !isAtTop && !isInHero));
 
   // Bloquea el scroll del body cuando el menu esta abierto
   useEffect(() => {
@@ -61,7 +56,7 @@ export default function MobileNavbar({ forceHide = false }: MobileNavbarProps) {
   ) => {
     const main = document.querySelector("main") as HTMLElement | null;
     const el = document.querySelector(hash) as HTMLElement | null;
-    if (!el) return;
+    if (!el || !main) return;
 
     sessionStorage.setItem(ANCHOR_JUMP_BYPASS_KEY, "1");
     window.setTimeout(
@@ -69,12 +64,15 @@ export default function MobileNavbar({ forceHide = false }: MobileNavbarProps) {
       1400,
     );
 
-    if (main) {
-      main.scrollTo({ top: el.offsetTop, behavior });
-      return;
-    }
+    // Calculate header height to offset (usually 60-70px)
+    const headerHeight = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--mobile-nav-header-height')) || 60;
+    
+    // Calculate accurate offset relative to the scroll container (main)
+    const containerRect = main.getBoundingClientRect();
+    const elRect = el.getBoundingClientRect();
+    const scrollTarget = main.scrollTop + (elRect.top - containerRect.top) - headerHeight - 12; // Extra buffer
 
-    el.scrollIntoView({ behavior, block: "start" });
+    main.scrollTo({ top: scrollTarget, behavior });
   };
 
   const handleNavClick = (title: string) => {
@@ -82,10 +80,9 @@ export default function MobileNavbar({ forceHide = false }: MobileNavbarProps) {
 
     const navMap: Record<string, { path: string; hash: string }> = {
       Direction: { path: "/", hash: "#direction" },
-      System: { path: "/", hash: "#strategy" },
+      System: { path: "/", hash: "#intro-questions" },
       "In Practice": { path: "/", hash: "#in-practice" },
       "Entry Points": { path: "/", hash: "#stages" },
-      Impact: { path: "/", hash: "#impact" },
       FAQs: { path: "/", hash: "#faqs" },
     };
 
@@ -137,10 +134,14 @@ export default function MobileNavbar({ forceHide = false }: MobileNavbarProps) {
           "fixed top-0 left-0 right-0 z-40",
           "flex items-center justify-between",
           "px-5 bg-[#FCFAF3] border-b border-brand-dark/10",
-          "transition-transform duration-300 ease-in-out",
-          isHidden ? "-translate-y-full" : "translate-y-0",
+          forceHide ? "transition-none" : "transition-all duration-300 ease-in-out",
+          isHidden ? "-translate-y-full opacity-0" : "translate-y-0 opacity-100",
         ].join(" ")}
-        style={{ height: "var(--mobile-nav-header-height)" }}
+        style={{
+          height: "var(--mobile-nav-header-height)",
+          pointerEvents: isHidden ? "none" : "auto",
+          transitionDuration: forceHide ? "0ms" : undefined,
+        }}
       >
         <button
           onClick={() => {

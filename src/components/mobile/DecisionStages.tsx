@@ -1,65 +1,82 @@
-import { useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import { ChevronDown } from "lucide-react";
-import { Link } from "react-router-dom";
+import { useEffect } from "react";
+import { motion } from "framer-motion";
+import { useNavigate } from "react-router-dom";
 import { saveScrollAnchor } from "../../utils/scrollRestore";
+
+function FadeInRow({ children, className = "" }: { children: React.ReactNode, className?: string }) {
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 50, filter: "blur(5px)" }}
+      whileInView={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+      viewport={{ once: true, amount: 0.2 }}
+      transition={{
+        y: { duration: 0.6, ease: "easeOut" },
+        opacity: { duration: 0.9, ease: "easeOut" },
+        filter: { duration: 0.4, ease: "easeOut" }
+      }}
+      className={className}
+    >
+      {children}
+    </motion.div>
+  );
+}
+
+
 import { StaggerReveal } from "../shared/StaggerReveal";
+import stage1Img from "../../assets/stages/Stage 1.png";
+import stage2Img from "../../assets/stages/Stage 2.png";
 
 const STAGES = [
-  "Awareness depth",
-  "Problem clarity",
-  "Solution familiarity",
-  "Channel context",
-  "Evaluation mode",
-  "Risk sensitivity",
-  "Intent strength",
-  "Acquisition source",
+  "Where awareness is forming",
+  "What problem is actually top-of-mind",
+  "What alternatives buyers consider",
+  "Where evaluation happens",
+  "What proof buyers need",
+  "Where trust builds",
+  "What removes hesitation",
+  "What triggers the decision",
 ];
 
-export default function DecisionStages() {
+export default function DecisionStages({ onStepChange }: { onStepChange?: (step: number) => void }) {
+  const navigate = useNavigate();
+  useEffect(() => {
+    const scrollContainer = document.querySelector('.story-snap-main');
+    if (!scrollContainer || !onStepChange) return;
+
+    const observer = new IntersectionObserver((entries) => {
+      const [entry] = entries;
+      if (entry.isIntersecting) {
+        onStepChange(30);
+      }
+    }, {
+      root: scrollContainer,
+      threshold: 0.1
+    });
+
+    const currentRef = document.getElementById('stages');
+    if (currentRef) observer.observe(currentRef);
+
+    return () => observer.disconnect();
+  }, [onStepChange]);
+
   return (
-    <section 
-      id="stages" 
+    <section
+      id="stages"
       className="w-full flex flex-col items-center pt-32 pb-0 overflow-hidden relative z-1 bg-[#FCFAF3]"
     >
       {/* Title */}
       <div className="w-full px-5 mb-[8px] text-center">
         <StaggerReveal staggerDelay={80}>
-          <h2 className="tracking-tight leading-[1.05]">
-            <span
-              style={{
-                fontFamily: "Fustat",
-                fontWeight: 600,
-                fontSize: "38.91px",
-                color: "#1A1A2E",
-              }}
-            >
-              Direct your focus <br />
-              to where buyers
-            </span>
-            <br />
-            <span
-              style={{
-                fontFamily: "Lato",
-                fontWeight: 600,
-                fontStyle: "italic",
-                fontSize: "38.91px",
-                color: "#8B8CFB",
-              }}
-            >
-              actually
-            </span>
-            <span
-              style={{
-                fontFamily: "Fustat",
-                fontWeight: 600,
-                fontSize: "38.91px",
-                color: "#1A1A2E",
-              }}
-            >
-              {" "}
-              decide.
-            </span>
+          <h2
+            style={{
+              fontFamily: "Fustat",
+              fontWeight: 600,
+              fontSize: "38.91px",
+              color: "#1A1A2E",
+              lineHeight: "1",
+            }}
+          >
+            Focus depends on where growth is getting stuck
           </h2>
         </StaggerReveal>
       </div>
@@ -77,13 +94,16 @@ export default function DecisionStages() {
               key={i}
               className="shrink-0 flex items-center justify-center rounded-[12px] border-[#1A1A2E]"
               style={{
-                width: "190.94px",
+                width: "max-content",
                 height: "52px",
+                paddingLeft: "18px",
+                paddingRight: "18px",
                 backgroundColor: "rgba(235, 234, 248, 0.7)",
                 backdropFilter: "blur(14.7px)",
                 WebkitBackdropFilter: "blur(14.7px)",
                 borderWidth: "0.2px",
                 borderStyle: "solid",
+                whiteSpace: "nowrap",
               }}
             >
               <span
@@ -113,355 +133,432 @@ export default function DecisionStages() {
               lineHeight: "1.2",
             }}
           >
-            Every market has its own decision logic.
+            Once we see where decisions are forming,
           </p>
           <p
             style={{
               fontFamily: "Fustat",
-              fontWeight: 600,
+              fontWeight: 300,
               fontSize: "18px",
               color: "#191432",
               lineHeight: "1.2",
             }}
           >
-            Where we start depends on where growth is getting stuck.
+            the work becomes straightforward.
           </p>
         </StaggerReveal>
       </div>
 
       {/* Stage 1 Container */}
-      <div className="w-full px-[17.5px] pb-0 flex flex-col pt-24 bg-[#FCFAF3]">
+      <div className="w-full px-[17.5px] pb-16 flex flex-col pt-24 bg-[#FCFAF3]">
         {/* Stage Header */}
-        <div className="flex flex-col gap-2 mb-0.75">
-          <span
+        <div className="flex flex-col gap-2 mb-[19px]">
+          <FadeInRow><span
             style={{
               fontFamily: "Lato",
               fontStyle: "italic",
               fontWeight: 400,
-              fontSize: "17.07px",
-              color: "#7A71A5",
+              fontSize: "22.3px",
+              color: "#8B8CFB",
+              lineHeight: "1.1",
             }}
           >
-            Stage 1 — Calibration Sprint
-          </span>
-          <h3
+            Step 1 — The Direction
+          </span></FadeInRow>
+          <FadeInRow><h3
             style={{
               fontFamily: "Fustat",
               fontWeight: 600,
-              fontSize: "25px",
-              color: "#000000",
-              lineHeight: "1.15",
+              fontSize: "31px",
+              color: "#1A1A2E",
+              lineHeight: "1.2",
             }}
           >
-            When growth is moving, but <br />
-            it still feels scattered.
-          </h3>
+            First we identify the decision that will unlock growth.
+          </h3></FadeInRow>
         </div>
 
-        {/* Narrative */}
-        <div className="flex flex-col gap-0 mb-4.5">
-          <p
+        {/* Narrative & Lists Wrapper */}
+        <div className="flex flex-col gap-[20px]">
+          <FadeInRow><p
             style={{
               fontFamily: "Lato",
-              fontWeight: 300,
-              fontSize: "17.07px",
-              color: "#171425",
-              lineHeight: "1.21",
+              fontStyle: "italic",
+              fontWeight: 400,
+              fontSize: "18px",
+              color: "#06203C",
+              lineHeight: "1.1",
             }}
           >
-            You’ve tested angles, launched campaigns, <br />
-            optimized metrics.
-          </p>
-          <p
+            Where should growth actually focus?
+          </p></FadeInRow>
+
+          <FadeInRow><div
             style={{
-              fontFamily: "Lato",
-              fontWeight: 500,
-              fontSize: "17.07px",
-              color: "#171425",
-              lineHeight: "1.21",
+              fontFamily: "Fustat",
+              fontSize: "18px",
+              color: "#191432",
+              lineHeight: "1.1",
             }}
           >
-            But the repeatable logic hasn’t fully <br />
-            surfaced yet.
-          </p>
-        </div>
+            <p style={{ fontWeight: 300 }} className="mb-0">Teams often come asking for a website, campaigns, or better UX.</p>
+            <p style={{ fontWeight: 700 }}>But those are symptoms.</p>
+          </div></FadeInRow>
 
-        {/* Lists Wrapper */}
-        <div className="flex flex-col gap-4.5">
-          <CollapsibleList
-            title="What we clarify:"
-            type="bullet"
-            items={[
-              "The cohort worth prioritizing",
-              "The entry point that matches their intent",
-              "The narrative that makes your offer click",
-              "The journey that reveals signal and removes friction.",
-            ]}
-          />
+          <div className="bg-[#171425] flex flex-col justify-center px-[23px] py-[15px] rounded-[10px]">
+            <div className="flex flex-col gap-[5px] leading-[1.1]">
+              <p
+                style={{
+                  fontFamily: "Fustat",
+                  fontWeight: 300,
+                  fontSize: "15.5px",
+                  color: "#FFFFFF",
+                }}
+              >
+                The real question is:
+              </p>
+              <FadeInRow><p
+                style={{
+                  fontFamily: "Lato",
+                  fontStyle: "italic",
+                  fontWeight: 600,
+                  fontSize: "18px",
+                  color: "#D2D2FF",
+                }}
+              >
+                What decision should the business help its audience make?
+              </p></FadeInRow>
+            </div>
+          </div>
 
-          <CollapsibleList
-            title="What this enables:"
-            type="check"
-            items={[
-              "Market-backed clarity on what's actually moving the needle",
-              "A validated direction the team can confidently scale",
-              "Conversion journeys engineered around real buyer behavior",
-              "A unified decision logic to leverage across teams",
-            ]}
-            initialCount={1}
-          />
-        </div>
-
-        {/* CTA Button */}
-        <div className="flex flex-col items-center gap-4 mt-8">
-          <Link
-            to="/contact"
-            className="w-full flex items-center justify-center bg-[#1A1A2E] px-4 rounded-full h-[59.56px]"
-            onClick={() => {
-              saveScrollAnchor();
-              localStorage.setItem("selectedTier", "Stage 1");
-            }}
-          >
-            <span
-              style={{
-                fontFamily: "Fustat",
-                fontWeight: 500,
-                fontSize: "18.75px",
-                color: "#FFFFFF",
-              }}
-            >
-              Calibrate your Growth →
-            </span>
-          </Link>
-          <span
+          <div
             style={{
-              fontFamily: "Lato",
-              fontWeight: 300,
-              fontSize: "14.56px",
-              color: "#0A0B26",
-              opacity: 0.9,
-              paddingBottom: "77.44px",
+              fontFamily: "Fustat",
+              fontSize: "18px",
+              color: "#191432",
             }}
           >
-            Build once. Scale deliberately.
-          </span>
+            <FadeInRow>
+              <p style={{ fontWeight: 700, lineHeight: "1.1", marginBottom: "7px" }}>Output</p>
+            </FadeInRow>
+            <div className="flex flex-col gap-[7px]">
+              <FadeInRow><div className="flex gap-2">
+                <span style={{ fontWeight: 300, lineHeight: "1.1" }}>✓</span>
+                <span style={{ lineHeight: "1.1" }}>The growth decision the company needs to make</span>
+              </div></FadeInRow>
+              <FadeInRow><div className="flex gap-2">
+                <span style={{ fontWeight: 300, lineHeight: "1.1" }}>✓</span>
+                <span style={{ lineHeight: "1.1" }}>The audience and moment where the decision forms</span>
+              </div></FadeInRow>
+              <FadeInRow><div className="flex gap-2">
+                <span style={{ fontWeight: 300, lineHeight: "1.1" }}>✓</span>
+                <span style={{ lineHeight: "1.1" }}>The narrative worth building around</span>
+              </div></FadeInRow>
+            </div>
+          </div>
+
+          {/* Image Component */}
+          <FadeInRow><div className="w-full mt-4 flex justify-center items-center">
+            <img src={stage1Img} alt="Stage 1 Diagram" className="w-full h-auto object-contain rounded-[12px]" />
+          </div></FadeInRow>
         </div>
       </div>
 
       {/* Stage 2 Container */}
-      <div className="w-full px-[17.5px] pt-[86.56px] pb-0 flex flex-col bg-[#1A1A2E]">
+      <div className="w-full px-[17.5px] pb-24 flex flex-col pt-24 bg-[#FCFAF3]">
         {/* Stage Header */}
-        <div className="flex flex-col gap-2 mb-0.75">
-          <span
+        <div className="flex flex-col gap-2 mb-[19px]">
+          <FadeInRow><span
             style={{
               fontFamily: "Lato",
               fontStyle: "italic",
               fontWeight: 400,
-              fontSize: "17.07px",
-              color: "#D2D2FF",
+              fontSize: "22.3px",
+              color: "#8B8CFB",
+              lineHeight: "1.1",
             }}
           >
-            Stage 2 — Expansion Architecture
-          </span>
-          <h3
+            Step 2 — The Proof
+          </span></FadeInRow>
+          <FadeInRow><h3
             style={{
               fontFamily: "Fustat",
               fontWeight: 600,
-              fontSize: "25px",
-              color: "#FFFFFF",
-              lineHeight: "1.15",
+              fontSize: "31px",
+              color: "#1A1A2E",
+              lineHeight: "1.2",
             }}
           >
-            When the direction is clear, <br />
-            but scale demands deeper <br />
-            execution.
-          </h3>
+            Then we validate that direction in the real market.
+          </h3></FadeInRow>
         </div>
 
-        {/* Narrative */}
-        <div className="flex flex-col gap-0 mb-4.5">
-          <p
-            style={{
-              fontFamily: "Lato",
-              fontWeight: 300,
-              fontSize: "17.07px",
-              color: "#FFFFFF",
-              lineHeight: "1.21",
-            }}
-          >
-            The direction is proven.
-          </p>
-          <p
-            style={{
-              fontFamily: "Lato",
-              fontWeight: 500,
-              fontSize: "17.07px",
-              color: "#FFFFFF",
-              lineHeight: "1.21",
-            }}
-          >
-            Now it needs to be activated for scale <br />
-            across your highest-leverage surfaces.
-          </p>
-        </div>
-
-        {/* Lists Wrapper */}
-        <div className="flex flex-col gap-4.5">
-          <CollapsibleList
-            title="We operationalize it through:"
-            type="bullet"
-            theme="dark"
-            items={[
-              "Upgrading your key assets for scale",
-              "Optimizing acquisition around proven signals",
-              "Reinforcing conversion systems for expansion and efficiency",
-              "Embedding narrative cohesion across Product, Marketing, and Sales",
-            ]}
-          />
-
-          <CollapsibleList
-            title="Depending on where scale is bottlenecked, this can extend to:"
-            type="dash"
-            theme="dark"
-            items={[
-              "Website restructuring",
-              "Landing ecosystems",
-              "Campaign systems",
-              "Sales enablement",
-              "Product narrative alignment",
-            ]}
-          />
-
-          <CollapsibleList
-            title="What this enables:"
-            type="check"
-            theme="dark"
-            items={[
-              "Structural alignment across critical channels and surfaces",
-              "Systems designed to convert and scale",
-              "Cohesive execution across disciplines",
-              "Structural capacity to expand what works",
-              "Growth that compounds instead of resets",
-            ]}
-            initialCount={1}
-          />
-        </div>
-
-        {/* CTA Button */}
-        <div className="flex flex-col items-center gap-4 mt-8">
-          <Link
-            to="/contact"
-            className="w-full flex items-center justify-center bg-[#8B8CFB] px-4 rounded-full h-[59.56px]"
-            onClick={() => {
-              saveScrollAnchor();
-              localStorage.setItem("selectedTier", "Stage 2");
-            }}
-          >
-            <span
+        {/* Narrative & Lists Wrapper */}
+        <div className="flex flex-col gap-[20px]">
+          <FadeInRow>
+            <p
               style={{
-                fontFamily: "Fustat",
-                fontWeight: 600,
-                fontSize: "18.75px",
-                color: "#171425",
+                fontFamily: "Lato",
+                fontStyle: "italic",
+                fontWeight: 400,
+                fontSize: "18px",
+                color: "#06203C",
+                lineHeight: "1.1",
               }}
             >
-              Scale What Works →
-            </span>
-          </Link>
-          <span
-            style={{
-              fontFamily: "Lato",
-              fontWeight: 300,
-              fontSize: "14.56px",
-              color: "#FFFFFF",
-              opacity: 0.9,
-            }}
-          >
-            Design the system that scales.
-          </span>
-        </div>
+              Does the market confirm this direction?
+            </p>
+          </FadeInRow>
 
-        {/* Secondary CTA Card */}
-        <div 
-          className="mt-8 mb-12 pt-[67.91px] pb-[67.91px] w-full rounded-[28.96px] flex flex-col items-center text-center overflow-hidden"
-          style={{
-            background: "linear-gradient(135deg, #E0E7FF 0%, #E1E0FF 100%)",
-          }}
-        >
-          <h2
-            className="mb-2.25 px-2"
+          <FadeInRow><div
             style={{
               fontFamily: "Fustat",
-              fontWeight: 600,
-              fontSize: "40.18px",
+              fontSize: "18px",
               color: "#191432",
-              lineHeight: "1.05",
+              lineHeight: "1.1",
             }}
           >
-            Not sure where <br />
-            you stand?
-          </h2>
-
-          <div className="flex flex-col gap-3 mb-4 w-full px-2">
-            <p
-              style={{
-                fontFamily: "Fustat",
-                fontWeight: 300,
-                fontSize: "clamp(16px, 4.5vw, 19px)",
-                color: "#191432",
-                whiteSpace: "nowrap",
-                letterSpacing: "-0.02em",
-              }}
-            >
-              We’ll pinpoint it in one focused session.
+            <p style={{ fontWeight: 300 }} className="mb-0">
+              Before committing to large builds, we first confirm the direction through real market signal.
             </p>
-            <p
-              style={{
-                fontFamily: "Fustat",
-                fontWeight: 500,
-                fontSize: "clamp(17px, 4.8vw, 20px)",
-                color: "#191432",
-                lineHeight: "1.2",
-                letterSpacing: "-0.03em",
-              }}
-            >
-              <span className="whitespace-nowrap">You’ll leave with a clear starting point</span><br />
-              <span className="whitespace-nowrap">and the right path to scale.</span>
-            </p>
-          </div>
+          </div></FadeInRow>
 
-          <div className="w-full px-[30.37px] mb-2.5">
-            <Link
-              to="/contact"
-              onClick={saveScrollAnchor}
-            className="w-full flex items-center justify-center bg-brand-hero-body rounded-full h-[59.56px]"
-            >
-              <span
+          <div className="bg-[#171425] flex flex-col justify-center px-[23px] py-[15px] rounded-[10px]">
+            <div className="flex flex-col gap-[5px] leading-[1.1]">
+              <p
                 style={{
                   fontFamily: "Fustat",
-                  fontWeight: 500,
-                  fontSize: "18.75px",
+                  fontWeight: 300,
+                  fontSize: "15.5px",
                   color: "#FFFFFF",
                 }}
               >
-                Direct your Growth →
-              </span>
-            </Link>
+                We validate it through:
+              </p>
+              <div
+                style={{
+                  fontFamily: "Lato",
+                  fontStyle: "italic",
+                  fontWeight: 400,
+                  fontSize: "18px",
+                  color: "#D2D2FF",
+                }}
+                className="flex flex-col gap-[9px] mt-1"
+              >
+                <FadeInRow><div className="flex gap-2"><span className="shrink-0 mt-[2px]">•</span><span className="font-light leading-[1.2]">Landing pages</span></div></FadeInRow>
+                <FadeInRow><div className="flex gap-2"><span className="shrink-0 mt-[2px]">•</span><span className="font-light leading-[1.2]">Messaging tests</span></div></FadeInRow>
+                <FadeInRow><div className="flex gap-2"><span className="shrink-0 mt-[2px]">•</span><span className="font-light leading-[1.2]">UX prototypes</span></div></FadeInRow>
+                <FadeInRow><div className="flex gap-2"><span className="shrink-0 mt-[2px]">•</span><span className="font-light leading-[1.2]">Paid traffic tests</span></div></FadeInRow>
+              </div>
+            </div>
           </div>
-          
-          <span
-            className="px-2"
+
+          <div
             style={{
-              fontFamily: "Lato",
-              fontWeight: 300,
-              fontSize: "14.56px",
-              color: "#191627",
-              opacity: 0.8,
+              fontFamily: "Fustat",
+              fontSize: "18px",
+              color: "#191432",
             }}
           >
-            No obligation. Just alignment.
-          </span>
+            <FadeInRow>
+              <p style={{ fontWeight: 700, lineHeight: "1.1", marginBottom: "7px" }}>Output</p>
+            </FadeInRow>
+            <div className="flex flex-col gap-[7px]">
+              <FadeInRow><div className="flex gap-2">
+                <span style={{ fontWeight: 300, lineHeight: "1.1" }}>✓</span>
+                <span style={{ lineHeight: "1.1" }}>Real-world signal on what actually drives engagement</span>
+              </div></FadeInRow>
+              <FadeInRow><div className="flex gap-2">
+                <span style={{ fontWeight: 300, lineHeight: "1.1" }}>✓</span>
+                <span style={{ lineHeight: "1.1" }}>Evidence the direction resonates with buyers</span>
+              </div></FadeInRow>
+              <FadeInRow><div className="flex gap-2">
+                <span style={{ fontWeight: 300, lineHeight: "1.1" }}>✓</span>
+                <span style={{ lineHeight: "1.1" }}>A validated path the team can confidently scale</span>
+              </div></FadeInRow>
+            </div>
+          </div>
+
+          {/* Image Component */}
+          <FadeInRow><div className="w-full mt-4 flex justify-center items-center">
+            <img src={stage2Img} alt="Stage 2 Diagram" className="w-full h-auto object-contain rounded-[12px]" />
+          </div></FadeInRow>
         </div>
+      </div>
+
+      {/* Stage 3 Container */}
+      <div className="w-full px-[17.5px] pb-24 flex flex-col pt-24 bg-[#FCFAF3]">
+        {/* Stage Header */}
+        <div className="flex flex-col gap-2 mb-[19px]">
+          <FadeInRow><span
+            style={{
+              fontFamily: "Lato",
+              fontStyle: "italic",
+              fontWeight: 400,
+              fontSize: "22.3px",
+              color: "#8B8CFB",
+              lineHeight: "1.1",
+            }}
+          >
+            Step 3 — The System
+          </span></FadeInRow>
+          <FadeInRow><h3
+            style={{
+              fontFamily: "Fustat",
+              fontWeight: 600,
+              fontSize: "31px",
+              color: "#1A1A2E",
+              lineHeight: "1.2",
+            }}
+          >
+            Once the signal is clear, we turn it into a growth system.
+          </h3></FadeInRow>
+        </div>
+
+        {/* Narrative & Lists Wrapper */}
+        <div className="flex flex-col gap-[20px]">
+          <FadeInRow>
+            <p
+              style={{
+                fontFamily: "Lato",
+                fontStyle: "italic",
+                fontWeight: 400,
+                fontSize: "18px",
+                color: "#06203C",
+                lineHeight: "1.1",
+              }}
+            >
+              How do we turn that signal into repeatable growth?
+            </p>
+          </FadeInRow>
+
+          <FadeInRow><div
+            style={{
+              fontFamily: "Fustat",
+              fontSize: "18px",
+              color: "#191432",
+              lineHeight: "1.1",
+            }}
+          >
+            <p style={{ fontWeight: 300 }} className="mb-0">
+              Now execution becomes straightforward because the direction is validated.
+            </p>
+          </div></FadeInRow>
+
+          <div className="bg-[#171425] flex flex-col justify-center px-[23px] py-[15px] rounded-[10px]">
+            <div className="flex flex-col gap-[5px] leading-[1.1]">
+              <p
+                style={{
+                  fontFamily: "Fustat",
+                  fontWeight: 300,
+                  fontSize: "15.5px",
+                  color: "#FFFFFF",
+                }}
+              >
+                Depending on where scale is bottlenecked, this can take the form of:
+              </p>
+              <div
+                style={{
+                  fontFamily: "Lato",
+                  fontStyle: "italic",
+                  fontWeight: 400,
+                  fontSize: "18px",
+                  color: "#D2D2FF",
+                }}
+                className="flex flex-col gap-[9px] mt-1"
+              >
+                <FadeInRow><div className="flex gap-2"><span className="shrink-0 mt-[2px]">•</span><span className="font-light leading-[1.2]">Website restructuring</span></div></FadeInRow>
+                <FadeInRow><div className="flex gap-2"><span className="shrink-0 mt-[2px]">•</span><span className="font-light leading-[1.2]">Landing ecosystems</span></div></FadeInRow>
+                <FadeInRow><div className="flex gap-2"><span className="shrink-0 mt-[2px]">•</span><span className="font-light leading-[1.2]">Acquisition architecture</span></div></FadeInRow>
+                <FadeInRow><div className="flex gap-2"><span className="shrink-0 mt-[2px]">•</span><span className="font-light leading-[1.2]">Sales enablement</span></div></FadeInRow>
+                <FadeInRow><div className="flex gap-2"><span className="shrink-0 mt-[2px]">•</span><span className="font-light leading-[1.2]">Product narrative alignment</span></div></FadeInRow>
+              </div>
+            </div>
+          </div>
+
+          <div
+            style={{
+              fontFamily: "Fustat",
+              fontSize: "18px",
+              color: "#191432",
+            }}
+          >
+            <FadeInRow>
+              <p style={{ fontWeight: 700, lineHeight: "1.1", marginBottom: "7px" }}>Output</p>
+            </FadeInRow>
+            <div className="flex flex-col gap-[7px]">
+              <FadeInRow><div className="flex gap-2">
+                <span style={{ fontWeight: 300, lineHeight: "1.1" }}>✓</span>
+                <span style={{ lineHeight: "1.1" }}>Structural alignment across critical channels and surfaces</span>
+              </div></FadeInRow>
+              <FadeInRow><div className="flex gap-2">
+                <span style={{ fontWeight: 300, lineHeight: "1.1" }}>✓</span>
+                <span style={{ lineHeight: "1.1" }}>Conversion journeys engineered around buyer behavior</span>
+              </div></FadeInRow>
+              <FadeInRow><div className="flex gap-2">
+                <span style={{ fontWeight: 300, lineHeight: "1.1" }}>✓</span>
+                <span style={{ lineHeight: "1.1" }}>Structural capacity to expand what works</span>
+              </div></FadeInRow>
+              <FadeInRow><div className="flex gap-2">
+                <span style={{ fontWeight: 300, lineHeight: "1.1" }}>✓</span>
+                <span style={{ lineHeight: "1.1" }}>Growth that compounds instead of resets</span>
+              </div></FadeInRow>
+              <FadeInRow><div className="flex gap-2">
+                <span style={{ fontWeight: 300, lineHeight: "1.1" }}>✓</span>
+                <span style={{ lineHeight: "1.1" }}>
+                  A scalable growth system built to <span style={{ fontWeight: 700, textDecoration: "underline", textUnderlineOffset: "2px" }}>expand what works</span>
+                </span>
+              </div></FadeInRow>
+            </div>
+          </div>
+
+          {/* Image Component */}
+          <FadeInRow><div className="w-full mt-4 flex justify-center items-center">
+            <img src={stage2Img} alt="Stage 3 Diagram" className="w-full h-auto object-contain rounded-[12px]" />
+          </div></FadeInRow>
+        </div>
+      </div>
+
+      {/* Scroll Reveal Summary Section */}
+      <div className="w-full px-5 py-[120px] flex flex-col items-center justify-center bg-[#FCFAF3]">
+        <motion.div
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, amount: 0.4 }}
+          variants={{
+            visible: { transition: { staggerChildren: 0.4 } },
+            hidden: {},
+          }}
+          className="flex flex-col text-center font-['Fustat'] font-semibold text-[24px] leading-[1.11] text-[#1A1A2E] max-w-[313px]"
+        >
+          <motion.p variants={{ visible: { opacity: 1 }, hidden: { opacity: 0.1 } }} transition={{ duration: 0.8 }}>
+            Direction identifies<br/>what decision matters.
+          </motion.p>
+          <motion.p variants={{ visible: { opacity: 1 }, hidden: { opacity: 0.1 } }} transition={{ duration: 0.8 }}>
+            Proof validates it in the<br/>market.
+          </motion.p>
+          <motion.p variants={{ visible: { opacity: 1 }, hidden: { opacity: 0.1 } }} transition={{ duration: 0.8 }}>
+            System scales it across<br/>the company.
+          </motion.p>
+
+          <motion.div
+            variants={{ visible: { opacity: 1 }, hidden: { opacity: 0.1 } }} transition={{ duration: 0.8 }}
+            className="flex flex-col items-center gap-[10px] mt-[16px]"
+          >
+            <button
+              onClick={() => {
+                saveScrollAnchor();
+                navigate("/contact");
+              }}
+              className="w-full max-w-[263px] py-[16.28px] rounded-full border-[0.5px] border-[#1A1A2E] bg-[#191432] text-white font-['Fustat'] font-medium text-[18.75px] transition-transform active:scale-95 shadow-sm"
+            >
+              Start with Clarity
+            </button>
+            <p className="font-['Lato'] font-light text-[14.56px] text-[#191627] text-center mt-6">
+              No obligation. Just alignment.
+            </p>
+          </motion.div>
+        </motion.div>
       </div>
 
       <style>{`
@@ -474,115 +571,5 @@ export default function DecisionStages() {
         }
       `}</style>
     </section>
-  );
-}
-
-function CollapsibleList({
-  title,
-  items,
-  type = "bullet",
-  initialCount = 2,
-  theme = "light",
-}: {
-  title: string;
-  items: string[];
-  type?: "bullet" | "check" | "dash";
-  initialCount?: number;
-  theme?: "light" | "dark";
-}) {
-  const [isOpen, setIsOpen] = useState(false);
-  const textColor = theme === "dark" ? "#FFFFFF" : "#171425";
-
-  return (
-    <div className="flex flex-col gap-[2px]">
-      <h4
-        style={{
-          fontFamily: "Lato",
-          fontWeight: 600,
-          fontSize: "17.07px",
-          color: textColor,
-        }}
-      >
-        {title}
-      </h4>
-      <div className="flex flex-col gap-0">
-        {items.slice(0, initialCount).map((item, idx) => (
-          <div key={idx} className="flex items-start gap-2.5">
-            <span
-              className="shrink-0 mt-[2px]"
-              style={{
-                fontFamily: "Lato",
-                fontWeight: 400,
-                fontSize: "17.07px",
-                color: textColor,
-              }}
-            >
-              {type === "bullet" ? "•" : type === "check" ? "✓" : "–"}
-            </span>
-            <div className="flex-1 flex items-start gap-1">
-              <p
-                style={{
-                  fontFamily: "Lato",
-                  fontWeight: 300,
-                  fontSize: "17.07px",
-                  color: textColor,
-                  lineHeight: "1.21",
-                }}
-              >
-                {item}
-                {!isOpen && idx === initialCount - 1 && "..."}
-              </p>
-              {!isOpen && idx === initialCount - 1 && (
-                <button
-                  onClick={() => setIsOpen(true)}
-                  className="mt-[3px] shrink-0"
-                >
-                  <ChevronDown size={14} color={theme === "dark" ? "#FFFFFF" : "#ACA9BE"} />
-                </button>
-              )}
-            </div>
-          </div>
-        ))}
-
-        <AnimatePresence>
-          {isOpen && (
-            <motion.div
-              initial={{ height: 0, opacity: 0 }}
-              animate={{ height: "auto", opacity: 1 }}
-              exit={{ height: 0, opacity: 0 }}
-              transition={{ duration: 0.4, ease: "easeOut" }}
-              className="overflow-hidden flex flex-col gap-0"
-            >
-              {items.slice(initialCount).map((item, idx) => (
-                <div key={idx} className="flex items-start gap-2.5">
-                  <span
-                    className="shrink-0 mt-[2px]"
-                    style={{
-                      fontFamily: "Lato",
-                      fontWeight: 400,
-                      fontSize: "17.07px",
-                      color: textColor,
-                    }}
-                  >
-                    {type === "bullet" ? "•" : type === "check" ? "✓" : "–"}
-                  </span>
-                  <p
-                    style={{
-                      fontFamily: "Lato",
-                      fontWeight: 300,
-                      fontSize: "17.07px",
-                      color: textColor,
-                      lineHeight: "1.21",
-                    }}
-                  >
-                    {item}
-                  </p>
-                </div>
-              ))}
-            </motion.div>
-          )}
-        </AnimatePresence>
-      </div>
-    </div>
   );
 }

@@ -35,3 +35,10 @@ AGENTS.md
 /skills
 
 prompt_nbk.md
+
+# Playwright
+/test-results/
+/playwright-report/
+/blob-report/
+/playwright/.cache/
+/playwright/.auth/
